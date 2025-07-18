@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/DayTradingSimulator.iml" filepath="$PROJECT_DIR$/.idea/DayTradingSimulator.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/RAYLIB-TEST.iml" filepath="$PROJECT_DIR$/.idea/RAYLIB-TEST.iml" />
     </modules>
   </component>
 </project>
