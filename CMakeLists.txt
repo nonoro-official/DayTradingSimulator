@@ -24,6 +24,10 @@ endif()
 
 # Our Project
 
-add_executable(${PROJECT_NAME} src/main.cpp)
+add_executable(${PROJECT_NAME} src/main.cpp
+        src/Objects/UI/Button.cpp
+        src/Objects/UI/Button.h
+        src/Objects/UI/Button.cpp
+        src/Objects/UI/Button.h)
 #set(raylib_VERBOSE 1)
 target_link_libraries(${PROJECT_NAME} raylib)
