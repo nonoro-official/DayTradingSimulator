@@ -1,6 +1,6 @@
 #include "Button.h"
 
-Button::Button(float x, float y, float w, float h) {
+Button::Button(float x, float y, float w, float h   ) {
     bounds = {x, y, w, h};
 }
 
