@@ -1,32 +1,47 @@
 #include "raylib.h"
+#include "Objects/Graph.h"
 
-#define RAYGUI_IMPLEMENTATION
-#include "raygui.h"
+const int screenWidth = 640;
+const int screenHeight = 480;
+
+float frameTime = 0;
 
 int main()
 {
-    InitWindow(400, 200, "raygui - controls test suite");
+    InitWindow(screenWidth, screenHeight, "Day Trading Simulator");
     SetTargetFPS(60);
 
-    bool showMessageBox = false;
+    GraphPoint points[] = {
+    { screenWidth / 2, screenHeight / 2 },
+    { screenWidth / 2 - 15 * 2, screenHeight / 2 - 15 },
+    { screenWidth / 2 - 30 * 2, screenHeight / 2 },
+    { screenWidth / 2 - 45 * 2, screenHeight / 2 + 15 },
+    { screenWidth / 2 - 15 * 2, screenHeight / 2 - 15 },
+    { screenWidth / 2 - 30 * 2, screenHeight / 2 },
+    { screenWidth / 2 - 45 * 2, screenHeight / 2 + 15 },
+    { screenWidth / 2 - 15 * 2, screenHeight / 2 - 15 },
+    { screenWidth / 2 - 30 * 2, screenHeight / 2 },
+    { screenWidth / 2 - 45 * 2, screenHeight / 2 + 15 },
+    { screenWidth / 2 - 15 * 2, screenHeight / 2 - 15 },
+    { screenWidth / 2 - 30 * 2, screenHeight / 2 },
+    { screenWidth / 2 - 45 * 2, screenHeight / 2 + 15 }
+    };
 
-    while (!WindowShouldClose())
-    {
+    GraphDisplay *display = new GraphDisplay({screenWidth / 2, screenHeight / 2},
+                                             {screenWidth / 2, screenHeight / 2});
+
+    for (GraphPoint& point : points) {
+        display->AddNode(&point);
+    }
+
+    while (!WindowShouldClose()) {
+        // Update
+        display->Update();
+
         // Draw
-        //----------------------------------------------------------------------------------
         BeginDrawing();
-        ClearBackground(GetColor(GuiGetStyle(DEFAULT, BACKGROUND_COLOR)));
-
-        if (GuiButton((Rectangle){ 24, 24, 120, 30 }, "#191#Show Message")) showMessageBox = true;
-
-        if (showMessageBox)
-        {
-            int result = GuiMessageBox((Rectangle){ 85, 70, 250, 100 },
-                "#191#Message Box", "Hi! This is a message!", "Nice;Cool");
-
-            if (result >= 0) showMessageBox = false;
-        }
-
+        ClearBackground(WHITE);
+        display->Draw();
         EndDrawing();
     }
 
