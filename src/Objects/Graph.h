@@ -12,13 +12,13 @@ class GraphPoint {
 public:
     Vector2 position = {0, 0};
     GraphPoint* nextPoint = nullptr;
+    Color pointColor = DARKGREEN, lineColor = DARKGREEN;
 
     GraphPoint(float x, float y);
     void Draw();
 
 private:
     float radius = 5;
-    Color pointColor = DARKGREEN, lineColor = DARKGREEN;
     float yOffset = -100;
     float width = 80, height = 40;
     float fontSize = 8;
@@ -32,11 +32,19 @@ class GraphDisplay {
     };
 
 public:
+    Vector2 center;
+    Vector2 bounds;
     void Update();
     void Draw();
     void AddNode(GraphPoint* point);
+    void ForceAddNode(GraphPoint* point);
+
+    GraphDisplay(Vector2 center, Vector2 bounds);
 
 private:
     std::vector<GraphNode*> nodes;
-    float scrollSpeed = -.25f;
+    std::vector<GraphPoint*> queue;
+    float pixelsPerInterval = -50;
+    float timer = 0.0f;
+    float interval = 1.0f; // time between adding nodes
 };

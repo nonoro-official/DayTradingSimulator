@@ -32,13 +32,38 @@ void GraphPoint::Draw() {
 }
 
 void GraphDisplay::Update() {
-    for (GraphNode* node : nodes) {
-        GraphPoint* point = node->point;
-        point->position.x += scrollSpeed;
+    timer += GetFrameTime();
+    if (timer >= interval) {
+        timer = 0.0f;
+
+        // Move points and mark those out of bounds
+        for (int i = 0; i < nodes.size(); /* manual increment */) {
+            GraphNode* node = nodes[i];
+            GraphPoint* point = node->point;
+
+            point->position.x += pixelsPerInterval;
+
+            if (point->position.x < center.x - bounds.x / 2) {
+                // Delete and remove node
+                delete node;                     // Free heap memory
+                nodes.erase(nodes.begin() + i); // Remove from vector
+                continue; // Do not increment i, since the vector shifted
+            }
+
+            i++; // Only increment if we didn't erase
+        }
+
+        // Spawn new node if any in queue
+        if (!queue.empty()) {
+            ForceAddNode(queue.front());
+            queue.erase(queue.begin());
+        }
     }
 }
 
 void GraphDisplay::Draw() {
+    DrawRectangle(center.x - bounds.x / 2, center.y - bounds.y / 2, bounds.x, bounds.y, GRAY);
+
     for (GraphNode* node : nodes) {
         GraphPoint* point = node->point;
         point->Draw();
@@ -46,7 +71,21 @@ void GraphDisplay::Draw() {
 }
 
 void GraphDisplay::AddNode(GraphPoint* point) {
+    queue.push_back(point);
+}
+
+void GraphDisplay::ForceAddNode(GraphPoint* point) {
     GraphNode* lastNode = nodes.empty() ? nullptr : nodes.back();
     GraphNode* node = new GraphNode{point, lastNode};
     nodes.push_back(node);
+
+    // initialize spawn
+    Vector2 position = point->position;
+    position.x = center.x + bounds.x / 2;
+    node->point->position = position;
+}
+
+GraphDisplay::GraphDisplay(Vector2 c, Vector2 b) {
+    center = c;
+    bounds = b;
 }
