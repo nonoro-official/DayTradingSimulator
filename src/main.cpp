@@ -1,83 +1,35 @@
 #include "raylib.h"
-#include <iostream>
-#include <string>
 
-#include "Objects/UI/Button.h"
-
-const int screenWidth = 640;
-const int screenHeight = 480;
-
-class Player {
-    public:
-        Vector2 position;
-        int radius;
-        int moveSpeed;
-
-        void Draw() {
-            DrawCircle(position.x, position.y, radius, PURPLE);
-        }
-
-        void Update(Vector2 input) {
-            position.x += input.x * moveSpeed;
-            position.y += input.y * moveSpeed;
-
-            if (position.x > screenWidth - radius) CloseWindow();
-            if (position.x < radius) CloseWindow();
-            if (position.y > screenHeight - radius) CloseWindow();
-            if (position.y < radius) CloseWindow();
-        }
-};
+#define RAYGUI_IMPLEMENTATION
+#include "raygui.h"
 
 int main()
 {
-    InitWindow(screenWidth, screenHeight, "Pong");
-
+    InitWindow(400, 200, "raygui - controls test suite");
     SetTargetFPS(60);
 
-    Player player = {{screenWidth / 2, screenHeight / 2}, 25, 5};
-
-    Button test = {screenWidth / 2, screenHeight / 2, 30, 15};
-    test.onClick = []() {
-        std::cout << "Button clicked" << std::endl;
-    };
-
-    test.onHold = []() {
-        std::cout << "Button held" << std::endl;
-    };
-
-    test.onRelease= []() {
-        std::cout << "Button rel" << std::endl;
-    };
+    bool showMessageBox = false;
 
     while (!WindowShouldClose())
     {
-        // UPDATE
-        Vector2 input = {0, 0};
-        if (IsKeyDown(KEY_A)) input.x = -1;
-        if (IsKeyDown(KEY_D)) input.x = 1;
-        if (IsKeyDown(KEY_W)) input.y = -1;
-        if (IsKeyDown(KEY_S)) input.y = 1;
-
-        std::string inputStr = "INPUT: (" + std::to_string(input.x) + ", " + std::to_string(input.y) + ")";
-
-        player.Update(input);
-        test.Update();
-
-        // DRAW
+        // Draw
+        //----------------------------------------------------------------------------------
         BeginDrawing();
-        ClearBackground(WHITE);
+        ClearBackground(GetColor(GuiGetStyle(DEFAULT, BACKGROUND_COLOR)));
 
-        DrawText(inputStr.c_str(), 0, 0, 20, BLACK);
+        if (GuiButton((Rectangle){ 24, 24, 120, 30 }, "#191#Show Message")) showMessageBox = true;
 
+        if (showMessageBox)
+        {
+            int result = GuiMessageBox((Rectangle){ 85, 70, 250, 100 },
+                "#191#Message Box", "Hi! This is a message!", "Nice;Cool");
 
-        player.Draw();
-
-        test.Draw();
+            if (result >= 0) showMessageBox = false;
+        }
 
         EndDrawing();
     }
 
     CloseWindow();
-
     return 0;
 }
