@@ -8,6 +8,8 @@
 
 char infoBuffer[64];
 
+GraphPoint::GraphPoint() {}
+
 GraphPoint::GraphPoint(float x, float y) {
     position.x = x;
     position.y = y;
