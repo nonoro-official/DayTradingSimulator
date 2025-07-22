@@ -10,11 +10,14 @@
 class Upgrade {
 private:
     std::string name;
-    double cost;
-    bool purchased;
+    int cost = 0;
+    bool purchased = false;
     std::function<void(GameState&)> effect;
 public:
-    void setName(std::string name);
-    void setCost(double cost);
-    void setEffect();
+    void setName(std::string& name);
+    void setCost(int c);
+    void setEffect(std::function<void(GameState)> e);
+
+    bool tryPurchase(GameState& state);
+    void display();
 };
