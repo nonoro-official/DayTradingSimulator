@@ -35,7 +35,13 @@ FetchContent_MakeAvailable(raygui)
 # Our Project
 add_executable(${PROJECT_NAME}
         src/main.cpp
-        src/Objects/UI/Button.cpp
+        src/Objects/Graph.cpp
+        src/Objects/Graph.h
+        src/Upgrades/Upgrade.cpp
+        src/Upgrades/Upgrade.h
+        src/Upgrades/UpgradeHandler.cpp
+        src/Upgrades/UpgradeHandler.h
+        src/GameState.h
 )
 
 # Include paths

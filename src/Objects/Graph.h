@@ -46,5 +46,5 @@ private:
     std::vector<GraphPoint*> queue;
     float pixelsPerInterval = -50;
     float timer = 0.0f;
-    float interval = 1.0f; // time between adding nodes
+    float interval = 2.5f; // time between adding nodes
 };
