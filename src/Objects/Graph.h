@@ -14,6 +14,7 @@ public:
     GraphPoint* nextPoint = nullptr;
     Color pointColor = DARKGREEN, lineColor = DARKGREEN;
 
+    GraphPoint();
     GraphPoint(float x, float y);
     void Draw();
 
