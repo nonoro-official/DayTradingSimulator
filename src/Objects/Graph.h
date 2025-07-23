@@ -33,6 +33,10 @@ class GraphDisplay {
     };
 
 public:
+    float pixelsPerInterval = -10;
+    float timer = 0.0f;
+    float interval = 0.5f; // time between adding nodes
+
     Vector2 center;
     Vector2 bounds;
     void Update();
@@ -41,11 +45,9 @@ public:
     void ForceAddNode(GraphPoint* point);
 
     GraphDisplay(Vector2 center, Vector2 bounds);
+    void AddNodesFromVector(const std::vector<GraphPoint>& points);
 
 private:
     std::vector<GraphNode*> nodes;
     std::vector<GraphPoint*> queue;
-    float pixelsPerInterval = -50;
-    float timer = 0.0f;
-    float interval = 1.0f; // time between adding nodes
 };

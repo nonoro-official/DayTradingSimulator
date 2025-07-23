@@ -12,7 +12,7 @@ public:
     int amountOfPoints;
     float amplitude, frequency, smoothness;
 
-    GenerateRandomMarket(int points, float amplitude, float frequency, float smoothness = 0.5f);
+    GenerateRandomMarket(int points, float amplitude, float frequency);
 
     void InitializeMarket();
     const std::vector<GraphPoint>& GetMarketValues() const;

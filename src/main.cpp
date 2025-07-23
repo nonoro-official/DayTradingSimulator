@@ -1,5 +1,6 @@
 #include "raylib.h"
 #include "Objects/Graph.h"
+#include "Objects/GenerateRandomMarket.h"
 
 const int screenWidth = 640;
 const int screenHeight = 480;
@@ -11,28 +12,13 @@ int main()
     InitWindow(screenWidth, screenHeight, "Day Trading Simulator");
     SetTargetFPS(60);
 
-    GraphPoint points[] = {
-    { screenWidth / 2, screenHeight / 2 },
-    { screenWidth / 2 - 15 * 2, screenHeight / 2 - 15 },
-    { screenWidth / 2 - 30 * 2, screenHeight / 2 },
-    { screenWidth / 2 - 45 * 2, screenHeight / 2 + 15 },
-    { screenWidth / 2 - 15 * 2, screenHeight / 2 - 15 },
-    { screenWidth / 2 - 30 * 2, screenHeight / 2 },
-    { screenWidth / 2 - 45 * 2, screenHeight / 2 + 15 },
-    { screenWidth / 2 - 15 * 2, screenHeight / 2 - 15 },
-    { screenWidth / 2 - 30 * 2, screenHeight / 2 },
-    { screenWidth / 2 - 45 * 2, screenHeight / 2 + 15 },
-    { screenWidth / 2 - 15 * 2, screenHeight / 2 - 15 },
-    { screenWidth / 2 - 30 * 2, screenHeight / 2 },
-    { screenWidth / 2 - 45 * 2, screenHeight / 2 + 15 }
-    };
+    GenerateRandomMarket *market = new GenerateRandomMarket(100, 1, .5);
+    market->InitializeMarket();
 
     GraphDisplay *display = new GraphDisplay({screenWidth / 2, screenHeight / 2},
-                                             {screenWidth / 2, screenHeight / 2});
+                                             {screenWidth, screenHeight / 1.5f});
 
-    for (GraphPoint& point : points) {
-        display->AddNode(&point);
-    }
+    display->AddNodesFromVector(market->GetMarketValues());
 
     while (!WindowShouldClose()) {
         // Update
