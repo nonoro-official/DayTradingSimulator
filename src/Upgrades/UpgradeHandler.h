@@ -2,13 +2,18 @@
 // Created by Noah Peñaranda on 7/22/2025.
 //
 
-#ifndef UPGRADEHANDLER_H
-#define UPGRADEHANDLER_H
+#pragma once
+#include <vector>
+#include "Upgrade.h"
+#include "GameState.h"
 
-class UpgradeHandler {
+class UpgradeHandler
+{
+private:
+    std::vector<Upgrade> upgrades;
 
+public:
+    void init(GameState& game);
+    void showAvailable();
+    void handlePurchase(int index, GameState& state);
 };
-
-
-
-#endif //UPGRADEHANDLER_H

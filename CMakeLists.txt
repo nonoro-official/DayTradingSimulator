@@ -37,11 +37,15 @@ add_executable(${PROJECT_NAME}
         src/main.cpp
         src/Objects/Graph.cpp
         src/Objects/Graph.h
+        src/Objects/GenerateRandomMarket.cpp
+        src/Objects/GenerateRandomMarket.h
+        src/GameState.h
         src/Upgrades/Upgrade.cpp
         src/Upgrades/Upgrade.h
         src/Upgrades/UpgradeHandler.cpp
         src/Upgrades/UpgradeHandler.h
-        src/GameState.h
+        src/Upgrades/UpgradeBuilder.cpp
+        src/Upgrades/UpgradeBuilder.h
 )
 
 # Include paths
