@@ -1,36 +1,35 @@
 #include "raylib.h"
 #include "Objects/Graph.h"
 #include "Objects/GenerateRandomMarket.h"
+#include "GameState.h"
+#include "Upgrades/UpgradeHandler.h"
+#include <iostream>
 
-const int screenWidth = 640;
-const int screenHeight = 480;
+int main() {
+    GameState game;
+    UpgradeHandler shop;
+    shop.init(game);
 
-float frameTime = 0;
+    while (true) {
+        std::cout << "\nCash: $" << game.cash
+                  << " | Delay: " << game.executionDelay << "s\n";
+        shop.showAvailable();
 
-int main()
-{
-    InitWindow(screenWidth, screenHeight, "Day Trading Simulator");
-    SetTargetFPS(60);
+        std::cout << "Choose upgrade (index) or -1 to exit: ";
+        int index;
+        std::cin >> index;
 
-    GenerateRandomMarket *market = new GenerateRandomMarket(100, 1, .25);
-    market->InitializeMarket();
+        GenerateRandomMarket *market = new GenerateRandomMarket(100, 1, .25);
+        market->InitializeMarket();
 
-    GraphDisplay *display = new GraphDisplay({screenWidth / 2, screenHeight / 2},
-                                             {screenWidth, screenHeight / 1.5f});
+        GraphDisplay *display = new GraphDisplay({screenWidth / 2, screenHeight / 2},
+                                                {screenWidth, screenHeight / 1.5f});
 
-    display->AddNodesFromVector(market->GetMarketValues());
+        display->AddNodesFromVector(market->GetMarketValues());
+        if (index == -1) break;
 
-    while (!WindowShouldClose()) {
-        // Update
-        display->Update();
-
-        // Draw
-        BeginDrawing();
-        ClearBackground(WHITE);
-        display->Draw();
-        EndDrawing();
+        shop.handlePurchase(index, game);  // <== This applies the upgrade
     }
 
-    CloseWindow();
     return 0;
 }
