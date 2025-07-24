@@ -2,6 +2,14 @@
 
 class GameState {
 public:
+    // Access the singleton instance
+    static GameState& Instance() {
+        static GameState instance; // Guaranteed to be initialized only once
+        return instance;
+    }
+
+    // Public state variables
+    int month = 0;
     int cash = 500;                 // Starting cash
     float executionDelay = 8.0f;    // Initial trade delay in seconds
 
@@ -13,6 +21,7 @@ public:
     int sharesHeld = 0;
     float avgBuyPrice = 0.0f;
 
+    // Game state control
     bool IsPaused();
     float GetTimeScale();
     void PauseGame();
@@ -20,6 +29,12 @@ public:
     void SetTimeScale(float scale);
 
 private:
+    // Private constructor prevents external instancing
+    GameState() = default;
+    GameState(const GameState&) = delete;
+    GameState& operator=(const GameState&) = delete;
+
+    // Internal state
     bool paused = false;
     float timeScale = 1.0f;
 };

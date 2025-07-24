@@ -47,6 +47,12 @@ add_executable(${PROJECT_NAME}
         src/Upgrades/UpgradeHandler.h
         src/Upgrades/UpgradeBuilder.cpp
         src/Upgrades/UpgradeBuilder.h
+        src/Classes/PlayerData.cpp
+        src/Classes/PlayerData.h
+        src/Classes/Stock.cpp
+        src/Classes/Stock.h
+        src/Classes/Company.cpp
+        src/Classes/MarketData.h
 )
 
 # Include paths

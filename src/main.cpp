@@ -8,8 +8,8 @@
 const int screenWidth = 640;
 const int screenHeight = 480;
 
-static GameState game;
 int main() {
+    // GameState::Instance().Initialize(); TODO: IMPLEMENT
     /*
     UpgradeHandler shop;
     shop.init(game);
@@ -34,25 +34,30 @@ int main() {
 
     SetTargetFPS(60);
 
-    GenerateRandomMarket *market = new GenerateRandomMarket(100, 1, .25);
+    GenerateRandomMarket *market = new GenerateRandomMarket(1, 1);
 
     GraphDisplay display = GraphDisplay({screenWidth / 2, screenHeight / 2},
-                                            {screenWidth, screenHeight / 1.5f}, &game);
+                                            {screenWidth, screenHeight / 1.5f});
     market->InitializeMarket();
-    display.AddNodesFromVector(market->GetMarketValues());
+
+    for (int i = 0; i < 100; i++) {
+        market->GenerateNextPoint();
+    }
+
+    display.AddPointsFromVector(market->GetMarketValues());
 
     while (!WindowShouldClose()) {
         // pausing
         if (IsKeyPressed(KEY_P)) {
-            game.PauseGame();
+            GameState::Instance().PauseGame();
         }
 
-        if (IsKeyPressed(KEY_ONE)) game.SetTimeScale(1.0f);
-        if (IsKeyPressed(KEY_TWO)) game.SetTimeScale(2.0f);
-        if (IsKeyPressed(KEY_THREE)) game.SetTimeScale(3.0f);
-        if (IsKeyPressed(KEY_FOUR)) game.SetTimeScale(4.0f);
+        if (IsKeyPressed(KEY_ONE)) GameState::Instance().SetTimeScale(1.0f);
+        if (IsKeyPressed(KEY_TWO)) GameState::Instance().SetTimeScale(2.0f);
+        if (IsKeyPressed(KEY_THREE)) GameState::Instance().SetTimeScale(3.0f);
+        if (IsKeyPressed(KEY_FOUR)) GameState::Instance().SetTimeScale(4.0f);
 
-        if (!game.IsPaused()) {
+        if (!GameState::Instance().IsPaused()) {
             display.Update();
         }
 
