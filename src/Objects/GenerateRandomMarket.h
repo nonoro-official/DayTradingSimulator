@@ -5,22 +5,25 @@
 #include <functional>
 #include "Graph.h"
 #include "../Libraries/PerlinNoise.hpp"
+#include "Classes/MarketData.h"
 
 class GenerateRandomMarket {
 public:
     int seed;
-    int amountOfPoints;
     float amplitude, frequency, smoothness;
 
-    GenerateRandomMarket(int points, float amplitude, float frequency);
+    GenerateRandomMarket(float amplitude, float frequency);
 
     void InitializeMarket();
     const std::vector<GraphPoint>& GetMarketValues() const;
     std::function<void()> OnFinishInitialize = nullptr;
 
+    GraphPoint* GenerateNextPoint();
+
 private:
     float time = 0.0f;
     std::vector<GraphPoint> generatedPoints;
+    siv::PerlinNoise perlinNoise = siv::PerlinNoise(0); // default seed
 };
 
 #endif //GENERATERANDOMMARKET_H

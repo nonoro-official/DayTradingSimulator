@@ -6,15 +6,19 @@
 #define COMPANY_H
 
 #include "../Objects/GenerateRandomMarket.h"
+#include <vector>
 
+#include "MarketData.h"
 
 
 class Company {
 public:
-    GenerateRandomMarket companyMarket;
+    std::string companyName, companyDescription;
+    float stockPrice;
 
-    Company();
-    ~Company();
+    void UpdateStockPrice(float price);
+private:
+    std::vector<MarketData> previousValues;
 };
 
 

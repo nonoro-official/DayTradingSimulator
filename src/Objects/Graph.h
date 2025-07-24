@@ -13,31 +13,27 @@ extern char infoBuffer[64];
 class GraphPoint {
 public:
     Vector2 position = {0, 0};
-    GraphPoint* nextPoint = nullptr;
-    Color pointColor = DARKGREEN, lineColor = DARKGREEN;
+    GraphPoint* prevPoint = nullptr;
+    Color pointColor = DARKGREEN, lineColor = Fade(DARKGREEN, .25f);
 
     GraphPoint();
     GraphPoint(float x, float y);
     void Draw();
 
 private:
-    float radius = 5;
-    float yOffset = -100;
+    float radius = 5.0f;
+    float collisionRadius = 10.0f;
+    float yOffset = -125;
     float width = 80, height = 40;
     float fontSize = 8;
     Color textColor = BLACK, boxColor = SKYBLUE;
 };
 
 class GraphDisplay {
-    struct GraphNode {
-        GraphPoint* point;
-        GraphNode* next;
-    };
-
 public:
-    int pointsToDraw = 50;
+    int pointsToDraw = 25;
     float timer = 0.0f;
-    float interval = 0.5f; // time between adding nodes
+    float interval = 2.5f; // time between adding nodes
 
     Vector2 center;
     Vector2 bounds;
@@ -46,15 +42,20 @@ public:
     void AddNode(GraphPoint* point);
     void ForceAddNode(GraphPoint* point);
 
-    GraphDisplay(Vector2 center, Vector2 bounds, GameState* gameState);
-    void AddNodesFromVector(const std::vector<GraphPoint>& points);
+    GraphDisplay(Vector2 center, Vector2 bounds);
+    void AddPointsFromVector(const std::vector<GraphPoint>& points);
 
     ~GraphDisplay();
 
 private:
-    std::vector<GraphNode*> nodes;
+    std::vector<GraphPoint*> nodes;
     std::vector<GraphPoint*> queue;
 
     float pixelsPerInterval = 0; // calculated on create
     GameState* gameState = nullptr;
+
+    Color gridColor = Fade(DARKGRAY, .25f);
+    Color displayColor = Fade(BLACK, 0.9f);
+    Color borderColor = BLACK;
+    int borderWidth = 5;
 };

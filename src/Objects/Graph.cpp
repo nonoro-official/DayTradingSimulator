@@ -20,16 +20,31 @@ GraphPoint::GraphPoint(float x, float y) {
 }
 
 void GraphPoint::Draw() {
-    if (nextPoint != nullptr) {
-        DrawLineEx(position, nextPoint->position, 2.5, lineColor);
+    if (prevPoint != nullptr) {
+        DrawLineEx(position, prevPoint->position, 2.5f, lineColor);
     }
 
     DrawCircle(position.x, position.y, radius, pointColor);
 
-    if (CheckCollisionPointCircle(GetMousePosition(), position, radius)) {
+    if (CheckCollisionPointCircle(GetMousePosition(), position, collisionRadius)) {
+        const float padding = 8.0f;
+
         Vector2 boxPosition = {position.x - width / 2, position.y + yOffset + height / 2};
-        Vector2 linePosition = {position.x, position.y + yOffset + height / 2};
-        DrawLineEx(position, linePosition, 2.5, lineColor);
+        Vector2 linePosition = {position.x, boxPosition.y};
+
+        // Clamp box to screen bounds with padding
+        int screenWidth = GetScreenWidth();
+        int screenHeight = GetScreenHeight();
+
+        if (boxPosition.x < padding) boxPosition.x = padding;
+        if (boxPosition.x + width > screenWidth - padding)
+            boxPosition.x = screenWidth - width - padding;
+
+        if (boxPosition.y < padding) boxPosition.y = padding;
+        if (boxPosition.y + height > screenHeight - padding)
+            boxPosition.y = screenHeight - height - padding;
+
+        DrawLineEx(position, linePosition, 2.5f, lineColor);
         DrawRectangle(boxPosition.x, boxPosition.y, width, height, boxColor);
 
         snprintf(infoBuffer, sizeof(infoBuffer), "Value: %.2f\nDifference: %.2f", 100.0f, -5.0f);
@@ -37,21 +52,21 @@ void GraphPoint::Draw() {
     }
 }
 
+
 void GraphDisplay::Update() {
     timer += GetFrameTime();
-    if (timer >= interval * (1 / gameState->GetTimeScale())) {
+    if (timer >= interval * (1 / GameState::Instance().GetTimeScale())) {
         timer = 0.0f;
 
         // Move points and mark those out of bounds
         for (int i = 0; i < nodes.size(); /* manual increment */) {
-            GraphNode* node = nodes[i];
-            GraphPoint* point = node->point;
+            GraphPoint* point = nodes[i];
 
             point->position.x += pixelsPerInterval;
 
             if (point->position.x < center.x - bounds.x / 2) {
                 // Delete and remove node
-                delete node;                     // Free heap memory
+                delete point;                     // Free heap memory
                 nodes.erase(nodes.begin() + i); // Remove from vector
                 continue; // Do not increment i, since the vector shifted
             }
@@ -69,19 +84,28 @@ void GraphDisplay::Update() {
 
 void GraphDisplay::Draw() {
     // Draw background of the graph area
-    DrawRectangle(center.x - bounds.x / 2, center.y - bounds.y / 2, bounds.x, bounds.y, GRAY);
+    DrawRectangle(center.x - bounds.x / 2, center.y - bounds.y / 2, bounds.x, bounds.y, displayColor);
+
+    // === Draw Grid Lines ===
+    float rightBorder = center.x - bounds.x / 2;
+    float top = center.y - bounds.y / 2;
+    float bottom = center.y + bounds.y / 2;
+
+    for (int i = 0; i < pointsToDraw; i++) {
+        float x = rightBorder - 5 - pixelsPerInterval * (i + 1);
+        DrawLine((int)x, (int)top, (int)x, (int)bottom, gridColor);
+    }
 
     // Draw all graph points and connections
-    for (GraphNode* node : nodes) {
-        GraphPoint* point = node->point;
-        point->Draw();
+    for (GraphPoint* node : nodes) {;
+        node->Draw();
     }
 
     // Draw the outline of the graph area
     DrawRectangleLinesEx(
         { center.x - bounds.x / 2, center.y - bounds.y / 2, bounds.x, bounds.y },
-        2.0f,  // Thickness of the lines
-        DARKGRAY // Border color
+        borderWidth,  // Thickness of the lines
+        borderColor // Border color
     );
 }
 
@@ -90,9 +114,8 @@ void GraphDisplay::AddNode(GraphPoint* point) {
 }
 
 void GraphDisplay::ForceAddNode(GraphPoint* point) {
-    GraphNode* lastNode = nodes.empty() ? nullptr : nodes.back();
-    GraphNode* node = new GraphNode{point, lastNode};
-    nodes.push_back(node);
+    if (!nodes.empty()) { point->prevPoint = nodes.back(); }
+    nodes.push_back(point);
 
     // Assume value range (Perlin with amplitude 1 means 0–1 range)
     float dataMinY = 0.0f;
@@ -110,35 +133,48 @@ void GraphDisplay::ForceAddNode(GraphPoint* point) {
     position.x = center.x + bounds.x / 2.0f - 5;
     position.y = mappedY;
 
-    node->point->position = position;
+    // Assign prevPoint
+    point->position = position;
 }
 
 
-GraphDisplay::GraphDisplay(Vector2 c, Vector2 b, GameState* g) {
+GraphDisplay::GraphDisplay(Vector2 c, Vector2 b) {
     center = c;
     bounds = b;
 
     // calculate ppi
     pixelsPerInterval = ((center.x - bounds.x / 2) - (center.x + bounds.x / 2)) / pointsToDraw;
 
-    gameState = g;
+    // Pre-fill with flat data
+    float rightBorder = center.x - bounds.x / 2;
+    for (int i = 0; i < pointsToDraw; ++i) {
+        GraphPoint* point = new GraphPoint();
+
+        // Link to previous node if any
+        if (!nodes.empty()) { point->prevPoint = nodes.back(); }
+        nodes.push_back(point);
+
+        // Normalized Y → screen Y mapping (same as ForceAddNode)
+        float x = rightBorder - 5 - pixelsPerInterval * (i + 1);
+
+        point->position.x = x;
+        point->position.y = center.y;
+    }
 }
 
-void GraphDisplay::AddNodesFromVector(const std::vector<GraphPoint>& points) {
+void GraphDisplay::AddPointsFromVector(const std::vector<GraphPoint>& points) {
     for (const GraphPoint& point : points) {
         AddNode(const_cast<GraphPoint*>(&point)); // safe only if original vector won't be moved
     }
 }
 
 GraphDisplay::~GraphDisplay() {
-    for (GraphNode* node : nodes) {
+    for (GraphPoint *node : nodes) {
         delete node;
     }
 
-    // If `queue` contains dynamically allocated GraphPoint*, and
-    // if you're not deleting them elsewhere, also clean them up:
-    for (GraphPoint* point : queue) {
-        delete point;
+    for (GraphPoint* node : queue) {
+        delete node;
     }
 
     nodes.clear();

@@ -3,32 +3,36 @@
 #include <iostream>
 #include <bits/ostream.tcc>
 
-GenerateRandomMarket::GenerateRandomMarket(int points, float amplitude, float frequency)
-    : amountOfPoints(points), amplitude(amplitude), frequency(frequency) {}
+GenerateRandomMarket::GenerateRandomMarket(float amplitude, float frequency)
+    : amplitude(amplitude), frequency(frequency) {}
 
 void GenerateRandomMarket::InitializeMarket() {
-    const siv::PerlinNoise::seed_type seedVal = this->seed;
-    const siv::PerlinNoise perlin(seedVal);
-
+    perlinNoise = siv::PerlinNoise(seed);  // Initialize with seed
+    time = 0.0f;
     generatedPoints.clear();
-    generatedPoints.reserve(amountOfPoints);
-
-    for (int i = 0; i < amountOfPoints; ++i) {
-        float noise = perlin.noise1D_01(i * frequency); // 0–1 range
-        GraphPoint point;
-        point.position = {0, noise * amplitude};
-        point.nextPoint = nullptr;
-        generatedPoints.push_back(point);
-    }
-
-    // Link points if you want a chain
-    for (int i = 1; i < amountOfPoints; ++i) {
-        generatedPoints[i].nextPoint = &generatedPoints[i - 1];
-    }
 
     if (OnFinishInitialize) OnFinishInitialize();
 }
 
 const std::vector<GraphPoint>& GenerateRandomMarket::GetMarketValues() const {
     return generatedPoints;
+}
+
+GraphPoint* GenerateRandomMarket::GenerateNextPoint() {
+    float noise = perlinNoise.noise1D_01(time * frequency);  // 0–1 range
+    float value = noise * amplitude;
+
+    GraphPoint *newPoint = new GraphPoint();
+    newPoint->position = { time, value };
+    newPoint->prevPoint = nullptr;
+
+    if (!generatedPoints.empty()) {
+        newPoint->prevPoint = &generatedPoints.back();
+    }
+
+    generatedPoints.push_back(*newPoint);
+
+    time += 0.5f;  // Or a smaller delta for smoother simulation
+
+    return newPoint;
 }

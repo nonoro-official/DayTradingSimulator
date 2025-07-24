@@ -1,68 +1,75 @@
 #include "raylib.h"
-#include "raygui.h"
+#include "Objects/Graph.h"
+#include "Objects/GenerateRandomMarket.h"
 #include "GameState.h"
-#include "Objects/Menu.h"
+#include "Upgrades/UpgradeHandler.h"
+#include <iostream>
 
-const int screenWidth = 960;
-const int screenHeight = 540;
-
-static GameState game;
-static Menu menu;
-
-void DrawTopBar() {
-    DrawRectangle(0, 0, screenWidth, 40, DARKGRAY);
-
-    std::string status = "Cash $" + std::to_string(game.cash) +
-                         " | Shares: " + std::to_string(game.sharesHeld) ;// +
-                         // " | Day: " + std::to_string(game.dayCount
-                         //    );
-    DrawText(status.c_str(), 140, 10, 18, RAYWHITE);
-
-    // Optional: Add Play / Pause / Fast-forward icons later
-}
-
-void DrawSidebar() {
-    DrawRectangle(0, 40, 120, screenHeight - 40, LIGHTGRAY);
-
-    if (GuiButton({10.0f, 60.0f, 100.0f, 40.0f}, "Profile"))
-        menu.SetScreen(SCREEN_PORTFOLIO);
-
-    if (GuiButton({10.0f, 110.0f, 100.0f, 40.0f}, "Dashboard"))
-        menu.SetScreen(SCREEN_DASHBOARD);
-
-    if (GuiButton({10.0f, 160.0f, 100.0f, 40.0f}, "Companies"))
-        menu.SetScreen(SCREEN_COMPANIES);
-
-    if (GuiButton({10.0f, 210.0f, 100.0f, 40.0f}, "Upgrades"))
-        menu.SetScreen(SCREEN_UPGRADES);
-}
+const int screenWidth = 640;
+const int screenHeight = 480;
 
 int main() {
+    // GameState::Instance().Initialize(); TODO: IMPLEMENT
+    /*
+    UpgradeHandler shop;
+    shop.init(game);
+
+    while (true) {
+        std::cout << "\nCash: $" << game.cash
+                  << " | Delay: " << game.executionDelay << "s\n";
+        shop.showAvailable();
+
+        std::cout << "Choose upgrade (index) or -1 to exit: ";
+        int index;
+        std::cin >> index;
+
+        if (index == -1) break;
+
+        shop.handlePurchase(index, game);  // <== This applies the upgrade
+    }
+
+    return 0;*/
+
     InitWindow(screenWidth, screenHeight, "Day Trading Simulator");
+
     SetTargetFPS(60);
 
-    menu.Init(&game);
+    GenerateRandomMarket *market = new GenerateRandomMarket(1, 1);
+
+    GraphDisplay display = GraphDisplay({screenWidth / 2, screenHeight / 2},
+                                            {screenWidth, screenHeight / 1.5f});
+    market->InitializeMarket();
+
+    for (int i = 0; i < 100; i++) {
+        market->GenerateNextPoint();
+    }
+
+    display.AddPointsFromVector(market->GetMarketValues());
 
     while (!WindowShouldClose()) {
-        // Global Controls
-        if (IsKeyPressed(KEY_P)) game.PauseGame();
-        if (IsKeyPressed(KEY_ONE)) game.SetTimeScale(1.0f);
-        if (IsKeyPressed(KEY_TWO)) game.SetTimeScale(2.0f);
-        if (IsKeyPressed(KEY_THREE)) game.SetTimeScale(3.0f);
-        if (IsKeyPressed(KEY_FOUR)) game.SetTimeScale(4.0f);
+        // pausing
+        if (IsKeyPressed(KEY_P)) {
+            GameState::Instance().PauseGame();
+        }
 
-        menu.Update();
+        if (IsKeyPressed(KEY_ONE)) GameState::Instance().SetTimeScale(1.0f);
+        if (IsKeyPressed(KEY_TWO)) GameState::Instance().SetTimeScale(2.0f);
+        if (IsKeyPressed(KEY_THREE)) GameState::Instance().SetTimeScale(3.0f);
+        if (IsKeyPressed(KEY_FOUR)) GameState::Instance().SetTimeScale(4.0f);
+
+        if (!GameState::Instance().IsPaused()) {
+            display.Update();
+        }
 
         BeginDrawing();
-        ClearBackground(RAYWHITE);
+        ClearBackground(WHITE);
 
-        DrawTopBar();
-        DrawSidebar();
-        menu.Draw();
+        display.Draw();
 
         EndDrawing();
     }
 
+    delete market;
     CloseWindow();
-    return 0;
 }
+
