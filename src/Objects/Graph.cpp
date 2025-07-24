@@ -39,7 +39,7 @@ void GraphPoint::Draw() {
 
 void GraphDisplay::Update() {
     timer += GetFrameTime();
-    if (timer >= interval) {
+    if (timer >= interval * (1 / gameState->GetTimeScale())) {
         timer = 0.0f;
 
         // Move points and mark those out of bounds
@@ -106,9 +106,6 @@ void GraphDisplay::ForceAddNode(GraphPoint* point) {
     float top = center.y - bounds.y / 2.0f;
     float mappedY = top + (1.0f - normalizedY) * bounds.y;
 
-    // DEBUG
-    std::cout << normalizedY << std::endl;
-
     Vector2 position;
     position.x = center.x + bounds.x / 2.0f - 5;
     position.y = mappedY;
@@ -117,12 +114,14 @@ void GraphDisplay::ForceAddNode(GraphPoint* point) {
 }
 
 
-GraphDisplay::GraphDisplay(Vector2 c, Vector2 b) {
+GraphDisplay::GraphDisplay(Vector2 c, Vector2 b, GameState* g) {
     center = c;
     bounds = b;
 
     // calculate ppi
     pixelsPerInterval = ((center.x - bounds.x / 2) - (center.x + bounds.x / 2)) / pointsToDraw;
+
+    gameState = g;
 }
 
 void GraphDisplay::AddNodesFromVector(const std::vector<GraphPoint>& points) {

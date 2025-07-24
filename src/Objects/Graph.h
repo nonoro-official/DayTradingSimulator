@@ -6,6 +6,8 @@
 #include "raylib.h"
 #include <vector>
 
+#include "GameState.h"
+
 extern char infoBuffer[64];
 
 class GraphPoint {
@@ -44,14 +46,15 @@ public:
     void AddNode(GraphPoint* point);
     void ForceAddNode(GraphPoint* point);
 
-    GraphDisplay(Vector2 center, Vector2 bounds);
+    GraphDisplay(Vector2 center, Vector2 bounds, GameState* gameState);
     void AddNodesFromVector(const std::vector<GraphPoint>& points);
+
+    ~GraphDisplay();
 
 private:
     std::vector<GraphNode*> nodes;
     std::vector<GraphPoint*> queue;
 
-    ~GraphDisplay();
-
     float pixelsPerInterval = 0; // calculated on create
+    GameState* gameState = nullptr;
 };
