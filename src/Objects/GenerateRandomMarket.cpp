@@ -1,5 +1,8 @@
 #include "GenerateRandomMarket.h"
 
+#include <iostream>
+#include <bits/ostream.tcc>
+
 GenerateRandomMarket::GenerateRandomMarket(int points, float amplitude, float frequency)
     : amountOfPoints(points), amplitude(amplitude), frequency(frequency) {}
 
@@ -19,8 +22,8 @@ void GenerateRandomMarket::InitializeMarket() {
     }
 
     // Link points if you want a chain
-    for (int i = 0; i < amountOfPoints - 1; ++i) {
-        generatedPoints[i].nextPoint = &generatedPoints[i + 1];
+    for (int i = 1; i < amountOfPoints; ++i) {
+        generatedPoints[i].nextPoint = &generatedPoints[i - 1];
     }
 
     if (OnFinishInitialize) OnFinishInitialize();
