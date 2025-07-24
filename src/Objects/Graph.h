@@ -33,7 +33,7 @@ class GraphDisplay {
     };
 
 public:
-    float pixelsPerInterval = -10;
+    int pointsToDraw = 50;
     float timer = 0.0f;
     float interval = 0.5f; // time between adding nodes
 
@@ -50,4 +50,8 @@ public:
 private:
     std::vector<GraphNode*> nodes;
     std::vector<GraphPoint*> queue;
+
+    ~GraphDisplay();
+
+    float pixelsPerInterval = 0; // calculated on create
 };

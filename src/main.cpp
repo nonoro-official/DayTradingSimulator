@@ -12,7 +12,7 @@ int main()
     InitWindow(screenWidth, screenHeight, "Day Trading Simulator");
     SetTargetFPS(60);
 
-    GenerateRandomMarket *market = new GenerateRandomMarket(100, 1, .5);
+    GenerateRandomMarket *market = new GenerateRandomMarket(100, 1, .25);
     market->InitializeMarket();
 
     GraphDisplay *display = new GraphDisplay({screenWidth / 2, screenHeight / 2},

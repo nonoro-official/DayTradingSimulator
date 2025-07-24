@@ -120,10 +120,28 @@ void GraphDisplay::ForceAddNode(GraphPoint* point) {
 GraphDisplay::GraphDisplay(Vector2 c, Vector2 b) {
     center = c;
     bounds = b;
+
+    // calculate ppi
+    pixelsPerInterval = ((center.x - bounds.x / 2) - (center.x + bounds.x / 2)) / pointsToDraw;
 }
 
 void GraphDisplay::AddNodesFromVector(const std::vector<GraphPoint>& points) {
     for (const GraphPoint& point : points) {
         AddNode(const_cast<GraphPoint*>(&point)); // safe only if original vector won't be moved
     }
+}
+
+GraphDisplay::~GraphDisplay() {
+    for (GraphNode* node : nodes) {
+        delete node;
+    }
+
+    // If `queue` contains dynamically allocated GraphPoint*, and
+    // if you're not deleting them elsewhere, also clean them up:
+    for (GraphPoint* point : queue) {
+        delete point;
+    }
+
+    nodes.clear();
+    queue.clear();
 }

@@ -32,6 +32,8 @@ add_executable(${PROJECT_NAME} src/main.cpp
         src/Objects/graph.cpp
         src/Objects/graph.h
         src/Objects/GenerateRandomMarket.cpp
-        src/Objects/GenerateRandomMarket.h)
+        src/Objects/GenerateRandomMarket.h
+        src/Classes/Company.cpp
+        src/Classes/Company.h)
 #set(raylib_VERBOSE 1)
 target_link_libraries(${PROJECT_NAME} raylib)
