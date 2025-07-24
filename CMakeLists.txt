@@ -47,6 +47,9 @@ add_executable(${PROJECT_NAME}
         src/Upgrades/UpgradeHandler.h
         src/Upgrades/UpgradeBuilder.cpp
         src/Upgrades/UpgradeBuilder.h
+        src/Objects/Menu.cpp
+        src/Objects/Menu.h
+        src/Libraries/raygui_wrapper.cpp
 )
 
 # Include paths
@@ -54,9 +57,6 @@ target_include_directories(${PROJECT_NAME} PRIVATE
         ${CMAKE_SOURCE_DIR}/src
         ${raygui_SOURCE_DIR}/src
 )
-
-# Definitions
-target_compile_definitions(${PROJECT_NAME} PRIVATE RAYGUI_IMPLEMENTATION)
 
 # Link libraries
 target_link_libraries(${PROJECT_NAME} PRIVATE raylib)
