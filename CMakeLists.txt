@@ -1,11 +1,10 @@
 cmake_minimum_required(VERSION 3.11) # FetchContent is available in 3.11+
-project(DayTradingSimulator)
+project(example)
 
 # Generate compile_commands.json
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 # Dependencies
-# raylib
 set(RAYLIB_VERSION 5.5)
 find_package(raylib ${RAYLIB_VERSION} QUIET) # QUIET or REQUIRED
 if (NOT raylib_FOUND) # If there's none, fetch and build raylib
@@ -23,39 +22,18 @@ if (NOT raylib_FOUND) # If there's none, fetch and build raylib
     endif()
 endif()
 
-# raygui
-include(FetchContent)
-FetchContent_Declare(
-        raygui
-        GIT_REPOSITORY https://github.com/raysan5/raygui.git
-        GIT_TAG master
-)
-FetchContent_MakeAvailable(raygui)
-
 # Our Project
-add_executable(${PROJECT_NAME}
-        src/main.cpp
-        src/Objects/Graph.cpp
-        src/Objects/Graph.h
+
+add_executable(${PROJECT_NAME} src/main.cpp
+        src/Objects/UI/Button.cpp
+        src/Objects/UI/Button.h
+        src/Objects/UI/Button.cpp
+        src/Objects/UI/Button.h
+        src/Objects/graph.cpp
+        src/Objects/graph.h
         src/Objects/GenerateRandomMarket.cpp
         src/Objects/GenerateRandomMarket.h
-        src/GameState.h
-        src/Upgrades/Upgrade.cpp
-        src/Upgrades/Upgrade.h
-        src/Upgrades/UpgradeHandler.cpp
-        src/Upgrades/UpgradeHandler.h
-        src/Upgrades/UpgradeBuilder.cpp
-        src/Upgrades/UpgradeBuilder.h
-)
-
-# Include paths
-target_include_directories(${PROJECT_NAME} PRIVATE
-        ${CMAKE_SOURCE_DIR}/src
-        ${raygui_SOURCE_DIR}/src
-)
-
-# Definitions
-target_compile_definitions(${PROJECT_NAME} PRIVATE RAYGUI_IMPLEMENTATION)
-
-# Link libraries
-target_link_libraries(${PROJECT_NAME} PRIVATE raylib)
+        src/Classes/Company.cpp
+        src/Classes/Company.h)
+#set(raylib_VERBOSE 1)
+target_link_libraries(${PROJECT_NAME} raylib)

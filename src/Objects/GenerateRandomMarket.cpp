@@ -1,7 +1,7 @@
 #include "GenerateRandomMarket.h"
 
-GenerateRandomMarket::GenerateRandomMarket(int points, float amplitude, float frequency, float smoothness)
-    : amountOfPoints(points), amplitude(amplitude), frequency(frequency), smoothness(smoothness) {}
+GenerateRandomMarket::GenerateRandomMarket(int points, float amplitude, float frequency)
+    : amountOfPoints(points), amplitude(amplitude), frequency(frequency) {}
 
 void GenerateRandomMarket::InitializeMarket() {
     const siv::PerlinNoise::seed_type seedVal = this->seed;

@@ -3,8 +3,12 @@
 //
 
 #include "Graph.h"
+
+#include <algorithm>
+
 #include "raylib.h"
 #include <cstdio>
+#include <iostream>
 
 char infoBuffer[64];
 
@@ -64,12 +68,21 @@ void GraphDisplay::Update() {
 }
 
 void GraphDisplay::Draw() {
+    // Draw background of the graph area
     DrawRectangle(center.x - bounds.x / 2, center.y - bounds.y / 2, bounds.x, bounds.y, GRAY);
 
+    // Draw all graph points and connections
     for (GraphNode* node : nodes) {
         GraphPoint* point = node->point;
         point->Draw();
     }
+
+    // Draw the outline of the graph area
+    DrawRectangleLinesEx(
+        { center.x - bounds.x / 2, center.y - bounds.y / 2, bounds.x, bounds.y },
+        2.0f,  // Thickness of the lines
+        DARKGRAY // Border color
+    );
 }
 
 void GraphDisplay::AddNode(GraphPoint* point) {
@@ -81,13 +94,54 @@ void GraphDisplay::ForceAddNode(GraphPoint* point) {
     GraphNode* node = new GraphNode{point, lastNode};
     nodes.push_back(node);
 
-    // initialize spawn
-    Vector2 position = point->position;
-    position.x = center.x + bounds.x / 2;
+    // Assume value range (Perlin with amplitude 1 means 0–1 range)
+    float dataMinY = 0.0f;
+    float dataMaxY = 1.0f;
+
+    float rawY = point->position.y;
+    float normalizedY = (rawY - dataMinY) / (dataMaxY - dataMinY);
+    normalizedY = std::clamp(normalizedY, 0.0f, 1.0f);
+
+    // Flip so high value goes UP (screen Y grows downward)
+    float top = center.y - bounds.y / 2.0f;
+    float mappedY = top + (1.0f - normalizedY) * bounds.y;
+
+    // DEBUG
+    std::cout << normalizedY << std::endl;
+
+    Vector2 position;
+    position.x = center.x + bounds.x / 2.0f - 5;
+    position.y = mappedY;
+
     node->point->position = position;
 }
+
 
 GraphDisplay::GraphDisplay(Vector2 c, Vector2 b) {
     center = c;
     bounds = b;
+
+    // calculate ppi
+    pixelsPerInterval = ((center.x - bounds.x / 2) - (center.x + bounds.x / 2)) / pointsToDraw;
+}
+
+void GraphDisplay::AddNodesFromVector(const std::vector<GraphPoint>& points) {
+    for (const GraphPoint& point : points) {
+        AddNode(const_cast<GraphPoint*>(&point)); // safe only if original vector won't be moved
+    }
+}
+
+GraphDisplay::~GraphDisplay() {
+    for (GraphNode* node : nodes) {
+        delete node;
+    }
+
+    // If `queue` contains dynamically allocated GraphPoint*, and
+    // if you're not deleting them elsewhere, also clean them up:
+    for (GraphPoint* point : queue) {
+        delete point;
+    }
+
+    nodes.clear();
+    queue.clear();
 }
