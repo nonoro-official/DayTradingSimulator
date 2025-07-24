@@ -27,6 +27,7 @@ public:
     void PauseGame();
     void SetPause(bool value);
     void SetTimeScale(float scale);
+    float GetTotalProfitLoss(float currentPrice);
 
 private:
     // Private constructor prevents external instancing

@@ -9,15 +9,17 @@
 void Menu::Init(GameState* gameRef) {
     game = gameRef;
     upgradeHandler.init(*game);
-    market = new GenerateRandomMarket(100, 1, 0.25f);
+    market = new GenerateRandomMarket(1, 0.25f);
     graphDisplay = new GraphDisplay(
     {120 + (840 / 2.0f), 40 + (500 / 2.0f)}, // position (centered in main area)
-    {840, 500},                             // size (screen - topbar/sidebar)
-    game
-);
+    {840, 460});                             // size (screen - topbar/sidebar)
 
     market->InitializeMarket();
-    graphDisplay->AddNodesFromVector(market->GetMarketValues());
+    for (int i = 0; i < 100; i++) {
+        market->GenerateNextPoint();
+    }
+    graphDisplay->AddPointsFromVector(market->GetMarketValues());
+
 }
 
 void Menu::Update() {
@@ -41,11 +43,11 @@ void Menu::Draw()
 
 void Menu::DrawPortfolioScreen()
 {
-    DrawText("PORTFOLIO", 140, 50, 30, DARKGRAY);
+    DrawText("PORTFOLIO", 140, 70, 30, DARKGRAY);
 
-    GuiTextBox((Rectangle){GetScreenWidth() - 210.0f, 50.0f, 180.0f, 30.0f}, (char *)"Search...", 32, false);
+    GuiTextBox((Rectangle){GetScreenWidth() - 210.0f, 70.0f, 180.0f, 30.0f}, (char *)"Search...", 32, false);
 
-    float boxStartY = 100.0f;
+    float boxStartY = 110.0f;
     float boxHeight = 80.0f;
     float boxWidth = GetScreenWidth() - 160.0f;
 
@@ -76,12 +78,12 @@ void Menu::DrawPortfolioScreen()
 
 void Menu::DrawCompaniesScreen()
 {
-    DrawText("COMPANIES", 140, 50, 30, DARKGRAY);
+    DrawText("COMPANIES", 140, 70, 30, DARKGRAY);
 }
 
 void Menu::DrawUpgradesScreen()
 {
-    DrawText("UPGRADES", 140, 50, 30, DARKGRAY);
+    DrawText("UPGRADES", 140, 70, 30, DARKGRAY);
 }
 
 Menu::~Menu()

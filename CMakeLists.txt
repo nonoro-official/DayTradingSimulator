@@ -34,11 +34,14 @@ FetchContent_MakeAvailable(raygui)
 
 # Our Project
 add_executable(${PROJECT_NAME}
+        src/Libraries/raygui_wrapper.cpp
         src/main.cpp
         src/Objects/Graph.cpp
         src/Objects/Graph.h
         src/Objects/GenerateRandomMarket.cpp
         src/Objects/GenerateRandomMarket.h
+        src/Objects/Menu.cpp
+        src/Objects/Menu.h
         src/GameState.cpp
         src/GameState.h
         src/Upgrades/Upgrade.cpp
@@ -60,9 +63,6 @@ target_include_directories(${PROJECT_NAME} PRIVATE
         ${CMAKE_SOURCE_DIR}/src
         ${raygui_SOURCE_DIR}/src
 )
-
-# Definitions
-target_compile_definitions(${PROJECT_NAME} PRIVATE RAYGUI_IMPLEMENTATION)
 
 # Link libraries
 target_link_libraries(${PROJECT_NAME} PRIVATE raylib)

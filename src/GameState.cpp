@@ -23,3 +23,9 @@ void GameState::SetTimeScale(float scale) {
     SetPause(false);
     timeScale = scale;
 }
+
+float GameState::GetTotalProfitLoss(float currentPrice) {
+    float currentValue = sharesHeld * currentPrice;
+    float costBasis = sharesHeld * avgBuyPrice;
+    return currentValue - costBasis;
+}
