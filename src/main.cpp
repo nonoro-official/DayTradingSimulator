@@ -63,9 +63,9 @@ int main() {
         BeginDrawing();
         ClearBackground(RAYWHITE);
 
+        menu.Draw();
         DrawTopBar();
         DrawSidebar();
-        menu.Draw();
 
         EndDrawing();
     }

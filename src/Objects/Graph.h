@@ -18,7 +18,8 @@ public:
 
     GraphPoint();
     GraphPoint(float x, float y);
-    void Draw();
+    void Draw(Vector2 graphCenter, Vector2 graphBounds);
+    void Update();
 
 private:
     float radius = 5.0f;
@@ -27,6 +28,8 @@ private:
     float width = 80, height = 40;
     float fontSize = 8;
     Color textColor = BLACK, boxColor = SKYBLUE;
+
+    bool hovering;
 };
 
 class GraphDisplay {

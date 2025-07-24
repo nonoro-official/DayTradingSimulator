@@ -17,6 +17,4 @@ public:
     float GetShareValue();
 };
 
-
-
 #endif //STOCK_H

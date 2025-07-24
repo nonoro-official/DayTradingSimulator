@@ -9,7 +9,7 @@
 void Menu::Init(GameState* gameRef) {
     game = gameRef;
     upgradeHandler.init(*game);
-    market = new GenerateRandomMarket(1, 0.25f);
+    market = new GenerateRandomMarket(1, .5f);
     graphDisplay = new GraphDisplay(
     {120 + (840 / 2.0f), 40 + (500 / 2.0f)}, // position (centered in main area)
     {840, 460});                             // size (screen - topbar/sidebar)

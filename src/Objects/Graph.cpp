@@ -19,30 +19,37 @@ GraphPoint::GraphPoint(float x, float y) {
     position.y = y;
 }
 
-void GraphPoint::Draw() {
+void GraphPoint::Update() {
+    hovering = CheckCollisionPointCircle(GetMousePosition(), position, collisionRadius);
+
+    GameState::Instance().SetTempPause(hovering); //todo: FIX DGNBSJGFGJSDNDG
+}
+
+void GraphPoint::Draw(Vector2 graphCenter, Vector2 graphBounds) {
     if (prevPoint != nullptr) {
         DrawLineEx(position, prevPoint->position, 2.5f, lineColor);
     }
 
     DrawCircle(position.x, position.y, radius, pointColor);
 
-    if (CheckCollisionPointCircle(GetMousePosition(), position, collisionRadius)) {
+    if (hovering) {
         const float padding = 8.0f;
 
         Vector2 boxPosition = {position.x - width / 2, position.y + yOffset + height / 2};
         Vector2 linePosition = {position.x, boxPosition.y};
 
-        // Clamp box to screen bounds with padding
-        int screenWidth = GetScreenWidth();
-        int screenHeight = GetScreenHeight();
+        // Graph bounds
+        float left   = graphCenter.x - graphBounds.x / 2.0f + padding;
+        float right  = graphCenter.x + graphBounds.x / 2.0f - padding - width;
+        float top    = graphCenter.y - graphBounds.y / 2.0f + padding;
+        float bottom = graphCenter.y + graphBounds.y / 2.0f - padding - height;
 
-        if (boxPosition.x < padding) boxPosition.x = padding;
-        if (boxPosition.x + width > screenWidth - padding)
-            boxPosition.x = screenWidth - width - padding;
+        // Clamp the tooltip position within graph area
+        if (boxPosition.x < left) boxPosition.x = left;
+        if (boxPosition.x > right) boxPosition.x = right;
 
-        if (boxPosition.y < padding) boxPosition.y = padding;
-        if (boxPosition.y + height > screenHeight - padding)
-            boxPosition.y = screenHeight - height - padding;
+        if (boxPosition.y < top) boxPosition.y = top;
+        if (boxPosition.y > bottom) boxPosition.y = bottom;
 
         DrawLineEx(position, linePosition, 2.5f, lineColor);
         DrawRectangle(boxPosition.x, boxPosition.y, width, height, boxColor);
@@ -51,6 +58,7 @@ void GraphPoint::Draw() {
         DrawText(infoBuffer, boxPosition.x, boxPosition.y, fontSize, textColor);
     }
 }
+
 
 
 void GraphDisplay::Update() {
@@ -80,6 +88,10 @@ void GraphDisplay::Update() {
             queue.erase(queue.begin());
         }
     }
+
+    for (GraphPoint* node : nodes) {
+        node->Update(); // Pass graph bounds
+    }
 }
 
 void GraphDisplay::Draw() {
@@ -97,8 +109,8 @@ void GraphDisplay::Draw() {
     }
 
     // Draw all graph points and connections
-    for (GraphPoint* node : nodes) {;
-        node->Draw();
+    for (GraphPoint* node : nodes) {
+        node->Draw(center, bounds); // Pass graph bounds
     }
 
     // Draw the outline of the graph area

@@ -26,6 +26,7 @@ public:
     float GetTimeScale();
     void PauseGame();
     void SetPause(bool value);
+    void SetTempPause(bool value);
     void SetTimeScale(float scale);
     float GetTotalProfitLoss(float currentPrice);
 
@@ -37,5 +38,6 @@ private:
 
     // Internal state
     bool paused = false;
+    bool tempPaused = false;
     float timeScale = 1.0f;
 };

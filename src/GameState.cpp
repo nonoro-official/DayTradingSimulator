@@ -3,7 +3,7 @@
 #include "GameState.h"
 
 bool GameState::IsPaused() {
-    return paused;
+    return paused || tempPaused;
 }
 
 float GameState::GetTimeScale() {
@@ -17,6 +17,10 @@ void GameState::PauseGame() {
 
 void GameState::SetPause(bool value) {
     paused = value;
+}
+
+void GameState::SetTempPause(bool value) {
+    tempPaused = value;
 }
 
 void GameState::SetTimeScale(float scale) {
