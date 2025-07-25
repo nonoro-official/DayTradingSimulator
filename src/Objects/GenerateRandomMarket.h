@@ -17,7 +17,7 @@ public:
     Vector2 trendDurationRange = { 4, 18 };  // min and max trend duration in steps
     float trendMaintainChance = .8f; // 0.0 to 1.0: 50% chance to continue current trend
 
-    float holdChance = 0.4f;              // 10% chance to enter a hold state
+    float holdChance = 0.4f; // 10% chance to enter a hold state
     Vector2 holdDurationRange = { 4, 16 }; // How long the market holds (steps)
     float holdNoiseDampening = .5f; // 5% of full amplitude during hold periods
 
