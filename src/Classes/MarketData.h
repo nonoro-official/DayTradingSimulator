@@ -11,6 +11,7 @@ struct MarketData {
     Company* company;
     float stockPrice;
     int monthAcquired;
+    int weekAcquired;
 };
 
 #endif //MARKETDATA_H

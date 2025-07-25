@@ -25,7 +25,7 @@ public:
     void GenerateNext(GraphDisplay* display);
 
     float GetCurrentPrice() const;
-    float CalculateIncrease(int monthStart, int monthEnd);
+    float CalculateIncrease(int startMonth, int startWeek, int endMonth, int endWeek);
 private:
     std::vector<MarketData> previousValues = std::vector<MarketData>();
 };

@@ -2,6 +2,7 @@
 #include "raygui.h"
 #include "GameState.h"
 #include "Objects/Menu.h"
+#include "Objects/MonthDisplay.h"
 
 const int screenWidth = 960;
 const int screenHeight = 540;
@@ -50,6 +51,9 @@ int main() {
 
     menu.Init(&GameState::Instance());
 
+    // TODO: TMEPORATIRY FJSFSDKL
+    MonthDisplay m = MonthDisplay(28, {screenWidth/2, screenHeight/2}, {200,100},2,BLACK, LIGHTGRAY, BLACK);
+
     while (!WindowShouldClose()) {
         // Global Controls
         if (IsKeyPressed(KEY_P)) GameState::Instance().PauseGame();
@@ -67,6 +71,9 @@ int main() {
         menu.Draw();
         DrawTopBar();
         DrawSidebar();
+
+        m.Update();
+        m.Draw(); // TODO: TMEPORATIRY FJSFSDKL
 
         EndDrawing();
     }

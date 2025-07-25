@@ -36,7 +36,18 @@ float GameState::GetTotalProfitLoss(float currentPrice) {
     return currentValue - costBasis;
 }
 
+void GameState::AddWeek() {
+    week++;
+    if (week == 4) {
+        month++;
+        week = 0;
+    }
+}
+
+
 int GameState::GetMonth() { return this->month; }
+
+int GameState::GetWeek() { return this->week; }
 
 void GameState::Update() {
     if (paused || tempPaused) return;
@@ -51,8 +62,8 @@ void GameState::Update() {
             listener();
         }
 
-        // Increment month
-        month++;
+        // Increment week
+        AddWeek();
     }
 }
 

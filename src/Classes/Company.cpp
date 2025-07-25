@@ -21,8 +21,8 @@ Company::Company(std::string companyName, std::string companyDescription, float 
     GameState::Instance().AddTickListener([this, display]() {
         GenerateNext(display);
 
-        std::cout << "CurrentPrice: " << this->GetCurrentPrice() << " Month: " << currentMarketData->monthAcquired << std::endl;
-        std::cout << "Increase: " << CalculateIncrease(0, GameState::Instance().GetMonth()) << "%" << std::endl;
+        std::cout << "CurrentPrice: " << this->GetCurrentPrice() << " Month: " << currentMarketData->monthAcquired << " Week: " << currentMarketData->weekAcquired << std::endl;
+        std::cout << "Increase: " << CalculateIncrease(0, 0, GameState::Instance().GetMonth(), GameState::Instance().GetWeek()) << "%" << std::endl;
     });
 }
 
@@ -34,6 +34,7 @@ void Company::GenerateNext(GraphDisplay* display) {
     MarketData* newData = new MarketData();
     newData->company = this;
     newData->monthAcquired = GameState::Instance().GetMonth();
+    newData->weekAcquired = GameState::Instance().GetWeek();
 
     float multiplier = nextPoint->position.y;
     newData->stockPrice = this->baseStockPrice * multiplier;
@@ -65,15 +66,15 @@ Company::~Company() {
 
 float Company::GetCurrentPrice() const { return baseStockPrice * currentMarketData->stockPrice; }
 
-float Company::CalculateIncrease(int monthStart, int monthEnd) {
+float Company::CalculateIncrease(int startMonth, int startWeek, int endMonth, int endWeek) {
     float priceStart = -1.0f;
     float priceEnd = -1.0f;
 
     for (const MarketData& data : previousValues) {
-        if (data.monthAcquired == monthStart) {
+        if (data.monthAcquired == startMonth && data.weekAcquired == startWeek) {
             priceStart = data.stockPrice;
         }
-        if (data.monthAcquired == monthEnd) {
+        if (data.monthAcquired == endMonth && data.weekAcquired == endWeek) {
             priceEnd = data.stockPrice;
         }
     }

@@ -57,6 +57,10 @@ add_executable(${PROJECT_NAME}
         src/Classes/Company.cpp
         src/Classes/Company.h
         src/Classes/MarketData.h
+        src/Objects/MonthDisplay.cpp
+        src/Objects/MonthDisplay.h
+        src/Objects/ToggleButton.cpp
+        src/Objects/ToggleButton.h
 )
 
 # Include paths
@@ -67,3 +71,5 @@ target_include_directories(${PROJECT_NAME} PRIVATE
 
 # Link libraries
 target_link_libraries(${PROJECT_NAME} PRIVATE raylib)
+
+file(COPY ${CMAKE_SOURCE_DIR}/Textures DESTINATION ${CMAKE_BINARY_DIR})

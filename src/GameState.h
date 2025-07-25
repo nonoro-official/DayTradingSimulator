@@ -10,7 +10,6 @@ public:
     }
 
     // Public state variables
-    int month = 0;
     int cash = 500;                 // Starting cash
     float executionDelay = 8.0f;    // Initial trade delay in seconds
 
@@ -31,6 +30,8 @@ public:
     void SetTimeScale(float scale);
     float GetTotalProfitLoss(float currentPrice);
     int GetMonth();
+    int GetWeek();
+    void AddWeek();
 
     void AddTickListener(std::function<void()> listener);
 
@@ -51,4 +52,7 @@ private:
     float tickInterval = 2.5f;
     float tickTimer = 0.0f;
     std::vector<std::function<void()>> listeners;
+
+    int month = 0;
+    int week = 0;
 };
