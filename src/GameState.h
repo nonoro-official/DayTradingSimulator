@@ -1,4 +1,5 @@
 #pragma once
+#include <functional>
 
 class GameState {
 public:
@@ -29,6 +30,11 @@ public:
     void SetTempPause(bool value);
     void SetTimeScale(float scale);
     float GetTotalProfitLoss(float currentPrice);
+    int GetMonth();
+
+    void AddTickListener(std::function<void()> listener);
+
+    void Update();
 
 private:
     // Private constructor prevents external instancing
@@ -40,4 +46,9 @@ private:
     bool paused = false;
     bool tempPaused = false;
     float timeScale = 1.0f;
+
+    // Timer
+    float tickInterval = 2.5f;
+    float tickTimer = 0.0f;
+    std::vector<std::function<void()>> listeners;
 };

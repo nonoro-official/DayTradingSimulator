@@ -62,33 +62,6 @@ void GraphPoint::Draw(Vector2 graphCenter, Vector2 graphBounds) {
 
 
 void GraphDisplay::Update() {
-    timer += GetFrameTime();
-    if (timer >= interval * (1 / GameState::Instance().GetTimeScale())) {
-        timer = 0.0f;
-
-        // Move points and mark those out of bounds
-        for (int i = 0; i < nodes.size(); /* manual increment */) {
-            GraphPoint* point = nodes[i];
-
-            point->position.x += pixelsPerInterval;
-
-            if (point->position.x < center.x - bounds.x / 2) {
-                // Delete and remove node
-                delete point;                     // Free heap memory
-                nodes.erase(nodes.begin() + i); // Remove from vector
-                continue; // Do not increment i, since the vector shifted
-            }
-
-            i++; // Only increment if we didn't erase
-        }
-
-        // Spawn new node if any in queue
-        if (!queue.empty()) {
-            ForceAddNode(queue.front());
-            queue.erase(queue.begin());
-        }
-    }
-
     for (GraphPoint* node : nodes) {
         node->Update(); // Pass graph bounds
     }
@@ -159,7 +132,7 @@ GraphDisplay::GraphDisplay(Vector2 c, Vector2 b) {
 
     // Pre-fill with flat data
     float rightBorder = center.x - bounds.x / 2;
-    for (int i = 0; i < pointsToDraw; ++i) {
+    for (int i = 0; i < pointsToDraw + 1; ++i) {
         GraphPoint* point = new GraphPoint();
 
         // Link to previous node if any
@@ -172,6 +145,29 @@ GraphDisplay::GraphDisplay(Vector2 c, Vector2 b) {
         point->position.x = x;
         point->position.y = center.y;
     }
+
+    GameState::Instance().AddTickListener([this]() {
+        // OnTick callback logic here
+
+        // Move points and mark those out of bounds
+        for (int i = 0; i < nodes.size(); /* manual increment */) {
+            GraphPoint* point = nodes[i];
+            point->position.x += pixelsPerInterval;
+
+            if (point->position.x < center.x - bounds.x / 2) {
+                delete point;
+                nodes.erase(nodes.begin() + i);
+                continue;
+            }
+            i++;
+        }
+
+        // Add next queued point
+        if (!queue.empty()) {
+            ForceAddNode(queue.front());
+            queue.erase(queue.begin());
+        }
+    });
 }
 
 void GraphDisplay::AddPointsFromVector(const std::vector<GraphPoint>& points) {

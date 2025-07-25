@@ -31,7 +31,6 @@ class Menu {
 private:
     Screen currentScreen = SCREEN_DASHBOARD;
 
-    GenerateRandomMarket* market = nullptr;
     GraphDisplay* graphDisplay = nullptr;
     GameState* game = nullptr;
     UpgradeHandler upgradeHandler;

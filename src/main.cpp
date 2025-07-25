@@ -58,6 +58,7 @@ int main() {
         if (IsKeyPressed(KEY_THREE)) GameState::Instance().SetTimeScale(3.0f);
         if (IsKeyPressed(KEY_FOUR)) GameState::Instance().SetTimeScale(4.0f);
 
+        GameState::Instance().Update();
         menu.Update();
 
         BeginDrawing();

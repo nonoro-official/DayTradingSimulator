@@ -35,8 +35,6 @@ private:
 class GraphDisplay {
 public:
     int pointsToDraw = 25;
-    float timer = 0.0f;
-    float interval = 2.5f; // time between adding nodes
 
     Vector2 center;
     Vector2 bounds;

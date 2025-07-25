@@ -5,21 +5,17 @@
 #include "Menu.h"
 #include "raylib.h"
 #include "raygui.h"
+#include "Classes/Company.h"
 
 void Menu::Init(GameState* gameRef) {
     game = gameRef;
     upgradeHandler.init(*game);
-    market = new GenerateRandomMarket(1, .5f);
     graphDisplay = new GraphDisplay(
     {120 + (840 / 2.0f), 40 + (500 / 2.0f)}, // position (centered in main area)
     {840, 460});                             // size (screen - topbar/sidebar)
 
-    market->InitializeMarket();
-    for (int i = 0; i < 100; i++) {
-        market->GenerateNextPoint();
-    }
-    graphDisplay->AddPointsFromVector(market->GetMarketValues());
-
+    // Test company
+    new Company("testName", "testDesc", 50.0f, 1, 1.0f, graphDisplay);
 }
 
 void Menu::Update() {
@@ -88,6 +84,5 @@ void Menu::DrawUpgradesScreen()
 
 Menu::~Menu()
 {
-    delete market;
     delete graphDisplay;
 }

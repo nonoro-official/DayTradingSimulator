@@ -2,6 +2,8 @@
 
 #include "GameState.h"
 
+#include "raylib.h"
+
 bool GameState::IsPaused() {
     return paused || tempPaused;
 }
@@ -32,4 +34,28 @@ float GameState::GetTotalProfitLoss(float currentPrice) {
     float currentValue = sharesHeld * currentPrice;
     float costBasis = sharesHeld * avgBuyPrice;
     return currentValue - costBasis;
+}
+
+int GameState::GetMonth() { return this->month; }
+
+void GameState::Update() {
+    if (paused || tempPaused) return;
+
+    tickTimer += GetFrameTime();
+
+    if (tickTimer >= tickInterval * (1.0f / timeScale)) {
+        tickTimer = 0.0f;
+
+        // Notify listeners
+        for (auto& listener : listeners) {
+            listener();
+        }
+
+        // Increment month
+        month++;
+    }
+}
+
+void GameState::AddTickListener(std::function<void()> listener) {
+    listeners.push_back(listener);
 }

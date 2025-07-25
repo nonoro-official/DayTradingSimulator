@@ -14,11 +14,20 @@
 class Company {
 public:
     std::string companyName, companyDescription;
-    float stockPrice;
+    float baseStockPrice;
+    GenerateRandomMarket *market;
+    MarketData *currentMarketData;
 
-    void UpdateStockPrice(float price);
+    Company(std::string companyName, std::string companyDescription, float baseStockPrice, float amplitude, float frequency, GraphDisplay* display);
+    ~Company();
+
+    void DisplayOnGraph(GenerateRandomMarket *market);
+    void GenerateNext(GraphDisplay* display);
+
+    float GetCurrentPrice() const;
+    float CalculateIncrease(int monthStart, int monthEnd);
 private:
-    std::vector<MarketData> previousValues;
+    std::vector<MarketData> previousValues = std::vector<MarketData>();
 };
 
 

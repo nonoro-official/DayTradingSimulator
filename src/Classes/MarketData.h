@@ -5,7 +5,10 @@
 #ifndef MARKETDATA_H
 #define MARKETDATA_H
 
+class Company;
+
 struct MarketData {
+    Company* company;
     float stockPrice;
     int monthAcquired;
 };

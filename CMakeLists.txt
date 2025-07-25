@@ -55,6 +55,7 @@ add_executable(${PROJECT_NAME}
         src/Classes/Stock.cpp
         src/Classes/Stock.h
         src/Classes/Company.cpp
+        src/Classes/Company.h
         src/Classes/MarketData.h
 )
 

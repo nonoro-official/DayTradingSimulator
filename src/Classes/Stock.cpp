@@ -3,3 +3,5 @@
 //
 
 #include "Stock.h"
+
+float Stock::GetShareValue() { return shares * company->GetCurrentPrice(); }
