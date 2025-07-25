@@ -11,10 +11,16 @@ class GenerateRandomMarket {
 public:
     int seed;
     float amplitude, frequency, smoothness;
-    float volatility = 0.05f;  // e.g., 0.5 = moderate noise, 2.0 = high chaos
-    float trendStrength = 0.0f;  // How strongly the market trends up/down (e.g., -0.1 to +0.1)
-    float trendChangeChance = 0.025f; // Chance of changing trend per step
-    float trendDuration = 1.0f; // How long the current trend lasts
+    float volatility = 0.0025f;  // e.g., 0.5 = moderate noise, 2.0 = high chaos
+    Vector2 trendStrengthRange = { -0.003f, 0.008f }; // Min and max trend strength
+    float trendChangeChance = 0.3f; // Chance of changing trend per step
+    Vector2 trendDurationRange = { 4, 18 };  // min and max trend duration in steps
+    float trendMaintainChance = .8f; // 0.0 to 1.0: 50% chance to continue current trend
+
+    float holdChance = 0.4f;              // 10% chance to enter a hold state
+    Vector2 holdDurationRange = { 4, 16 }; // How long the market holds (steps)
+    float holdNoiseDampening = .5f; // 5% of full amplitude during hold periods
+
 
     GenerateRandomMarket(float amplitude, float frequency);
 
@@ -28,6 +34,9 @@ private:
     float time = 0.0f;
     std::vector<GraphPoint> generatedPoints;
     siv::PerlinNoise perlinNoise = siv::PerlinNoise(0); // default seed
+    float activeTrendStrength = 0.0f;
+    float activeTrendDuration = 0.0f;
+    int holdStepsRemaining = 0;           // How many steps left to hold
 };
 
 #endif //GENERATERANDOMMARKET_H
