@@ -21,8 +21,7 @@ Company::Company(std::string companyName, std::string companyDescription, float 
     GameState::Instance().AddTickListener([this, display]() {
         GenerateNext(display);
 
-        std::cout << "StartPrice: " << this->baseStockPrice << std::endl;
-        std::cout << "CurrentPrice: " << currentMarketData->stockPrice << " Month: " << currentMarketData->monthAcquired << std::endl;
+        std::cout << "CurrentPrice: " << this->GetCurrentPrice() << " Month: " << currentMarketData->monthAcquired << std::endl;
         std::cout << "Increase: " << CalculateIncrease(0, GameState::Instance().GetMonth()) << "%" << std::endl;
     });
 }
@@ -35,7 +34,9 @@ void Company::GenerateNext(GraphDisplay* display) {
     MarketData* newData = new MarketData();
     newData->company = this;
     newData->monthAcquired = GameState::Instance().GetMonth();
-    newData->stockPrice = this->baseStockPrice * nextPoint->position.y;
+
+    float multiplier = nextPoint->position.y;
+    newData->stockPrice = this->baseStockPrice * multiplier;
 
     // Save data
     this->currentMarketData = newData;
