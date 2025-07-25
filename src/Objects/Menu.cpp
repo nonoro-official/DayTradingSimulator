@@ -15,7 +15,7 @@ void Menu::Init(GameState* gameRef) {
     {840, 460});                             // size (screen - topbar/sidebar)
 
     // Test company
-    new Company("testName", "testDesc", 50.0f, 1, 1.0f, graphDisplay);
+    new Company("testName", "testDesc", 50.0f, 1, .75f, graphDisplay);
 }
 
 void Menu::Update() {

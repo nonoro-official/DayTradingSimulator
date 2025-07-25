@@ -3,3 +3,8 @@
 //
 
 #include "PlayerData.h"
+
+PlayerData::PlayerData() {
+    cash = 0;
+    weekExecutionDelay = 4;
+}

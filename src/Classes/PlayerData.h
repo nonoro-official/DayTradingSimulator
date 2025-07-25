@@ -5,10 +5,17 @@
 #ifndef PLAYERDATA_H
 #define PLAYERDATA_H
 #include "Company.h"
+#include "Stock.h"
 
 
 class PlayerData {
+public:
+    float cash;
+    int weekExecutionDelay;
 
+    PlayerData();
+private:
+    std::vector<Stock> stocks = std::vector<Stock>();
 };
 
 
