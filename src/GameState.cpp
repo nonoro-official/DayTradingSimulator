@@ -38,9 +38,9 @@ float GameState::GetTotalProfitLoss(float currentPrice) {
 
 void GameState::AddWeek() {
     week++;
-    if (week == 4) {
+    if (week == 5) {
         month++;
-        week = 0;
+        week = 1;
     }
 }
 

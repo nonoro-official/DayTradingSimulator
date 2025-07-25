@@ -35,7 +35,7 @@ void DrawSidebar() {
     if (GuiButton({10.0f, 60.0f, 100.0f, 40.0f}, "Portfolio"))
         menu.SetScreen(SCREEN_PORTFOLIO);
 
-    if (GuiButton({10.0f, 110.0f, 100.0f, 40.0f}, "Dashboard"))
+    if (GuiButton({10.0, 110.0f, 100.0f, 40.0f}, "Dashboard"))
         menu.SetScreen(SCREEN_DASHBOARD);
 
     if (GuiButton({10.0f, 160.0f, 100.0f, 40.0f}, "Companies"))
@@ -51,8 +51,8 @@ int main() {
 
     menu.Init(&GameState::Instance());
 
-    // TODO: TMEPORATIRY FJSFSDKL
-    MonthDisplay m = MonthDisplay(28, {screenWidth/2, screenHeight/2}, {200,100},2,BLACK, LIGHTGRAY, BLACK);
+    // TODO: TEMPORARY
+    MonthDisplay m = MonthDisplay(28, {860, 50}, {200,100},2,BLACK, LIGHTGRAY, BLACK);
 
     while (!WindowShouldClose()) {
         // Global Controls
@@ -73,7 +73,7 @@ int main() {
         DrawSidebar();
 
         m.Update();
-        m.Draw(); // TODO: TMEPORATIRY FJSFSDKL
+        m.Draw(); // TODO: TEMPORARY
 
         EndDrawing();
     }
