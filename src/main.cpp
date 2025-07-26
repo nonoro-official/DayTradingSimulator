@@ -1,6 +1,7 @@
 #include "raylib.h"
 #include "raygui.h"
-#include "GameState.h"
+#include "Classes/GameState.h"
+#include "Classes/PlayerData.h"
 #include "Objects/Menu.h"
 #include "Objects/MonthDisplay.h"
 
@@ -12,15 +13,12 @@ static Menu menu;
 void DrawTopBar() {
     DrawRectangle(0, 0, screenWidth, 60, DARKGRAY);  // increase height for 2 rows
 
-    float latestPrice = 100.0f;  // or get it from your GraphDisplay
-    float profit = GameState::Instance().GetTotalProfitLoss(latestPrice);
+    float profit = PlayerData::Instance().GetTotalPortfolioValue() - PlayerData::Instance().cash;
 
-    std::string line1 = "Cash: $" + std::to_string(GameState::Instance().cash) +
-                        " | Shares: " + std::to_string(GameState::Instance().sharesHeld) +
-                        " | Average Buy Price: " + std::to_string(GameState::Instance().avgBuyPrice);
+    std::string line1 = "Cash: $" + std::to_string(PlayerData::Instance().cash) +
+                        " | Portfolio Value: $" + std::to_string(PlayerData::Instance().GetTotalPortfolioValue());
 
-    std::string line2 = "Current Price: " + std::to_string(latestPrice) +
-                        " | P/L: " + (profit >= 0 ? "+" : "") + std::to_string(profit);
+    std::string line2 = std::string("Total P/L: ") + (profit >= 0 ? "+" : "") + std::to_string(profit);
 
     DrawText(line1.c_str(), 140, 10, 18, RAYWHITE);
     DrawText(line2.c_str(), 140, 35, 18, (profit >= 0) ? GREEN : RED);

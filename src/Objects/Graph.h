@@ -6,7 +6,7 @@
 #include "raylib.h"
 #include <vector>
 
-#include "GameState.h"
+#include "../Classes/GameState.h"
 
 extern char infoBuffer[64];
 

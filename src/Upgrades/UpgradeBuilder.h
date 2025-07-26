@@ -13,7 +13,7 @@ private:
 public:
     UpgradeBuilder& setName(const std::string& name);
     UpgradeBuilder& setCost(int cost);
-    UpgradeBuilder& setEffect(std::function<void(GameState&)> effect);
+    UpgradeBuilder& setEffect(std::function<void(PlayerData&)> effect);
 
     Upgrade build();
 };

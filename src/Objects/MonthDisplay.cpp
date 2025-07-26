@@ -8,7 +8,7 @@
 #include <string.h>
 #include <string>
 
-#include "GameState.h"
+#include "../Classes/GameState.h"
 
 void MonthDisplay::Update() {
     for (ToggleButton& button : buttons) {
@@ -65,7 +65,7 @@ void MonthDisplay::Draw() {
 }
 
 #include "MonthDisplay.h"
-#include "GameState.h"
+#include "../Classes/GameState.h"
 #include <string>
 // Constructor
 MonthDisplay::MonthDisplay(float fontSize, Vector2 center, Vector2 bounds,

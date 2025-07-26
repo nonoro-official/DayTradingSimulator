@@ -16,7 +16,7 @@ UpgradeBuilder& UpgradeBuilder::setCost(int cost)
     return *this;
 }
 
-UpgradeBuilder& UpgradeBuilder::setEffect(std::function<void(GameState&)> effect)
+UpgradeBuilder& UpgradeBuilder::setEffect(std::function<void(PlayerData&)> effect)
 {
     upgrade.setEffect(std::move(effect));
     return *this;

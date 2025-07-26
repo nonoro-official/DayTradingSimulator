@@ -5,7 +5,7 @@
 #pragma once
 #include "Objects/Graph.h"
 #include "Objects/GenerateRandomMarket.h"
-#include "GameState.h"
+#include "../Classes/GameState.h"
 #include <vector>
 #include <string>
 

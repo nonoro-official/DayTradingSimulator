@@ -42,8 +42,8 @@ add_executable(${PROJECT_NAME}
         src/Objects/GenerateRandomMarket.h
         src/Objects/Menu.cpp
         src/Objects/Menu.h
-        src/GameState.cpp
-        src/GameState.h
+        src/Classes/GameState.cpp
+        src/Classes/GameState.h
         src/Upgrades/Upgrade.cpp
         src/Upgrades/Upgrade.h
         src/Upgrades/UpgradeHandler.cpp

@@ -1,8 +1,9 @@
 // src/GameState.cpp
 
-#include "GameState.h"
+#include "Classes/GameState.h"
 
 #include "raylib.h"
+#include "PlayerData.h"
 
 bool GameState::IsPaused() {
     return paused || tempPaused;
@@ -28,12 +29,6 @@ void GameState::SetTempPause(bool value) {
 void GameState::SetTimeScale(float scale) {
     SetPause(false);
     timeScale = scale;
-}
-
-float GameState::GetTotalProfitLoss(float currentPrice) {
-    float currentValue = sharesHeld * currentPrice;
-    float costBasis = sharesHeld * avgBuyPrice;
-    return currentValue - costBasis;
 }
 
 void GameState::AddWeek() {

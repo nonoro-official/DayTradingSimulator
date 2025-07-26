@@ -14,20 +14,20 @@ void UpgradeHandler::init(GameState& game)
     upgrades.push_back(
         builder.setName("Faster Execution")
         .setCost(150)
-        .setEffect([](GameState& state)
+        .setEffect([](PlayerData& player)
         {
-            state.executionDelay -= 1.5f;
-            if (state.executionDelay < 0.5f) state.executionDelay = 0.5f;
-            std::cout << "Execution Speed improved: " << state.executionDelay << "s" << std::endl;
+            player.weekExecutionDelay -= 1.5f;
+            if (player.weekExecutionDelay < 0.5f) player.weekExecutionDelay = 0.5f;
+            std::cout << "weekExecution Speed improved: " << player.weekExecutionDelay << "s" << std::endl;
         })
         .build());
 
     upgrades.push_back(
         builder.setName("Prediction Hint")
         .setCost(200)
-        .setEffect([](GameState& state)
+        .setEffect([](PlayerData& player)
         {
-            state.showPrediction = true;
+            player.showPrediction = true;
             std::cout << "Prediction Hints activated!" << std::endl;
         })
         .build());
@@ -35,10 +35,10 @@ void UpgradeHandler::init(GameState& game)
     upgrades.push_back(
         builder.setName("Graph Zoom")
         .setCost(250)
-        .setEffect([](GameState& state)
+        .setEffect([](PlayerData& player)
         {
-            state.graphZoom++;
-            std::cout << "Graph Zoom level: " << state.graphZoom << std::endl;
+            player.graphZoom++;
+            std::cout << "Graph Zoom level: " << player.graphZoom << std::endl;
         })
         .build());
 
@@ -57,7 +57,7 @@ void UpgradeHandler::showAvailable()
     }
 }
 
-void UpgradeHandler::handlePurchase(int index, GameState& state)
+void UpgradeHandler::handlePurchase(int index, PlayerData& player)
 {
     if (index < 0 || index >= upgrades.size())
     {
@@ -65,7 +65,7 @@ void UpgradeHandler::handlePurchase(int index, GameState& state)
         return;
     }
 
-    if (!upgrades[index].tryPurchase(state))
+    if (!upgrades[index].tryPurchase(player))
     {
         std::cout << "Could not purchase." << std::endl;
     }

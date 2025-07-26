@@ -15,7 +15,7 @@ void Upgrade::setCost(int cost)
     this->cost = cost;
 };
 
-void Upgrade::setEffect(std::function<void(GameState&)> effect)
+void Upgrade::setEffect(std::function<void(PlayerData&)> effect)
 {
     this->effect = std::move(effect);
 };
@@ -35,12 +35,12 @@ bool Upgrade::isPurchased()
     return purchased;
 }
 
-bool Upgrade::tryPurchase(GameState& state)
+bool Upgrade::tryPurchase(PlayerData& player)
 {
-    if (!purchased && state.cash >= cost)
+    if (!purchased && player.cash >= cost)
     {
-        state.cash -= cost;
-        effect(state);
+        player.cash -= cost;
+        effect(player);
         purchased = true;
         return true;
     }
