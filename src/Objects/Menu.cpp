@@ -86,13 +86,6 @@ void Menu::DrawDashboardScreen() {
         dropdownOpen = !dropdownOpen;
     }
 
-    // Draw dropdown
-    GuiDropdownBox(dropdownBounds, companyNames, &selectedCompanyIndex, dropdownOpen);
-
-    // Optional: show selected result (e.g. for debug or below graph)
-    DrawText(TextFormat("Selected: %d", selectedCompanyIndex), dropdownBounds.x + 200, dropdownBounds.y + 5, 18, DARKGRAY);
-
-
     // 2. Middle Section (Graph)
     Rectangle graphArea = {leftOffset, topBar.y + sectionHeight, screenWidth - leftOffset, screenHeight - topOffset - sectionHeight * 2};
 
@@ -100,6 +93,12 @@ void Menu::DrawDashboardScreen() {
     if (graphDisplay) {
         graphDisplay->Draw();  // this draws the graph and its points
     }
+
+    // Draw dropdown
+    GuiDropdownBox(dropdownBounds, companyNames, &selectedCompanyIndex, dropdownOpen);
+
+    // Optional: show selected result (e.g. for debug or below graph)
+    DrawText(TextFormat("Selected: %d", selectedCompanyIndex), dropdownBounds.x + 200, dropdownBounds.y + 5, 18, DARKGRAY);
 
 
     // 3. Bottom Section (Buy/Sell info)
