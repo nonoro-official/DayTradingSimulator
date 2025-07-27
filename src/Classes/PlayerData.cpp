@@ -57,6 +57,7 @@ float PlayerData::GetTotalPortfolioValue()
     float total = 0.0f;
     for (Stock& s : stocks)
     {
+        if (s.company && s.company->currentMarketData)
         total += s.GetShareValue();
     }
     return total;

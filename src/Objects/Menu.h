@@ -1,15 +1,12 @@
-//
-// Created by Noah Peñaranda on 7/24/2025.
-//
-
 #pragma once
 #include "Objects/Graph.h"
 #include "Objects/GenerateRandomMarket.h"
 #include "../Classes/GameState.h"
+#include "../Classes/Company.h"
+#include "../Classes/PlayerData.h"
+#include "Upgrades/UpgradeHandler.h"
 #include <vector>
 #include <string>
-
-#include "Upgrades/UpgradeHandler.h"
 
 enum Screen
 {
@@ -17,14 +14,6 @@ enum Screen
     SCREEN_PORTFOLIO,
     SCREEN_COMPANIES,
     SCREEN_UPGRADES
-};
-
-struct OwnedCompany
-{
-    std::string name;
-    float shares;
-    float value;
-    float increase;
 };
 
 class Menu {
@@ -35,19 +24,21 @@ private:
     GameState* game = nullptr;
     UpgradeHandler upgradeHandler;
 
-    std::vector<OwnedCompany> portfolio = {
-        {"Company A", 10, 100, -1},
-        {"Company B", 5, 200, 15},
-        { "Company C", 10, 10, -1}
-    };
+    // Dropdown state
+    int selectedCompanyIndex = 0;
+    bool dropdownActive = false;
+    std::vector<Company*> companies;  // Use this to store all companies
+
 public:
     void Init(GameState* gameRef);
     void SetScreen(Screen screen);
+    void Update();
     void Draw();
+
+    void DrawDashboardScreen();
     void DrawPortfolioScreen();
     void DrawCompaniesScreen();
     void DrawUpgradesScreen();
-    void Update();
 
     ~Menu();
 };

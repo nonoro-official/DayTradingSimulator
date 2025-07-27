@@ -26,6 +26,9 @@ public:
 
     float GetCurrentPrice() const;
     float CalculateIncrease(int startMonth, int startWeek, int endMonth, int endWeek);
+
+    std::string GetName();
+    std::string GetDescription();
 private:
     std::vector<MarketData> previousValues = std::vector<MarketData>();
 };

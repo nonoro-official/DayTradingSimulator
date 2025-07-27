@@ -20,11 +20,9 @@ void DrawTopBar() {
 
     std::string line2 = std::string("Total P/L: ") + (profit >= 0 ? "+" : "") + std::to_string(profit);
 
-    DrawText(line1.c_str(), 140, 10, 18, RAYWHITE);
-    DrawText(line2.c_str(), 140, 35, 18, (profit >= 0) ? GREEN : RED);
+    DrawText(line1.c_str(), 140, 10, 20, RAYWHITE);
+    DrawText(line2.c_str(), 140, 35, 20, (profit >= 0) ? GREEN : RED);
 
-    // Add week & month later on top right
-    // Optional: Add Play / Pause / Fast-forward icons later
 }
 
 void DrawSidebar() {
@@ -50,7 +48,7 @@ int main() {
     menu.Init(&GameState::Instance());
 
     // TODO: TEMPORARY
-    MonthDisplay m = MonthDisplay(28, {860, 50}, {200,100},2,BLACK, LIGHTGRAY, BLACK);
+    MonthDisplay m = MonthDisplay(28, {880, 50}, {200,100},2,BLACK, LIGHTGRAY, BLACK);
 
     while (!WindowShouldClose()) {
         // Global Controls

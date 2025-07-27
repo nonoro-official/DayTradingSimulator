@@ -1,0 +1,21 @@
+# ninja log v6
+1	57	7753339797271307	raygui-populate-prefix/src/raygui-populate-stamp/raygui-populate-mkdir	b518bceaff2b32a5
+1	57	7753339797271307	E:/DayTradingSimulator/cmake-build-debug/_deps/raygui-subbuild/raygui-populate-prefix/src/raygui-populate-stamp/raygui-populate-mkdir	b518bceaff2b32a5
+58	5996	7753339856675872	raygui-populate-prefix/src/raygui-populate-stamp/raygui-populate-download	1858323d5b5fdd7
+58	5996	7753339856675872	E:/DayTradingSimulator/cmake-build-debug/_deps/raygui-subbuild/raygui-populate-prefix/src/raygui-populate-stamp/raygui-populate-download	1858323d5b5fdd7
+5996	27411	7753339856715879	raygui-populate-prefix/src/raygui-populate-stamp/raygui-populate-update	9f32115a2899058c
+5996	27411	7753339856715879	E:/DayTradingSimulator/cmake-build-debug/_deps/raygui-subbuild/raygui-populate-prefix/src/raygui-populate-stamp/raygui-populate-update	9f32115a2899058c
+27412	27481	7753340071515685	raygui-populate-prefix/src/raygui-populate-stamp/raygui-populate-patch	2eb2ce1fd84149c1
+27412	27481	7753340071515685	E:/DayTradingSimulator/cmake-build-debug/_deps/raygui-subbuild/raygui-populate-prefix/src/raygui-populate-stamp/raygui-populate-patch	2eb2ce1fd84149c1
+27481	27542	7753340072115584	raygui-populate-prefix/src/raygui-populate-stamp/raygui-populate-configure	9b76047f8a4db7ad
+27481	27542	7753340072115584	E:/DayTradingSimulator/cmake-build-debug/_deps/raygui-subbuild/raygui-populate-prefix/src/raygui-populate-stamp/raygui-populate-configure	9b76047f8a4db7ad
+27542	27595	7753340072655572	raygui-populate-prefix/src/raygui-populate-stamp/raygui-populate-build	e738527a29e40abd
+27542	27595	7753340072655572	E:/DayTradingSimulator/cmake-build-debug/_deps/raygui-subbuild/raygui-populate-prefix/src/raygui-populate-stamp/raygui-populate-build	e738527a29e40abd
+27595	27656	7753340073265570	raygui-populate-prefix/src/raygui-populate-stamp/raygui-populate-install	9b1ccf398aff540a
+27595	27656	7753340073265570	E:/DayTradingSimulator/cmake-build-debug/_deps/raygui-subbuild/raygui-populate-prefix/src/raygui-populate-stamp/raygui-populate-install	9b1ccf398aff540a
+27656	27711	7753340073795579	raygui-populate-prefix/src/raygui-populate-stamp/raygui-populate-test	57073f4f19b76745
+27656	27711	7753340073795579	E:/DayTradingSimulator/cmake-build-debug/_deps/raygui-subbuild/raygui-populate-prefix/src/raygui-populate-stamp/raygui-populate-test	57073f4f19b76745
+27711	27823	7753340074905581	CMakeFiles/raygui-populate-complete	5a9cf92aeb935444
+27711	27823	7753340074905581	raygui-populate-prefix/src/raygui-populate-stamp/raygui-populate-done	5a9cf92aeb935444
+27711	27823	7753340074905581	E:/DayTradingSimulator/cmake-build-debug/_deps/raygui-subbuild/CMakeFiles/raygui-populate-complete	5a9cf92aeb935444
+27711	27823	7753340074905581	E:/DayTradingSimulator/cmake-build-debug/_deps/raygui-subbuild/raygui-populate-prefix/src/raygui-populate-stamp/raygui-populate-done	5a9cf92aeb935444
