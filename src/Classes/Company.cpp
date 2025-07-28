@@ -18,8 +18,9 @@ Company::Company(std::string companyName, std::string companyDescription, float 
     // pre gen points
 
     // Add Listener
-    GameState::Instance().AddTickListener([this, display]() {
-        GenerateNext(display);
+    this->display = display;
+    GameState::Instance().AddTickListener([this]() {
+        GenerateNext(this->display);
 
         /*std::cout << "CurrentPrice: " << this->GetCurrentPrice() << " Month: " << currentMarketData->monthAcquired << " Week: " << currentMarketData->weekAcquired << std::endl;
         std::cout << "Increase: " << CalculateIncrease(0, 0, GameState::Instance().GetMonth(), GameState::Instance().GetWeek()) << "%" << std::endl;

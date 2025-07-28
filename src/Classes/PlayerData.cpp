@@ -23,6 +23,7 @@ void PlayerData::AddStock(Stock& stock) {
     // else add new stock
     stocks.push_back(stock);
 }
+
 bool PlayerData::SellStock(Company* company, float sharesToSell) {
     for (auto it = stocks.begin(); it != stocks.end(); ++it) {
         if (it->company == company) {
