@@ -24,102 +24,43 @@ void GenerateRandomMarket::InitializeMarket() {
     if (OnFinishInitialize) OnFinishInitialize();
 }
 
-const std::vector<GraphPoint>& GenerateRandomMarket::GetMarketValues() const {
+const std::vector<GraphPoint*>& GenerateRandomMarket::GetMarketValues() const {
     return generatedPoints;
 }
 
 GraphPoint* GenerateRandomMarket::GenerateNextPoint() {
-    // If in hold mode, repeat last value
-    if (holdStepsRemaining > 0) {
-        holdStepsRemaining--;
+    if (timeInState <= 0) currentState = Normal;
 
-        float holdNoise = perlinNoise.noise1D_01(time * frequency);
-        float holdValue = holdNoise * amplitude * holdNoiseDampening;
-        holdValue = Clamp(holdValue, 0.0f, 1.0f);
+    switch (currentState) {
+        case Normal:
 
-        GraphPoint* newPoint = new GraphPoint();
-        newPoint->position = { time, holdValue };
-        newPoint->prevPoint = &generatedPoints.back();
-
-        generatedPoints.push_back(*newPoint);
-        time += 0.5f;
-        return newPoint;
+            break;
     }
 
-    // Chance to enter hold mode
-    float randomHold = static_cast<float>(rand()) / static_cast<float>(RAND_MAX);
-    if (randomHold < holdChance) {
-        float holdMin = holdDurationRange.x;
-        float holdMax = holdDurationRange.y;
-        float durationRand = static_cast<float>(rand()) / static_cast<float>(RAND_MAX);
-        holdStepsRemaining = static_cast<int>(holdMin + (holdMax - holdMin) * durationRand);
+    float yValue = currentValue;
+    /*float noiseValue = perlinNoise.noise1D(amplitude * time * frequency) * perlinNoiseMultiplier;
+    */
 
-        // First frame of hold: still emit this current value
-        if (!generatedPoints.empty()) {
-            GraphPoint* newPoint = new GraphPoint();
-            newPoint->position = { time, generatedPoints.back().position.y };
-            newPoint->prevPoint = &generatedPoints.back();
+    float noiseValue = Remap(static_cast<float>(rand()) / RAND_MAX, 0, 1, -.5, .5) * defaultNoiseMultiplier;
+    yValue += yValue * noiseValue;
 
-            generatedPoints.push_back(*newPoint);
-            time += 0.5f;
-            return newPoint;
-        }
-    }
+    // Random Trend
+    float chance = static_cast<float>(rand()) / RAND_MAX;
+    if (chance >= .5f) currentValue -= randomTrendStrength.y;
 
-    // ---- Existing trend logic below ----
+    // Clamp to minmax
+    currentValue = Clamp(currentValue, 0.025, 1.0f);
+    yValue = Clamp(yValue, 0.025f, 1.0f);
 
-    // Trend decision logic...
-    if (activeTrendDuration <= 0.0f && ((rand() % 1000) / 1000.0f) < trendChangeChance) {
-        float randFloat = static_cast<float>(rand()) / static_cast<float>(RAND_MAX);
+    std::cout << std::endl << "y " << yValue << std::endl;
+    std::cout << "n " << noiseValue << std::endl;
 
-        if (randFloat < trendMaintainChance) {
-            float minDuration = trendDurationRange.x;
-            float maxDuration = trendDurationRange.y;
-            float durationRand = static_cast<float>(rand()) / static_cast<float>(RAND_MAX);
-            activeTrendDuration = minDuration + (maxDuration - minDuration) * durationRand;
-        } else {
-            float minTrend = trendStrengthRange.x;
-            float maxTrend = trendStrengthRange.y;
-            float trendRand = static_cast<float>(rand()) / static_cast<float>(RAND_MAX);
-            activeTrendStrength = minTrend + (maxTrend - minTrend) * trendRand;
 
-            float minDuration = trendDurationRange.x;
-            float maxDuration = trendDurationRange.y;
-            float durationRand = static_cast<float>(rand()) / static_cast<float>(RAND_MAX);
-            activeTrendDuration = minDuration + (maxDuration - minDuration) * durationRand;
-        }
-    }
-
-    if (activeTrendDuration > 0.0f)
-        activeTrendDuration -= 1.0f;
-
-    float noise = perlinNoise.noise1D_01(time * frequency);
-    float baseValue = noise * amplitude;
-
-    float trendOffset = time * activeTrendStrength;
-    float volatilityOffset = ((rand() % 2001) - 1000) / 1000.0f * volatility;
-
-    float finalValue = baseValue + trendOffset + volatilityOffset;
-
-    // Clamp
-    finalValue = Clamp(finalValue, 0.0f, 1.0f);
-
-    // Failsafe
-    if (finalValue <= 0.0f || finalValue >= 1.0f) {
-        activeTrendStrength *= -1.0f;
-        activeTrendDuration = 5.0f;
-    }
-
-    GraphPoint* newPoint = new GraphPoint();
-    newPoint->position = { time, finalValue };
+    GraphPoint* newPoint = new GraphPoint(yValue);
     newPoint->prevPoint = nullptr;
 
-    if (!generatedPoints.empty()) {
-        newPoint->prevPoint = &generatedPoints.back();
-    }
+    generatedPoints.push_back(newPoint);
 
-    generatedPoints.push_back(*newPoint);
-    time += 0.5f;
-
+    time += 1;
     return newPoint;
 }

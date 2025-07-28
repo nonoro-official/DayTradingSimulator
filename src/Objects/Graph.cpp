@@ -10,13 +10,14 @@
 #include <cstdio>
 #include <iostream>
 
+#include "raymath.h"
+
 char infoBuffer[64];
 
-GraphPoint::GraphPoint() {}
-
-GraphPoint::GraphPoint(float x, float y) {
-    position.x = x;
-    position.y = y;
+GraphPoint::GraphPoint(float y) {
+    position.x = 0;
+    position.y = 0;
+    yValue = y;
 }
 
 void GraphPoint::Update() {
@@ -102,21 +103,13 @@ void GraphDisplay::ForceAddNode(GraphPoint* point) {
     if (!nodes.empty()) { point->prevPoint = nodes.back(); }
     nodes.push_back(point);
 
-    // Assume value range (Perlin with amplitude 1 means 0–1 range)
-    float dataMinY = 0.0f;
-    float dataMaxY = 1.0f;
-
-    float rawY = point->position.y;
-    float normalizedY = (rawY - dataMinY) / (dataMaxY - dataMinY);
-    normalizedY = std::clamp(normalizedY, 0.0f, 1.0f);
+    float rawY = point->yValue;
 
     // Flip so high value goes UP (screen Y grows downward)
-    float top = center.y - bounds.y / 2.0f;
-    float mappedY = top + (1.0f - normalizedY) * bounds.y;
-
     Vector2 position;
     position.x = center.x + bounds.x / 2.0f - 5;
-    position.y = mappedY;
+    position.y = (center.y + bounds.y / 2) - rawY * bounds.y;
+
 
     // Assign prevPoint
     point->position = position;
@@ -133,17 +126,15 @@ GraphDisplay::GraphDisplay(Vector2 c, Vector2 b) {
     // Pre-fill with flat data
     float rightBorder = center.x - bounds.x / 2;
     for (int i = 0; i < pointsToDraw + 1; ++i) {
-        GraphPoint* point = new GraphPoint();
+        // Normalized Y → screen Y mapping (same as ForceAddNode)
+        float x = rightBorder - 5 - pixelsPerInterval * (i + 1);
+
+        GraphPoint* point = new GraphPoint(center.y);
+        point->position = {x, center.y};
 
         // Link to previous node if any
         if (!nodes.empty()) { point->prevPoint = nodes.back(); }
         nodes.push_back(point);
-
-        // Normalized Y → screen Y mapping (same as ForceAddNode)
-        float x = rightBorder - 5 - pixelsPerInterval * (i + 1);
-
-        point->position.x = x;
-        point->position.y = center.y;
     }
 
     GameState::Instance().AddTickListener([this]() {

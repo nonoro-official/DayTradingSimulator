@@ -21,8 +21,9 @@ Company::Company(std::string companyName, std::string companyDescription, float 
     GameState::Instance().AddTickListener([this, display]() {
         GenerateNext(display);
 
-        std::cout << "CurrentPrice: " << this->GetCurrentPrice() << " Month: " << currentMarketData->monthAcquired << " Week: " << currentMarketData->weekAcquired << std::endl;
+        /*std::cout << "CurrentPrice: " << this->GetCurrentPrice() << " Month: " << currentMarketData->monthAcquired << " Week: " << currentMarketData->weekAcquired << std::endl;
         std::cout << "Increase: " << CalculateIncrease(0, 0, GameState::Instance().GetMonth(), GameState::Instance().GetWeek()) << "%" << std::endl;
+    */
     });
 }
 
@@ -41,7 +42,16 @@ void Company::GenerateNext(GraphDisplay* display) {
 
     // Save data
     this->currentMarketData = newData;
-    this->previousValues.push_back(*newData);
+
+    // Backlog
+    if (this->previousValues.size() >= maximumAmountOfGraphData) {
+        // Free memory of the oldest item
+        delete this->previousValues.front();
+        // Remove pointer from the vector
+        this->previousValues.erase(this->previousValues.begin());
+    }
+
+    this->previousValues.push_back(newData);
 
     // Show on Graph
     display->AddNode(nextPoint);
@@ -70,12 +80,12 @@ float Company::CalculateIncrease(int startMonth, int startWeek, int endMonth, in
     float priceStart = -1.0f;
     float priceEnd = -1.0f;
 
-    for (const MarketData& data : previousValues) {
-        if (data.monthAcquired == startMonth && data.weekAcquired == startWeek) {
-            priceStart = data.stockPrice;
+    for (const MarketData* data : previousValues) {
+        if (data->monthAcquired == startMonth && data->weekAcquired == startWeek) {
+            priceStart = data->stockPrice;
         }
-        if (data.monthAcquired == endMonth && data.weekAcquired == endWeek) {
-            priceEnd = data.stockPrice;
+        if (data->monthAcquired == endMonth && data->weekAcquired == endWeek) {
+            priceEnd = data->stockPrice;
         }
     }
 

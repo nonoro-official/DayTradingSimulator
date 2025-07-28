@@ -56,7 +56,7 @@ int main() {
         if (IsKeyPressed(KEY_ONE)) GameState::Instance().SetTimeScale(1.0f);
         if (IsKeyPressed(KEY_TWO)) GameState::Instance().SetTimeScale(2.0f);
         if (IsKeyPressed(KEY_THREE)) GameState::Instance().SetTimeScale(3.0f);
-        if (IsKeyPressed(KEY_FOUR)) GameState::Instance().SetTimeScale(4.0f);
+        if (IsKeyPressed(KEY_FOUR)) GameState::Instance().SetTimeScale(12.0f);
 
         GameState::Instance().Update();
         menu.Update();

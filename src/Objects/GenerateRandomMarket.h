@@ -1,3 +1,4 @@
+
 #ifndef GENERATERANDOMMARKET_H
 #define GENERATERANDOMMARKET_H
 
@@ -11,28 +12,52 @@ class GenerateRandomMarket {
 public:
     int seed;
     float amplitude, frequency, smoothness;
-    float volatility = 0.0025f;  // e.g., 0.5 = moderate noise, 2.0 = high chaos
-    Vector2 trendStrengthRange = { -0.003f, 0.008f }; // Min and max trend strength
-    float trendChangeChance = 0.3f; // Chance of changing trend per step
-    Vector2 trendDurationRange = { 4, 18 };  // min and max trend duration in steps
-    float trendMaintainChance = .8f; // 0.0 to 1.0: 50% chance to continue current trend
+    float currentValue = 0.5f; // 0 - 1
 
-    float holdChance = 0.4f; // 10% chance to enter a hold state
-    Vector2 holdDurationRange = { 4, 16 }; // How long the market holds (steps)
-    float holdNoiseDampening = .5f; // 5% of full amplitude during hold periods
+    enum MarketState {
+        Normal, TrendUp, TrendDown, Hold, Volatile
+    };
 
+    enum NoiseType {
+        PerlinNoise, WhiteNoise
+    };
+
+    MarketState currentState = Normal;
+
+    int timeInState = 0;
+
+    // Normal
+    NoiseType defaultNoiseType = WhiteNoise;
+    float defaultNoiseMultiplier = .6f; // use 80% of noise
+
+    // Trends
+    NoiseType trendNoiseType = WhiteNoise;
+    float trendNoiseMultiplier = .4f;
+    Vector2 trendCooldownRange = {4, 16};
+    Vector2 trendTimeRange = {4, 16};
+    Vector2 randomTrendStrength = {-.025, .025};
+
+    // Holds
+    NoiseType holdNoiseType = WhiteNoise;
+    float holdNoiseMultiplier = .2f;
+    Vector2 holdCooldownRange = {4, 16};
+    Vector2 holdTimeRange = {4, 16};
+
+    // Volatile
+    NoiseType volatileNoiseType = WhiteNoise;
+    float volatileNoiseMultiplier = 1.0f;
 
     GenerateRandomMarket(float amplitude, float frequency);
 
     void InitializeMarket();
-    const std::vector<GraphPoint>& GetMarketValues() const;
+    const std::vector<GraphPoint*> &GetMarketValues() const;
     std::function<void()> OnFinishInitialize = nullptr;
 
     GraphPoint* GenerateNextPoint();
 
 private:
     float time = 0.0f;
-    std::vector<GraphPoint> generatedPoints;
+    std::vector<GraphPoint*> generatedPoints;
     siv::PerlinNoise perlinNoise = siv::PerlinNoise(0); // default seed
     float activeTrendStrength = 0.0f;
     float activeTrendDuration = 0.0f;

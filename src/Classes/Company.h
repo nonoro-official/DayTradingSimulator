@@ -30,7 +30,8 @@ public:
     std::string GetName();
     std::string GetDescription();
 private:
-    std::vector<MarketData> previousValues = std::vector<MarketData>();
+    std::vector<MarketData*> previousValues = std::vector<MarketData*>();
+    int maximumAmountOfGraphData = 12; // 3 months
 };
 
 

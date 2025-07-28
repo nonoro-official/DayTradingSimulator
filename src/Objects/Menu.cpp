@@ -15,9 +15,9 @@ void Menu::Init(GameState* gameRef) {
 
     graphDisplay = new GraphDisplay({540, 300}, {840, 360});
 
-    companies.push_back(new Company("Lemon Inc", "Citrus Tech Giant", 50.0f, 1.0f, 0.75f, graphDisplay));
+    companies.push_back(new Company("Lemon Inc", "Citrus Tech Giant", 50.0f, 1.0f, 0.75f, graphDisplay));/*
     companies.push_back(new Company("Banana Corp", "AI + Fruit", 35.0f, 1.1f, 0.65f, graphDisplay));
-    companies.push_back(new Company("Mango Ltd", "Tropical Logistics", 45.0f, 0.9f, 0.85f, graphDisplay));
+    companies.push_back(new Company("Mango Ltd", "Tropical Logistics", 45.0f, 0.9f, 0.85f, graphDisplay));*/
 }
 
 void Menu::Update() {

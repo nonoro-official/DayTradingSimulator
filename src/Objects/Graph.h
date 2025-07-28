@@ -12,12 +12,12 @@ extern char infoBuffer[64];
 
 class GraphPoint {
 public:
+    float yValue;
     Vector2 position = {0, 0};
     GraphPoint* prevPoint = nullptr;
     Color pointColor = DARKGREEN, lineColor = Fade(DARKGREEN, .25f);
 
-    GraphPoint();
-    GraphPoint(float x, float y);
+    GraphPoint(float y);
     void Draw(Vector2 graphCenter, Vector2 graphBounds);
     void Update();
 
