@@ -6,7 +6,6 @@
 #include <functional>
 #include "Graph.h"
 #include "../Libraries/PerlinNoise.hpp"
-#include "Classes/MarketData.h"
 
 class GenerateRandomMarket {
 public:
@@ -14,8 +13,11 @@ public:
     float amplitude, frequency, smoothness;
     float currentValue = 0.5f; // 0 - 1
 
+    Vector2 eventCooldownRange = {2, 6};
+    float eventChance = .25f;
+
     enum MarketState {
-        Normal, TrendUp, TrendDown, Hold, Volatile
+        Normal, TrendUp, TrendDown, Hold, Volatile, Cooldown
     };
 
     enum NoiseType {
@@ -23,7 +25,6 @@ public:
     };
 
     MarketState currentState = Normal;
-
     int timeInState = 0;
 
     // Normal
@@ -33,19 +34,18 @@ public:
     // Trends
     NoiseType trendNoiseType = WhiteNoise;
     float trendNoiseMultiplier = .4f;
-    Vector2 trendCooldownRange = {4, 16};
     Vector2 trendTimeRange = {4, 16};
     Vector2 randomTrendStrength = {-.025, .025};
 
     // Holds
     NoiseType holdNoiseType = WhiteNoise;
     float holdNoiseMultiplier = .2f;
-    Vector2 holdCooldownRange = {4, 16};
     Vector2 holdTimeRange = {4, 16};
 
     // Volatile
     NoiseType volatileNoiseType = WhiteNoise;
     float volatileNoiseMultiplier = 1.0f;
+    Vector2 volatileTimeRange = {4, 16};
 
     GenerateRandomMarket(float amplitude, float frequency);
 
