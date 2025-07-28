@@ -28,18 +28,40 @@ void DrawTopBar() {
 void DrawSidebar() {
     DrawRectangle(0, 0, 120, screenHeight, LIGHTGRAY);
 
-    if (GuiButton({10.0f, 60.0f, 100.0f, 40.0f}, "Portfolio"))
-        menu.SetScreen(SCREEN_PORTFOLIO);
+    const char* labels[] = { "Portfolio", "Dashboard", "Companies", "Upgrades" };
+    Screen screens[] = { SCREEN_PORTFOLIO, SCREEN_DASHBOARD, SCREEN_COMPANIES, SCREEN_UPGRADES };
+    const int buttonCount = 4;
 
-    if (GuiButton({10.0, 110.0f, 100.0f, 40.0f}, "Dashboard"))
-        menu.SetScreen(SCREEN_DASHBOARD);
+    // Save original style (optional, for safety)
+    int baseNormal = GuiGetStyle(BUTTON, BASE_COLOR_NORMAL);
+    int borderNormal = GuiGetStyle(BUTTON, BORDER_COLOR_NORMAL);
 
-    if (GuiButton({10.0f, 160.0f, 100.0f, 40.0f}, "Companies"))
-        menu.SetScreen(SCREEN_COMPANIES);
+    for (int i = 0; i < buttonCount; ++i) {
+        float y = 60.0f + i * 50.0f;
+        Rectangle btn = {10.0f, y, 100.0f, 40.0f};
 
-    if (GuiButton({10.0f, 210.0f, 100.0f, 40.0f}, "Upgrades"))
-        menu.SetScreen(SCREEN_UPGRADES);
+        bool isActive = menu.GetCurrentScreen() == screens[i];
+
+        if (isActive) {
+            // Apply hover color for active tab
+            GuiSetStyle(BUTTON, BASE_COLOR_NORMAL, GuiGetStyle(BUTTON, BASE_COLOR_FOCUSED));
+            GuiSetStyle(BUTTON, BORDER_COLOR_NORMAL, GuiGetStyle(BUTTON, BORDER_COLOR_FOCUSED));
+        } else {
+            // Reset to normal
+            GuiSetStyle(BUTTON, BASE_COLOR_NORMAL, baseNormal);
+            GuiSetStyle(BUTTON, BORDER_COLOR_NORMAL, borderNormal);
+        }
+
+        if (GuiButton(btn, labels[i])) {
+            menu.SetScreen(screens[i]);
+        }
+    }
+
+    // Optional: restore defaults at the end
+    GuiSetStyle(BUTTON, BASE_COLOR_NORMAL, baseNormal);
+    GuiSetStyle(BUTTON, BORDER_COLOR_NORMAL, borderNormal);
 }
+
 
 int main() {
     InitWindow(screenWidth, screenHeight, "Day Trading Simulator");
@@ -48,7 +70,7 @@ int main() {
     menu.Init(&GameState::Instance());
 
     // TODO: TEMPORARY
-    MonthDisplay m = MonthDisplay(28, {880, 50}, {200,100},2,BLACK, LIGHTGRAY, BLACK);
+    MonthDisplay m = MonthDisplay(20, {880, 30}, {200,60},2,BLACK, LIGHTGRAY, BLACK);
 
     while (!WindowShouldClose()) {
         // Global Controls

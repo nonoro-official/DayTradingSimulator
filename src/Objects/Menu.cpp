@@ -26,6 +26,11 @@ void Menu::Update() {
     }
 }
 
+Screen Menu::GetCurrentScreen()
+{
+    return currentScreen;
+}
+
 void Menu::SetScreen(Screen screen)
 {
     currentScreen = screen;
@@ -55,7 +60,6 @@ void Menu::Draw()
 static int selectedCompanyIndex = 0;
 static bool dropdownOpen = false;
 
-// IKAW PALA PROBLEMA EH DRAWDASHBOARDSCREEN SMH
 void Menu::DrawDashboardScreen() {
     const float topOffset = 60.0f;   // your existing global top bar
     const float leftOffset = 120.0f; // width of your sidebar
@@ -96,10 +100,6 @@ void Menu::DrawDashboardScreen() {
 
     // Draw dropdown
     GuiDropdownBox(dropdownBounds, companyNames, &selectedCompanyIndex, dropdownOpen);
-
-    // Optional: show selected result (e.g. for debug or below graph)
-    DrawText(TextFormat("Selected: %d", selectedCompanyIndex), dropdownBounds.x + 200, dropdownBounds.y + 5, 18, DARKGRAY);
-
 
     // 3. Bottom Section (Buy/Sell info)
     Rectangle bottomBar = {leftOffset, graphArea.y + graphArea.height, screenWidth - leftOffset, sectionHeight};

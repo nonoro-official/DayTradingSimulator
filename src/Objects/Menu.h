@@ -31,6 +31,7 @@ private:
 
 public:
     void Init(GameState* gameRef);
+    Screen GetCurrentScreen();
     void SetScreen(Screen screen);
     void Update();
     void Draw();
