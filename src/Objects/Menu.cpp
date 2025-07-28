@@ -13,16 +13,16 @@ void Menu::Init(GameState* gameRef) {
     game = gameRef;
     upgradeHandler.init(*game);
 
-    graphDisplay = new GraphDisplay({540, 300}, {840, 360});
-
-    companies.push_back(new Company("Lemon Inc", "Citrus Tech Giant", 50.0f, 1.0f, 0.75f, graphDisplay));/*
-    companies.push_back(new Company("Banana Corp", "AI + Fruit", 35.0f, 1.1f, 0.65f, graphDisplay));
-    companies.push_back(new Company("Mango Ltd", "Tropical Logistics", 45.0f, 0.9f, 0.85f, graphDisplay));*/
+    companies.push_back(new Company("Lemon Inc", "Citrus Tech Giant", 50.0f, 1.0f, 0.75f, new GraphDisplay({540, 300}, {840, 360})));
+    companies.push_back(new Company("Banana Corp", "AI + Fruit", 35.0f, 1.1f, 0.65f, new GraphDisplay({540, 300}, {840, 360})));
+    companies.push_back(new Company("Mango Ltd", "Tropical Logistics", 45.0f, 0.9f, 0.85f, new GraphDisplay({540, 300}, {840, 360})));
 }
 
 void Menu::Update() {
     if (currentScreen == SCREEN_DASHBOARD && !game->IsPaused()) {
-        graphDisplay->Update();
+        for (Company* c: companies) {
+            c->display->Update();
+        }
     }
 }
 
@@ -94,9 +94,7 @@ void Menu::DrawDashboardScreen() {
     Rectangle graphArea = {leftOffset, topBar.y + sectionHeight, screenWidth - leftOffset, screenHeight - topOffset - sectionHeight * 2};
 
     // Draw the actual graph
-    if (graphDisplay) {
-        graphDisplay->Draw();  // this draws the graph and its points
-    }
+    companies[selectedCompanyIndex]->display->Draw();
 
     // Draw dropdown
     GuiDropdownBox(dropdownBounds, companyNames, &selectedCompanyIndex, dropdownOpen);

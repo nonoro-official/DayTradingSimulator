@@ -17,6 +17,7 @@ public:
     float baseStockPrice;
     GenerateRandomMarket *market;
     MarketData *currentMarketData;
+    GraphDisplay* display;
 
     Company(std::string companyName, std::string companyDescription, float baseStockPrice, float amplitude, float frequency, GraphDisplay* display);
     ~Company();

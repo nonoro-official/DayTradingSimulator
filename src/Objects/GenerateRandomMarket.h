@@ -44,7 +44,7 @@ public:
 
     // Volatile
     NoiseType volatileNoiseType = WhiteNoise;
-    float volatileNoiseMultiplier = 1.0f;
+    float volatileNoiseMultiplier = 1.25f;
     Vector2 volatileTimeRange = {4, 16};
 
     GenerateRandomMarket(float amplitude, float frequency);
