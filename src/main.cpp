@@ -32,22 +32,21 @@ void DrawSidebar() {
     Screen screens[] = { SCREEN_PORTFOLIO, SCREEN_DASHBOARD, SCREEN_COMPANIES, SCREEN_UPGRADES };
     const int buttonCount = 4;
 
-    // Save original style (optional, for safety)
     int baseNormal = GuiGetStyle(BUTTON, BASE_COLOR_NORMAL);
     int borderNormal = GuiGetStyle(BUTTON, BORDER_COLOR_NORMAL);
 
+    float y = 20.0f; // start position
+
     for (int i = 0; i < buttonCount; ++i) {
-        float y = 60.0f + i * 50.0f;
-        Rectangle btn = {10.0f, y, 100.0f, 40.0f};
+        float btnHeight = (i == 0) ? 80.0f : 40.0f;  // Make Portfolio taller
+        Rectangle btn = {10.0f, y, 100.0f, btnHeight};
 
         bool isActive = menu.GetCurrentScreen() == screens[i];
 
         if (isActive) {
-            // Apply hover color for active tab
             GuiSetStyle(BUTTON, BASE_COLOR_NORMAL, GuiGetStyle(BUTTON, BASE_COLOR_FOCUSED));
             GuiSetStyle(BUTTON, BORDER_COLOR_NORMAL, GuiGetStyle(BUTTON, BORDER_COLOR_FOCUSED));
         } else {
-            // Reset to normal
             GuiSetStyle(BUTTON, BASE_COLOR_NORMAL, baseNormal);
             GuiSetStyle(BUTTON, BORDER_COLOR_NORMAL, borderNormal);
         }
@@ -55,13 +54,14 @@ void DrawSidebar() {
         if (GuiButton(btn, labels[i])) {
             menu.SetScreen(screens[i]);
         }
+
+        y += btnHeight + 10.0f; // vertical spacing
     }
 
-    // Optional: restore defaults at the end
+    // Restore styles
     GuiSetStyle(BUTTON, BASE_COLOR_NORMAL, baseNormal);
     GuiSetStyle(BUTTON, BORDER_COLOR_NORMAL, borderNormal);
 }
-
 
 int main() {
     InitWindow(screenWidth, screenHeight, "Day Trading Simulator");

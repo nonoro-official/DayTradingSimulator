@@ -8,6 +8,7 @@
 #include "Classes/Company.h"
 #include "Classes/Stock.h"
 #include "Classes/PlayerData.h"
+#include <cstring>
 
 void Menu::Init(GameState* gameRef) {
     game = gameRef;
@@ -112,6 +113,9 @@ void Menu::DrawDashboardScreen() {
     Rectangle buyBtn = { bottomBar.x + 20, buttonY, buttonWidth, buttonHeight };
     Rectangle sellBtn = { bottomBar.x + 20 + buttonWidth + spacing, buttonY, buttonWidth, buttonHeight };
 
+    // Set bigger font size for buttons
+    GuiSetStyle(DEFAULT, TEXT_SIZE, 18);
+
     // Buttons
     if (GuiButton(buyBtn, "BUY")) {
         // TODO: Trigger buy logic
@@ -139,12 +143,42 @@ void Menu::DrawDashboardScreen() {
     DrawText(companyInfo.c_str(), infoX + 70, infoY + 10, fontSize, BLACK);
 }
 
+// Search variables for other screens
+static char searchText[32] = "Search...";
+static bool isSearchFocused = false;
 
 void Menu::DrawPortfolioScreen()
 {
     DrawText("PORTFOLIO", 140, 70, 30, DARKGRAY);
 
-    GuiTextBox((Rectangle){GetScreenWidth() - 210.0f, 70.0f, 180.0f, 30.0f}, (char *)"Search...", 32, false);
+    Rectangle searchBox = { GetScreenWidth() - 180.0f, 60.0f + 10.0f, 170.0f, 30.0f };
+
+    // Click detection
+    if (CheckCollisionPointRec(GetMousePosition(), searchBox)) {
+        if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) {
+            isSearchFocused = true;
+
+            // Clear placeholder when first clicked
+            if (strcmp(searchText, "Search...") == 0) {
+                searchText[0] = '\0'; // Clear text
+            }
+        }
+    } else if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) {
+        isSearchFocused = false;
+    }
+
+    // Show placeholder if not focused and empty
+    if (!isSearchFocused && strlen(searchText) == 0) {
+        strcpy(searchText, "Search...");
+    }
+
+    // Optional styles
+    GuiSetStyle(TEXTBOX, BASE_COLOR_NORMAL, ColorToInt(WHITE));
+    GuiSetStyle(TEXTBOX, BORDER_COLOR_NORMAL, ColorToInt(GRAY));
+    GuiSetStyle(TEXTBOX, TEXT_COLOR_NORMAL, ColorToInt(BLACK));
+
+    // Render the textbox (editable if focused)
+    GuiTextBox(searchBox, searchText, 32, isSearchFocused);
 
     float boxStartY = 110.0f;
     float boxHeight = 80.0f;
@@ -188,15 +222,147 @@ void Menu::DrawPortfolioScreen()
     }
 }
 
-
 void Menu::DrawCompaniesScreen()
 {
     DrawText("COMPANIES", 140, 70, 30, DARKGRAY);
+
+    Rectangle searchBox = { GetScreenWidth() - 180.0f, 60.0f + 10.0f, 170.0f, 30.0f };
+
+    // Click detection
+    if (CheckCollisionPointRec(GetMousePosition(), searchBox)) {
+        if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) {
+            isSearchFocused = true;
+
+            // Clear placeholder when first clicked
+            if (strcmp(searchText, "Search...") == 0) {
+                searchText[0] = '\0'; // Clear text
+            }
+        }
+    } else if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) {
+        isSearchFocused = false;
+    }
+
+    // Show placeholder if not focused and empty
+    if (!isSearchFocused && strlen(searchText) == 0) {
+        strcpy(searchText, "Search...");
+    }
+
+    // Optional styles
+    GuiSetStyle(TEXTBOX, BASE_COLOR_NORMAL, ColorToInt(WHITE));
+    GuiSetStyle(TEXTBOX, BORDER_COLOR_NORMAL, ColorToInt(GRAY));
+    GuiSetStyle(TEXTBOX, TEXT_COLOR_NORMAL, ColorToInt(BLACK));
+
+    // Render the textbox (editable if focused)
+    GuiTextBox(searchBox, searchText, 32, isSearchFocused);
+
+    float boxStartY = 110.0f;
+    float boxHeight = 80.0f;
+    float boxWidth = GetScreenWidth() - 160.0f;
+
+    std::vector<Stock>& stocks = PlayerData::Instance().GetStocks();
+
+    for (size_t i = 0; i < stocks.size(); ++i) {
+        Stock& stock = stocks[i];
+        Company* company = stock.company;
+        float shares = stock.shares;
+        float value = stock.GetShareValue();
+        float increase = company->CalculateIncrease(0, 0, game->GetMonth(), game->GetWeek());
+
+        float y = boxStartY + i * (boxHeight + 10.0f);
+        Rectangle box = {140.0f, y, boxWidth, boxHeight};
+
+        DrawRectangleRec(box, LIGHTGRAY);
+        DrawRectangleLinesEx(box, 1, GRAY);
+
+        std::string info = company->companyName +
+            " | Shares: " + std::to_string((int)shares) +
+            " | Value: $" + std::to_string((int)value) +
+            " | Increase: " + (increase >= 0 ? "+" : "") + std::to_string((int)increase) + "%";
+
+        DrawText(info.c_str(), box.x + 10.0f, box.y + 10.0f, 18, BLACK);
+
+        if (GuiButton({box.x + box.width - 160.0f, box.y + 10.0f, 60.0f, 30.0f}, "Buy")) {
+            // Optional: Pre-fill dropdown or trigger auto-buy
+        }
+        if (GuiButton({box.x + box.width - 80.0f, box.y + 10.0f, 60.0f, 30.0f}, "Sell")) {
+            // Sell one share
+            if (PlayerData::Instance().SellStock(company, 1)) {
+                PlayerData::Instance().cash += company->GetCurrentPrice();
+            }
+        }
+    }
+
 }
 
 void Menu::DrawUpgradesScreen()
 {
     DrawText("UPGRADES", 140, 70, 30, DARKGRAY);
+
+    Rectangle searchBox = { GetScreenWidth() - 180.0f, 60.0f + 10.0f, 170.0f, 30.0f };
+
+    // Click detection
+    if (CheckCollisionPointRec(GetMousePosition(), searchBox)) {
+        if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) {
+            isSearchFocused = true;
+
+            // Clear placeholder when first clicked
+            if (strcmp(searchText, "Search...") == 0) {
+                searchText[0] = '\0'; // Clear text
+            }
+        }
+    } else if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) {
+        isSearchFocused = false;
+    }
+
+    // Show placeholder if not focused and empty
+    if (!isSearchFocused && strlen(searchText) == 0) {
+        strcpy(searchText, "Search...");
+    }
+
+    // Optional styles
+    GuiSetStyle(TEXTBOX, BASE_COLOR_NORMAL, ColorToInt(WHITE));
+    GuiSetStyle(TEXTBOX, BORDER_COLOR_NORMAL, ColorToInt(GRAY));
+    GuiSetStyle(TEXTBOX, TEXT_COLOR_NORMAL, ColorToInt(BLACK));
+
+    // Render the textbox (editable if focused)
+    GuiTextBox(searchBox, searchText, 32, isSearchFocused);
+
+    float boxStartY = 110.0f;
+    float boxHeight = 80.0f;
+    float boxWidth = GetScreenWidth() - 160.0f;
+
+    std::vector<Stock>& stocks = PlayerData::Instance().GetStocks();
+
+    for (size_t i = 0; i < stocks.size(); ++i) {
+        Stock& stock = stocks[i];
+        Company* company = stock.company;
+        float shares = stock.shares;
+        float value = stock.GetShareValue();
+        float increase = company->CalculateIncrease(0, 0, game->GetMonth(), game->GetWeek());
+
+        float y = boxStartY + i * (boxHeight + 10.0f);
+        Rectangle box = {140.0f, y, boxWidth, boxHeight};
+
+        DrawRectangleRec(box, LIGHTGRAY);
+        DrawRectangleLinesEx(box, 1, GRAY);
+
+        std::string info = company->companyName +
+            " | Shares: " + std::to_string((int)shares) +
+            " | Value: $" + std::to_string((int)value) +
+            " | Increase: " + (increase >= 0 ? "+" : "") + std::to_string((int)increase) + "%";
+
+        DrawText(info.c_str(), box.x + 10.0f, box.y + 10.0f, 18, BLACK);
+
+        if (GuiButton({box.x + box.width - 160.0f, box.y + 10.0f, 60.0f, 30.0f}, "Buy")) {
+            // Optional: Pre-fill dropdown or trigger auto-buy
+        }
+        if (GuiButton({box.x + box.width - 80.0f, box.y + 10.0f, 60.0f, 30.0f}, "Sell")) {
+            // Sell one share
+            if (PlayerData::Instance().SellStock(company, 1)) {
+                PlayerData::Instance().cash += company->GetCurrentPrice();
+            }
+        }
+    }
 }
 
 Menu::~Menu()
