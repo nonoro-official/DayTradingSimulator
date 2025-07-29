@@ -73,7 +73,21 @@ void CompaniesScreen::Draw() {
 
         float textY = row.y + (layout.rowHeight - 20) / 2;
         DrawText(company->companyName.c_str(), row.x + 15, textY, 20, BLACK);
-        DrawText(priceInfo.str().c_str(), row.x + row.width - MeasureText(priceInfo.str().c_str(), 20) - 15, textY, 20, BLACK);
+        DrawText(priceInfo.str().c_str(), row.x + row.width - MeasureText(priceInfo.str().c_str(), 20) - 200, textY, 20, BLACK);
+
+        Rectangle buyBtn = {
+            row.x + row.width - 100.0f,
+            row.y + (layout.rowHeight - 30.0f) / 2.0f,
+            80.0f,
+            30.0f
+        };
+
+        if (GuiButton(buyBtn, "Buy")) {
+            popupCompany = company; // ← set which company to buy from
+            showBuyPopup = true;
+            strcpy(inputBuffer, "0.0"); // reset input
+        }
+
 
         shownCount++;
     }
@@ -81,4 +95,10 @@ void CompaniesScreen::Draw() {
     if (shownCount == 0) {
         DrawText("No companies found.", 140, 110, 20, RED);
     }
+
+    if (showBuyPopup && popupCompany) {
+        GameState::Instance().SetTempPause(true); // optional pause
+        PopUpWindow().DrawBuySellPopup(true, showBuyPopup, popupCompany, PlayerData::Instance(), inputBuffer);
+    }
+
 }

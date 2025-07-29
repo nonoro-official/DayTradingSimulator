@@ -53,6 +53,15 @@ std::vector<Stock>& PlayerData::GetStocks() {
     return stocks;
 }
 
+float PlayerData::GetMinimumShares(Company* company)
+{
+    for (Stock& stock : stocks) {
+        if (stock.company == company)
+            return stock.minimumShares;
+    }
+    return 5.0f;
+}
+
 float PlayerData::GetTotalPortfolioValue()
 {
     float total = 0.0f;

@@ -3,6 +3,9 @@
 //
 
 #pragma once
+#include "Classes/PlayerData.h"
+#include "Classes/Company.h"
+#include "Classes/Stock.h"
 #include <string>
 
 class PopUpWindow
@@ -15,6 +18,7 @@ public:
     void Show(const std::string& p, float durationSeconds = 4.0f);
     void Hide();
     void Draw();
+    void DrawBuySellPopup(bool isBuyMode, bool& isVisible, Company* company, PlayerData& player, char* inputText);
 };
 
 

@@ -30,7 +30,7 @@
         bool SellStock(Company* company, float sharesToSell);
         float GetTotalShares(Company* company);
         std::vector<Stock>& GetStocks();
-
+        float GetMinimumShares(Company* company);
         float GetTotalPortfolioValue(); // total value of all stocks
         float GetTotalProfitLoss(Company* company, float avgBuyPrice);
 

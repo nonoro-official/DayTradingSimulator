@@ -8,6 +8,7 @@
 #include "raygui.h"
 #include <sstream>
 #include <iomanip>
+#include <cstring>
 
 DashboardScreen::DashboardScreen(std::vector<Company*>* companiesRef, int* selectedIndex)
     : companies(companiesRef), selectedCompanyIndex(selectedIndex) {}
@@ -27,6 +28,10 @@ void DashboardScreen::Update() {
         (*companies)[i]->display->Update();
     }
 }
+
+static bool showBuyPopup = false;
+static bool showSellPopup = false;
+static char inputBuffer[16] = "0.0f";  // shared input for both
 
 void DashboardScreen::Draw() {
     Layout layout(GetScreenWidth(), GetScreenHeight());
@@ -108,7 +113,8 @@ void DashboardScreen::Draw() {
     GuiSetStyle(DEFAULT, TEXT_SIZE, 18);
 
     if (GuiButton(buyBtn, "BUY")) {
-        TraceLog(LOG_INFO, "Buy button clicked!");
+        showBuyPopup = true;
+        strcpy(inputBuffer, "0.0");
     }
 
     if (GuiButton(sellBtn, "SELL")) {
@@ -120,10 +126,13 @@ void DashboardScreen::Draw() {
     float infoY = bottomBar.y + 10;
     int fontSize = 20;
 
+    // Add this before the popup logic
+    Company* selectedCompany = nullptr;
     if (*selectedCompanyIndex >= 0 && *selectedCompanyIndex < (int)companies->size()) {
-        Company* selectedCompany = (*companies)[*selectedCompanyIndex];
+        selectedCompany = (*companies)[*selectedCompanyIndex];
+
         float price = selectedCompany->GetCurrentPrice();
-        float increase = selectedCompany->CalculateAverageIncreaseOverWeeks(12);;
+        float increase = selectedCompany->CalculateAverageIncreaseOverWeeks(12);
 
         std::ostringstream stream;
         stream << std::fixed << std::setprecision(2);
@@ -133,4 +142,14 @@ void DashboardScreen::Draw() {
         std::string companyInfo = stream.str();
         DrawText(companyInfo.c_str(), infoX + 70, infoY + 10, fontSize, BLACK);
     }
+
+    // Now this will work since selectedCompany is in scope
+    if (showBuyPopup && selectedCompany) {
+        GameState::Instance().SetTempPause(true);
+        PopUpWindow().DrawBuySellPopup(true, showBuyPopup, selectedCompany, PlayerData::Instance(), inputBuffer);
+    }
+    if (showSellPopup && selectedCompany) {
+        PopUpWindow().DrawBuySellPopup(false, showSellPopup, selectedCompany, PlayerData::Instance(), inputBuffer);
+    }
+
 }
