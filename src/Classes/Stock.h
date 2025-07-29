@@ -11,8 +11,9 @@ class Stock {
 public:
     Company *company;
     float shares;
+    float minimumShares;
 
-    Stock(Company &c, float startingStockPrice);
+    Stock(Company &c, float minShares);
 
     float GetShareValue();
 

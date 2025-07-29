@@ -3,6 +3,9 @@
 //
 
 #include "Menu.h"
+
+#include <iostream>
+
 #include "raylib.h"
 #include "raygui.h"
 #include "Classes/Company.h"
@@ -10,11 +13,7 @@
 #include "Classes/PlayerData.h"
 #include "Objects/Layout.h"
 
-void Menu::Init(GameState* gameRef) {
-    game = gameRef;
-    upgradeHandler.init(*game);
-
-    // Initialize Companies
+void Menu::InitializeCompanies() {
     Company* lemon = new Company("Lemon Inc", "Develops sustainable tech for modern agriculture.", 0.6f, 0.9f, new GraphDisplay({540, 300}, {840, 360}));
     lemon->market->SetNormalValues(GenerateRandomMarket::PerlinNoise, 0.3f);
     lemon->market->SetTrendValues(GenerateRandomMarket::PerlinNoise, 0.25f, {8, 20}, {-0.01f, 0.02f});
@@ -50,6 +49,24 @@ void Menu::Init(GameState* gameRef) {
         46.00f
     );
     companies.push_back(mango);
+}
+
+void Menu::InitializeStocks() {
+    for (Company * company: companies) {
+        Stock* stock = new Stock(*company, .5f);
+        stocks.push_back(stock);
+    }
+}
+
+void Menu::Init(GameState* gameRef) {
+    game = gameRef;
+    upgradeHandler.init(*game);
+
+    // Initialize Companies
+    InitializeCompanies();
+
+    // Initialize Stocks
+    InitializeStocks();
 }
 
 void Menu::Update() {
@@ -222,7 +239,11 @@ void Menu::DrawPortfolioScreen()
     for (size_t i = 0; i < stocks.size(); ++i) {
         Stock& stock = stocks[i];
         Company* company = stock.company;
+
         float shares = stock.shares;
+
+        if (shares < stock.minimumShares) { continue; }
+
         float value = stock.GetShareValue();
         float increase = company->CalculateIncreaseFromWeeksAgo(12);
 
@@ -299,7 +320,7 @@ void Menu::DrawCompaniesScreen()
     for (size_t i = 0; i < companies.size(); ++i)
     {
         Company* company = companies[i];
-        if (!company) continue;
+        if (company == nullptr) continue;
 
         float y = layout.GetBoxStartY() + i * (layout.rowHeight + layout.spacing);
 

@@ -4,10 +4,11 @@
 
 #include "Stock.h"
 
-Stock::Stock(Company& c, float startingStockPrice)
+Stock::Stock(Company& c, float minShares)
 {
     company = &c;
-    shares = 1;
+    shares = 0;
+    minimumShares = minShares;
 }
 
 

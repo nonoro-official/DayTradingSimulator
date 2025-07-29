@@ -26,6 +26,7 @@ public:
     PlayerData();
 
     void AddStock(Stock& stock);
+    bool BuyStock(Stock& stock, float moneyInserted);
     bool SellStock(Company* company, float sharesToSell);
     float GetTotalShares(Company* company);
     std::vector<Stock>& GetStocks();

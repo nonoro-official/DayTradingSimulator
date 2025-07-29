@@ -92,24 +92,32 @@ Company::~Company() {
     previousValues.clear();
 }
 
-float Company::GetCurrentPrice() const { return currentMarketData->stockPrice; }
+float Company::GetCurrentPrice() const {
+    if (!currentMarketData) return 0.0f; // Failsafe: no current market data
+    return currentMarketData->stockPrice;
+}
 
 float Company::CalculateIncreaseFromWeeksAgo(int weeksAgo) {
+    if (previousValues.empty() || !currentMarketData)
+        return 0.0f;  // Failsafe: no data available
+
     int currentMonth = GameState::Instance().GetMonth();
     int currentWeek = GameState::Instance().GetWeek();
 
     auto [startMonth, startWeek] = GetPastDate(currentMonth, currentWeek, weeksAgo);
     float priceStart = -1.0f;
-    float priceEnd = -1.0f;
 
+    // Find the price at the start date
     for (const MarketData* data : previousValues) {
-        if (data->monthAcquired == startMonth && data->weekAcquired == startWeek)
+        if (data->monthAcquired == startMonth && data->weekAcquired == startWeek) {
             priceStart = data->stockPrice;
-        if (data->monthAcquired == currentMonth && data->weekAcquired == currentWeek)
-            priceEnd = data->stockPrice;
+            break;
+        }
     }
 
-    if (priceStart < 0.0f || priceEnd < 0.0f || priceStart == 0.0f)
+    float priceEnd = GetCurrentPrice(); // Use safer accessor
+
+    if (priceStart < 0.0f || priceEnd <= 0.0f)
         return 0.0f;
 
     return (priceEnd - priceStart) / priceStart * 100.0f;

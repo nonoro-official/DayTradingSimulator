@@ -30,12 +30,17 @@ private:
     int selectedCompanyIndex = 0;
     bool dropdownActive = false;
     std::vector<Company*> companies;  // Use this to store all companies
+    std::vector<Stock*> stocks;
 
     // Search bar
     char searchText[32] = "Search...";
     bool isSearchFocused = false;
 
 public:
+    void InitializeCompanies();
+
+    void InitializeStocks();
+
     void Init(GameState* gameRef);
     Screen GetCurrentScreen();
     void SetScreen(Screen screen);
