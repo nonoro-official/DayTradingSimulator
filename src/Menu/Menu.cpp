@@ -8,6 +8,7 @@
 #include "Classes/Company.h"
 #include "Classes/Stock.h"
 #include "Classes/PlayerData.h"
+#include "Classes/Transactions/TransactionManager.h"
 
 bool GraphDisplay::isAnyHovering = false;
 
@@ -24,6 +25,10 @@ void Menu::Init(GameState* gameRef)
 {
     game = gameRef;
     upgradeHandler.init(*game);
+    transactionManager = new TransactionManager();
+    game->AddTickListener([this]() {
+        transactionManager->Update();
+    });
 
     game->InitializeCompaniesAndStocks();
 
@@ -88,4 +93,6 @@ Menu::~Menu()
         delete c;
     }
     companies.clear();
+
+    delete transactionManager;
 }

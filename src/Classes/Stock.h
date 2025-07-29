@@ -18,7 +18,7 @@ public:
     float GetShareValue();
 
     float SellStock(float shares);
-    void BuyStock(float amountToBuy, float amountToSubtract);
+    void BuyStock(float depositAmount);
 };
 
 #endif //STOCK_H

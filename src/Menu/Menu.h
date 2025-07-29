@@ -15,6 +15,8 @@
 #include <sstream>
 #include <iomanip>
 
+#include "Classes/Transactions/TransactionManager.h"
+
 enum Screen
 {
     SCREEN_DASHBOARD,
@@ -29,6 +31,7 @@ private:
 
     GraphDisplay* graphDisplay = nullptr;
     GameState* game = nullptr;
+    TransactionManager* transactionManager = nullptr;
     UpgradeHandler upgradeHandler;
     PlayerData player;
     PopUpWindow message;

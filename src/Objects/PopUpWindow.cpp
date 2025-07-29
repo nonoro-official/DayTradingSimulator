@@ -7,6 +7,8 @@
 #include "raygui.h"
 #include <cstring>
 
+#include "Classes/Transactions/TransactionManager.h"
+
 void PopUpWindow::Show(const std::string& p, float durationSeconds)
 {
     popUp = p;
@@ -125,7 +127,7 @@ void PopUpWindow::DrawBuySellPopup(bool isBuyMode, bool& isVisible, Company* com
                 else if (inputValue > playerBalance) Show("Not enough funds.");
                 else Show("Must meet minimum shares requirement.");
             } else {
-                stock->BuyStock(sharesToBuy, inputValue);
+                TransactionManager::Instance().CreateBuyOrder(stock, PlayerData::Instance().weekExecutionDelay, inputValue);
                 Show("Stock purchased!");
                 isVisible = false;
                 strcpy(inputText, "");
@@ -137,7 +139,7 @@ void PopUpWindow::DrawBuySellPopup(bool isBuyMode, bool& isVisible, Company* com
                 else if (inputValue > ownedShares) Show("You don't own that many shares.");
                 else Show("Selling would drop you below the minimum shares.");
             } else {
-                stock->SellStock(inputValue);
+                TransactionManager::Instance().CreateSellOrder(stock, PlayerData::Instance().weekExecutionDelay, inputValue);
                 Show("Shares sold!");
                 isVisible = false;
                 strcpy(inputText, "");
