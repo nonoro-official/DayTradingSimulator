@@ -13,16 +13,22 @@ static Menu menu;
 void DrawTopBar() {
     DrawRectangle(0, 0, screenWidth, 60, DARKGRAY);  // increase height for 2 rows
 
-    float profit = PlayerData::Instance().GetTotalPortfolioValue() - PlayerData::Instance().cash;
+    float cash = PlayerData::Instance().cash;
+    float portfolio = PlayerData::Instance().GetTotalPortfolioValue();
+    float profit = portfolio - cash;
 
-    std::string line1 = "Cash: $" + std::to_string(PlayerData::Instance().cash) +
-                        " | Portfolio Value: $" + std::to_string(PlayerData::Instance().GetTotalPortfolioValue());
+    std::ostringstream line1Stream, line2Stream;
+    line1Stream << std::fixed << std::setprecision(2);
+    line2Stream << std::fixed << std::setprecision(2);
 
-    std::string line2 = std::string("Total P/L: ") + (profit >= 0 ? "+" : "") + std::to_string(profit);
+    line1Stream << "Cash: $" << cash << " | Portfolio Value: $" << portfolio;
+    line2Stream << "Total P/L: " << (profit >= 0 ? "+" : "") << profit;
+
+    std::string line1 = line1Stream.str();
+    std::string line2 = line2Stream.str();
 
     DrawText(line1.c_str(), 140, 10, 20, RAYWHITE);
     DrawText(line2.c_str(), 140, 35, 20, (profit >= 0) ? GREEN : RED);
-
 }
 
 void DrawSidebar() {

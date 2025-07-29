@@ -8,7 +8,7 @@
 #include "Classes/Company.h"
 #include "Classes/Stock.h"
 #include "Classes/PlayerData.h"
-#include <cstring>
+#include "Objects/Layout.h"
 
 void Menu::Init(GameState* gameRef) {
     game = gameRef;
@@ -57,20 +57,12 @@ void Menu::Draw()
     }
 }
 
-// Dropdown state (persistent between frames)
-static int selectedCompanyIndex = 0;
-static bool dropdownOpen = false;
-
-void Menu::DrawDashboardScreen() {
-    const float topOffset = 60.0f;   // your existing global top bar
-    const float leftOffset = 120.0f; // width of your sidebar
-    const float sectionHeight = 60.0f; // height of top/bottom dashboard bars
-
-    const int screenWidth = 960;
-    const int screenHeight = 540;
+void Menu::DrawDashboardScreen()
+{
+    Layout layout(GetScreenWidth(), GetScreenHeight());
 
     // 1. Top Section (Dropdown area)
-    Rectangle topBar = { leftOffset, topOffset, screenWidth - leftOffset, sectionHeight };
+    Rectangle topBar = { layout.leftOffset, layout.topOffset, layout.screenWidth - layout.leftOffset, layout.sectionHeight };
     DrawRectangleRec(topBar, GRAY);
 
     // Optional: Set dropdown styles (set once is enough — do this before or in Init())
@@ -80,72 +72,80 @@ void Menu::DrawDashboardScreen() {
     GuiSetStyle(DROPDOWNBOX, TEXT_COLOR_NORMAL, ColorToInt(BLACK));
     GuiSetStyle(DROPDOWNBOX, TEXT_COLOR_PRESSED, ColorToInt(BLACK));
 
-    // Dropdown options (semicolon-separated)
+    // Dropdown state (persistent between frames)
+    static int selectedCompanyIndex = 0;
+    static bool dropdownOpen = false;
+
+    // Dropdown options
     const char* companyNames = "Lemon Inc.;Banana Corp;Mango Ltd";
 
-    // Dropdown position
     Rectangle dropdownBounds = { topBar.x + 20, topBar.y + 15, 180, 30 };
-
-    // Toggle manually
     if (CheckCollisionPointRec(GetMousePosition(), dropdownBounds) && IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) {
         dropdownOpen = !dropdownOpen;
     }
 
     // 2. Middle Section (Graph)
-    Rectangle graphArea = {leftOffset, topBar.y + sectionHeight, screenWidth - leftOffset, screenHeight - topOffset - sectionHeight * 2};
+    Rectangle graphArea = {
+        layout.leftOffset,
+        topBar.y + layout.sectionHeight,
+        layout.screenWidth - layout.leftOffset,
+        layout.screenHeight - layout.topOffset - layout.sectionHeight * 2
+    };
 
-    // Draw the actual graph
-    companies[selectedCompanyIndex]->display->Draw();
+    if (selectedCompanyIndex >= 0 && selectedCompanyIndex < companies.size() && companies[selectedCompanyIndex]) {
+        companies[selectedCompanyIndex]->display->Draw();
+    }
 
-    // Draw dropdown
+    // Dropdown
     GuiDropdownBox(dropdownBounds, companyNames, &selectedCompanyIndex, dropdownOpen);
 
-    // 3. Bottom Section (Buy/Sell info)
-    Rectangle bottomBar = {leftOffset, graphArea.y + graphArea.height, screenWidth - leftOffset, sectionHeight};
+    // 3. Bottom Section (Buy/Sell)
+    Rectangle bottomBar = {
+        layout.leftOffset,
+        graphArea.y + graphArea.height,
+        layout.screenWidth - layout.leftOffset,
+        layout.sectionHeight
+    };
     DrawRectangleRec(bottomBar, GRAY);
 
-    // Button positions
     float buttonWidth = 100;
     float buttonHeight = 30;
     float spacing = 20;
-    float buttonY = bottomBar.y + (sectionHeight - buttonHeight) / 2;
+    float buttonY = bottomBar.y + (layout.sectionHeight - buttonHeight) / 2;
 
     Rectangle buyBtn = { bottomBar.x + 20, buttonY, buttonWidth, buttonHeight };
-    Rectangle sellBtn = { bottomBar.x + 20 + buttonWidth + spacing, buttonY, buttonWidth, buttonHeight };
+    Rectangle sellBtn = { buyBtn.x + buttonWidth + spacing, buttonY, buttonWidth, buttonHeight };
 
-    // Set bigger font size for buttons
     GuiSetStyle(DEFAULT, TEXT_SIZE, 18);
 
-    // Buttons
     if (GuiButton(buyBtn, "BUY")) {
-        // TODO: Trigger buy logic
         TraceLog(LOG_INFO, "Buy button clicked!");
     }
 
     if (GuiButton(sellBtn, "SELL")) {
-        // TODO: Trigger sell logic
         TraceLog(LOG_INFO, "Sell button clicked!");
     }
 
-    // INFO LABELS on the right
+    // Info Display (on right side)
     float infoX = sellBtn.x + buttonWidth + spacing * 2;
-    float infoY = bottomBar.y + 10; // Top padding
+    float infoY = bottomBar.y + 10;
     int fontSize = 20;
 
-    // Dummy data (replace with actual selected company/player info)
+    // Dummy data for now — replace with company info later
     const char* selectedCompany = "Lemon Inc.";
     float price = 52.75f;
     float increase = 12.5f;
 
-    std::string companyInfo = "Share Price: $" + std::to_string(price) +
-                        " | Increase: " + std::to_string(increase);
+    std::ostringstream stream;
+
+    stream << std::fixed << std::setprecision(2);
+    stream << "Share Price: $" << price
+           << " | Increase: " << (increase >= 0 ? "+" : "") << increase << "%";
+
+    std::string companyInfo = stream.str();
 
     DrawText(companyInfo.c_str(), infoX + 70, infoY + 10, fontSize, BLACK);
 }
-
-// Search variables for other screens
-static char searchText[32] = "Search...";
-static bool isSearchFocused = false;
 
 void Menu::DrawPortfolioScreen()
 {
@@ -224,9 +224,11 @@ void Menu::DrawPortfolioScreen()
 
 void Menu::DrawCompaniesScreen()
 {
+    Layout layout(GetScreenWidth(), GetScreenHeight());
+
     DrawText("COMPANIES", 140, 70, 30, DARKGRAY);
 
-    Rectangle searchBox = { GetScreenWidth() - 180.0f, 60.0f + 10.0f, 170.0f, 30.0f };
+    Rectangle searchBox = { layout.screenWidth - 180.0f, layout.topOffset + 10.0f, 170.0f, 30.0f };
 
     // Click detection
     if (CheckCollisionPointRec(GetMousePosition(), searchBox)) {
@@ -255,44 +257,55 @@ void Menu::DrawCompaniesScreen()
     // Render the textbox (editable if focused)
     GuiTextBox(searchBox, searchText, 32, isSearchFocused);
 
-    float boxStartY = 110.0f;
-    float boxHeight = 80.0f;
-    float boxWidth = GetScreenWidth() - 160.0f;
-
-    std::vector<Stock>& stocks = PlayerData::Instance().GetStocks();
-
-    for (size_t i = 0; i < stocks.size(); ++i) {
-        Stock& stock = stocks[i];
-        Company* company = stock.company;
-        float shares = stock.shares;
-        float value = stock.GetShareValue();
-        float increase = company->CalculateIncrease(0, 0, game->GetMonth(), game->GetWeek());
-
-        float y = boxStartY + i * (boxHeight + 10.0f);
-        Rectangle box = {140.0f, y, boxWidth, boxHeight};
-
-        DrawRectangleRec(box, LIGHTGRAY);
-        DrawRectangleLinesEx(box, 1, GRAY);
-
-        std::string info = company->companyName +
-            " | Shares: " + std::to_string((int)shares) +
-            " | Value: $" + std::to_string((int)value) +
-            " | Increase: " + (increase >= 0 ? "+" : "") + std::to_string((int)increase) + "%";
-
-        DrawText(info.c_str(), box.x + 10.0f, box.y + 10.0f, 18, BLACK);
-
-        if (GuiButton({box.x + box.width - 160.0f, box.y + 10.0f, 60.0f, 30.0f}, "Buy")) {
-            // Optional: Pre-fill dropdown or trigger auto-buy
-        }
-        if (GuiButton({box.x + box.width - 80.0f, box.y + 10.0f, 60.0f, 30.0f}, "Sell")) {
-            // Sell one share
-            if (PlayerData::Instance().SellStock(company, 1)) {
-                PlayerData::Instance().cash += company->GetCurrentPrice();
-            }
-        }
+    if (companies.empty()) {
+        DrawText("No companies found.", 140, 110, 20, RED);
+        return;
     }
 
+    // ==== COMPANY LIST ====
+    for (size_t i = 0; i < companies.size(); ++i)
+    {
+        Company* company = companies[i];
+        if (!company) continue;
+
+        float y = layout.GetBoxStartY() + i * (layout.rowHeight + layout.spacing);
+
+        Rectangle row = {
+            layout.GetBoxX(),
+            y,
+            layout.GetBoxWidth(),
+            layout.rowHeight
+        };
+
+        // Skip rows that would go off screen
+        if (y + layout.rowHeight > layout.screenHeight) break;
+
+        // Alternate row color
+        Color bgColor = (i % 2 == 0) ? Color{ 230, 230, 230, 255 } : Color{ 250, 250, 250, 255 };
+        DrawRectangleRec(row, bgColor);
+        DrawRectangleLinesEx(row, 1, GRAY);
+
+        // ==== Text Info ====
+        std::string name = company->companyName;
+        float price = company->GetCurrentPrice();
+        float increase = company->CalculateIncrease(0, 0, game->GetMonth(), game->GetWeek());
+
+        // Use stringstream for proper formatting
+        std::ostringstream priceInfoStream;
+        priceInfoStream << std::fixed << std::setprecision(2);
+        priceInfoStream << "share price: $" << price
+                        << "  |  change: " << (increase >= 0 ? "+" : "") << increase;
+
+        std::string priceInfo = priceInfoStream.str();
+
+        // Text positions
+        float textY = row.y + (layout.rowHeight - 20) / 2;
+
+        DrawText(name.c_str(), row.x + 15, textY, 20, BLACK);
+        DrawText(priceInfo.c_str(), row.x + row.width - MeasureText(priceInfo.c_str(), 20) - 15, textY, 20, BLACK);
+    }
 }
+
 
 void Menu::DrawUpgradesScreen()
 {

@@ -6,7 +6,9 @@
 #include "../Classes/PlayerData.h"
 #include "Upgrades/UpgradeHandler.h"
 #include <vector>
-#include <string>
+#include <cstring>
+#include <sstream>
+#include <iomanip>
 
 enum Screen
 {
@@ -28,6 +30,10 @@ private:
     int selectedCompanyIndex = 0;
     bool dropdownActive = false;
     std::vector<Company*> companies;  // Use this to store all companies
+
+    // Search bar
+    char searchText[32] = "Search...";
+    bool isSearchFocused = false;
 
 public:
     void Init(GameState* gameRef);
