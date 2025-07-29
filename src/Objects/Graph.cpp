@@ -20,6 +20,14 @@ GraphPoint::GraphPoint(float y) {
     yValue = y;
 }
 
+void GraphPoint::InitializeTooltip(int week, int month, float price, float increase) {
+    this->week = week;
+    this->month = month;
+    this->price = price;
+    this->increase = increase;
+}
+
+
 void GraphPoint::Update() {
     hovering = CheckCollisionPointCircle(GetMousePosition(), position, collisionRadius);
 }
@@ -67,7 +75,7 @@ void GraphPoint::DrawTooltip(Vector2 graphCenter, Vector2 graphBounds) {
     // Placeholder values — replace with real data later
     snprintf(infoBuffer, sizeof(infoBuffer),
              "Month: %d\nWeek: %d\nPrice: %.2f\nChange: %.2f",
-             1, 3, 123.45f, +4.20f);
+             month, week, price, increase);
 
     DrawText(infoBuffer, boxPosition.x + 6, boxPosition.y + 6, fontSize, textColor);
 }

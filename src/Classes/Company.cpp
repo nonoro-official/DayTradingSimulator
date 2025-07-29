@@ -58,6 +58,9 @@ void Company::GenerateNext(GraphDisplay* display) {
     float multiplier = nextPoint->position.y;
     newData->stockPrice = this->baseStockPrice * multiplier;
 
+    // Pass tooltip data
+    nextPoint->InitializeTooltip(newData->weekAcquired, newData->monthAcquired, newData->stockPrice, newData->company->CalculateIncreaseFromWeeksAgo(1));
+
     // Save data
     this->currentMarketData = newData;
 

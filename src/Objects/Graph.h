@@ -23,6 +23,7 @@ public:
     bool hovering = false;
 
     GraphPoint(float y);
+    void InitializeTooltip(int week, int month, float price, float increase);
     void DrawLineToPrevious();
     void DrawPoint();
     void DrawTooltip(Vector2 graphCenter, Vector2 graphBounds);
@@ -38,6 +39,10 @@ private:
 
     Color textColor = {34, 34, 34, 255};            // Near-black text
     Color boxColor  = {255, 255, 255, 230};         // Soft white tooltip box
+
+    // Tooltip variables
+    int week, month;
+    float price, increase;
 };
 class GraphDisplay {
 public:
