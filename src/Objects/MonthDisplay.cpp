@@ -11,17 +11,64 @@
 #include "../Classes/GameState.h"
 
 void MonthDisplay::Update() {
+    // Global Controls
+    if (IsKeyPressed(KEY_P)) {
+        GameState::Instance().PauseGame();
+
+        // Sync button states
+        buttons[0].SetToggled(GameState::Instance().IsPaused());
+        buttons[1].SetToggled(!GameState::Instance().IsPaused());
+        buttons[2].SetToggled(false);
+        buttons[3].SetToggled(false);
+    }
+
+    if (IsKeyPressed(KEY_ONE)) {
+        GameState::Instance().SetTimeScale(1.0f);
+
+        // Reset speed buttons
+        buttons[2].SetToggled(false);
+        buttons[3].SetToggled(false);
+
+        buttons[0].SetToggled(GameState::Instance().IsPaused());
+        buttons[1].SetToggled(true);
+    }
+
+    if (IsKeyPressed(KEY_TWO)) {
+        GameState::Instance().SetTimeScale(2.0f);
+
+        // Update button visuals
+        buttons[2].SetToggled(true);
+        buttons[3].SetToggled(false);
+
+        buttons[0].SetToggled(GameState::Instance().IsPaused());
+        buttons[1].SetToggled(false);
+
+    }
+
+    if (IsKeyPressed(KEY_THREE)) {
+        GameState::Instance().SetTimeScale(4.0f);
+
+        buttons[2].SetToggled(false);
+        buttons[3].SetToggled(true);
+
+        buttons[0].SetToggled(GameState::Instance().IsPaused());
+        buttons[1].SetToggled(false);
+
+    }
+
     for (ToggleButton& button : buttons) {
         button.Update();
     }
 }
 
 
-void MonthDisplay::Draw() {
-    float padding = 8.0f;  // Change as needed
 
-    std::string monthLabel = "Month " + std::to_string(GameState::Instance().GetMonth());
-    std::string weekLabel = "Week " + std::to_string(GameState::Instance().GetWeek());
+void MonthDisplay::Draw() {
+    float padding = 8.0f;
+
+    // === Build single label string ===
+    std::string label = "Month " + std::to_string(GameState::Instance().GetMonth()) +
+                        " | Week " + std::to_string(GameState::Instance().GetWeek());
 
     // Draw background
     DrawRectangleV({center.x - bounds.x / 2, center.y - bounds.y / 2}, bounds, backgroundColor);
@@ -29,44 +76,24 @@ void MonthDisplay::Draw() {
     // Draw border
     DrawRectangleLinesEx({center.x - bounds.x / 2, center.y - bounds.y / 2, bounds.x, bounds.y}, borderThickness, borderColor);
 
-    // Top-left corner of the box
-    Vector2 topLeft = {
-        center.x - bounds.x / 2 + padding,
+    // === Center the single combined label ===
+    float textSize = MeasureText(label.c_str(), fontSize);
+
+    Vector2 textPos = {
+        center.x - textSize / 2 + padding,
         center.y - bounds.y / 2 + padding
     };
 
-    // Draw month label
-    DrawTextEx(GetFontDefault(), monthLabel.c_str(), topLeft, fontSize, 1, textColor);
+    DrawTextEx(GetFontDefault(), label.c_str(), textPos, fontSize, 1, textColor);
 
-    // Draw week label below it
-    Vector2 weekPos = {
-        topLeft.x,
-        topLeft.y + fontSize + 4  // 4 pixels spacing
-    };
-    DrawTextEx(GetFontDefault(), weekLabel.c_str(), weekPos, fontSize - 4, 1, textColor);
-
-    /*Texture2D texture = LoadTexture("../Textures/uiTime.png");
-
-    // Source rectangle (sprite to draw from the sheet)
-    Rectangle source = { 0, 0, 16, 16 };  // x, y, width, height on the spritesheet
-
-    // Destination rectangle (where and how big to draw on screen)
-    Rectangle dest = { center.x, center.y, 24, 24 };  // x, y, width *scale*, height *scale*
-
-    // Origin and rotation (optional)
-    Vector2 origin = { 0, 0 };  // top-left corner
-    float rotation = 0.0f;
-
-    DrawTexturePro(texture, source, dest, origin, rotation, RED);*/
-
+    // === Draw Buttons ===
     for (ToggleButton& button : buttons) {
         button.Draw();
     }
 }
 
-#include "MonthDisplay.h"
-#include "../Classes/GameState.h"
-#include <string>
+
+
 // Constructor
 MonthDisplay::MonthDisplay(float fontSize, Vector2 center, Vector2 bounds,
                            float borderThickness, Color textColor,
@@ -75,26 +102,33 @@ MonthDisplay::MonthDisplay(float fontSize, Vector2 center, Vector2 bounds,
       borderThickness(borderThickness), textColor(textColor),
       backgroundColor(backgroundColor), borderColor(borderColor)
 {
-    float spacing = 4.0f;
-    float buttonSize = 20.0f;
+    // === Layout Constants ===
+    const float spacing = 2.0f;
+    const float buttonSize = 20.0f;
+    const float bottomOffset = 12.0f;
 
+    // === Load Texture ===
     texture = LoadTexture("../Textures/uiTime.png");
 
+    // === Compute Starting Button Position ===
+    float totalWidth = (buttonSize + spacing) * 4 - spacing;
     Vector2 startPos = {
-        center.x - ((buttonSize + spacing) * 2 - spacing) / 2,
-        center.y + bounds.y / 2 - buttonSize - 8.0f
+        center.x - bounds.x / 4,
+        center.y - buttonSize / 2 + bottomOffset
     };
 
-    // create and store buttons
+    // === Create Buttons ===
     for (int i = 0; i < 4; ++i) {
+        // Center each button
         Vector2 buttonCenter = {
-            startPos.x + i * (buttonSize + spacing) + buttonSize / 2,
+            startPos.x + i * (buttonSize + spacing) + buttonSize / 2 + 8,
             startPos.y + buttonSize / 2
         };
 
+        // Sprite source from 2x2 grid in 16x16 tiles
         Rectangle spriteSource = {
-            (float)((i % 2) * 16),
-            (float)((i / 2) * 16),
+            static_cast<float>((i % 2) * 16),
+            static_cast<float>((i / 2) * 16),
             16, 16
         };
 
@@ -110,32 +144,32 @@ MonthDisplay::MonthDisplay(float fontSize, Vector2 center, Vector2 bounds,
         buttons.push_back(button);
     }
 
-    // assign click handlers
+    // === Assign Click Handlers ===
     for (int i = 0; i < 4; ++i) {
         buttons[i].SetOnClick([this, i](bool state) {
             if (state) {
-                // Deselect others
+                // Deselect all other buttons
                 for (int j = 0; j < buttons.size(); ++j) {
                     if (j != i) buttons[j].SetToggled(false);
                 }
 
-                // Apply functionality
+                // Apply button functionality
                 switch (i) {
-                    case 0: GameState::Instance().SetPause(true); break;
-                    case 1: GameState::Instance().SetPause(false); break;
-                    case 2: GameState::Instance().SetTimeScale(2); break;
-                    case 3: GameState::Instance().SetTimeScale(4); break;
+                    case 0: GameState::Instance().SetPause(true);  break; // Pause
+                    case 1: GameState::Instance().SetPause(false); break; // Play
+                    case 2: GameState::Instance().SetTimeScale(2); break; // 2x Speed
+                    case 3: GameState::Instance().SetTimeScale(4); break; // 4x Speed
                 }
 
                 TraceLog(LOG_INFO, "Button %d toggled ON", i);
             } else {
-                // Prevent all from being off
+                // Ensure at least one button stays active
                 buttons[i].SetToggled(true);
             }
         });
     }
 
-    // Optional: Set default active button
-    buttons[1].SetToggled(true);
+    // === Set Default State ===
+    buttons[1].SetToggled(true);  // Play by default
     GameState::Instance().SetPause(false);
 }

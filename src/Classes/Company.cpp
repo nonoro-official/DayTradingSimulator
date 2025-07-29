@@ -27,6 +27,8 @@ Company::Company(std::string companyName, std::string companyDescription, float 
     market->InitializeMarket();
 
     // pre gen points
+    std::vector<GraphPoint*> history = market->GeneratePrefillPoints(25);
+    display->PrefillPoints(history);
 
     // Add Listener
     this->display = display;

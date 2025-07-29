@@ -20,9 +20,22 @@ GenerateRandomMarket::GenerateRandomMarket(float amplitude, float frequency)
 }
 
 void GenerateRandomMarket::InitializeMarket() {
-    perlinNoise = siv::PerlinNoise(seed);  // Initialize with seed
-    time = 0.0f;
+    perlinNoise = siv::PerlinNoise(seed);  // Re-seed noise
     generatedPoints.clear();
+
+    time = -25; // Start from negative to simulate historical data
+    currentValue = GetRandomFloat(0.1f, 0.9f); // Start from a middle value
+    currentState = Normal;
+
+    // Temporarily simulate past history (but don't store)
+    for (int i = 0; i < 25; ++i) {
+        GenerateNextPoint(); // this increments time too
+    }
+
+    // Reinitialize values for forward simulation
+    time = 0;
+    currentValue = Clamp(currentValue, 0.025f, 0.95f);
+    SetMarketState(Normal);
 
     if (OnFinishInitialize) OnFinishInitialize();
 }
@@ -152,6 +165,35 @@ GraphPoint* GenerateRandomMarket::GenerateNextPoint() {
     time += 1;
     return newPoint;
 }
+
+std::vector<GraphPoint*> GenerateRandomMarket::GeneratePrefillPoints(int count) {
+    std::vector<GraphPoint*> prefillPoints;
+
+    float backupTime = time;
+    float backupValue = currentValue;
+    MarketState backupState = currentState;
+    int backupTimeInState = timeInState;
+
+    // Temporarily shift time back
+    time = -count;
+
+    for (int i = 0; i < count; ++i) {
+        GraphPoint* point = GenerateNextPoint();
+        prefillPoints.push_back(point);
+    }
+
+    // Restore state
+    time = backupTime;
+    currentValue = backupValue;
+    currentState = backupState;
+    timeInState = backupTimeInState;
+
+    // Clear these generated points from internal storage
+    generatedPoints.erase(generatedPoints.end() - count, generatedPoints.end());
+
+    return prefillPoints;
+}
+
 
 void GenerateRandomMarket::SetNormalValues(NoiseType noiseType, float noiseMultiplier) {
     defaultNoiseType = noiseType;
