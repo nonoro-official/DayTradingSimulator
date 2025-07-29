@@ -224,7 +224,7 @@ void Menu::DrawPortfolioScreen()
         Company* company = stock.company;
         float shares = stock.shares;
         float value = stock.GetShareValue();
-        float increase = company->CalculateIncrease(0, 0, game->GetMonth(), game->GetWeek());
+        float increase = company->CalculateIncreaseFromWeeksAgo(12);
 
         float y = boxStartY + i * (boxHeight + 10.0f);
         Rectangle box = {140.0f, y, boxWidth, boxHeight};
@@ -321,7 +321,7 @@ void Menu::DrawCompaniesScreen()
         // ==== Text Info ====
         std::string name = company->companyName;
         float price = company->GetCurrentPrice();
-        float increase = company->CalculateIncrease(0, 0, game->GetMonth(), game->GetWeek());
+        float increase = company->CalculateIncreaseFromWeeksAgo(12);
 
         // Use stringstream for proper formatting
         std::ostringstream priceInfoStream;
@@ -384,7 +384,7 @@ void Menu::DrawUpgradesScreen()
         Company* company = stock.company;
         float shares = stock.shares;
         float value = stock.GetShareValue();
-        float increase = company->CalculateIncrease(0, 0, game->GetMonth(), game->GetWeek());
+        float increase = company->CalculateIncreaseFromWeeksAgo(12);
 
         float y = boxStartY + i * (boxHeight + 10.0f);
         Rectangle box = {140.0f, y, boxWidth, boxHeight};

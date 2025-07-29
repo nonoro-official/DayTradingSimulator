@@ -26,7 +26,7 @@ public:
     void GenerateNext(GraphDisplay* display);
 
     float GetCurrentPrice() const;
-    float CalculateIncrease(int startMonth, int startWeek, int endMonth, int endWeek);
+    float CalculateIncreaseFromWeeksAgo(int weeksAgo);
 
     std::string GetName();
     std::string GetDescription();

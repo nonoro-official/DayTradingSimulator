@@ -6,6 +6,18 @@
 
 #include <iostream>
 
+std::pair<int, int> GetPastDate(int currentMonth, int currentWeek, int weeksAgo) {
+    int totalWeeks = currentMonth * 4 + currentWeek;
+    int pastTotal = totalWeeks - weeksAgo;
+
+    if (pastTotal < 0) pastTotal = 0; // Clamp to zero to avoid negative
+
+    int pastMonth = pastTotal / 4;
+    int pastWeek = pastTotal % 4;
+
+    return {pastMonth, pastWeek};
+}
+
 Company::Company(std::string companyName, std::string companyDescription, float amplitude, float frequency, GraphDisplay* display) {
     this->companyName = companyName;
     this->companyDescription = companyDescription;
@@ -82,24 +94,36 @@ Company::~Company() {
 
 float Company::GetCurrentPrice() const { return currentMarketData->stockPrice; }
 
-float Company::CalculateIncrease(int startMonth, int startWeek, int endMonth, int endWeek) {
+float Company::CalculateIncreaseFromWeeksAgo(int weeksAgo) {
+    int currentMonth = GameState::Instance().GetMonth();
+    int currentWeek = GameState::Instance().GetWeek();
+
+    auto [startMonth, startWeek] = GetPastDate(currentMonth, currentWeek, weeksAgo);
     float priceStart = -1.0f;
     float priceEnd = -1.0f;
 
     for (const MarketData* data : previousValues) {
-        if (data->monthAcquired == startMonth && data->weekAcquired == startWeek) {
+        if (data->monthAcquired == startMonth && data->weekAcquired == startWeek)
             priceStart = data->stockPrice;
-        }
-        if (data->monthAcquired == endMonth && data->weekAcquired == endWeek) {
+        if (data->monthAcquired == currentMonth && data->weekAcquired == currentWeek)
             priceEnd = data->stockPrice;
-        }
     }
 
-    // Validate
-    if (priceStart < 0.0f || priceEnd < 0.0f || priceStart == 0.0f) {
-        return 0.0f; // Can't compute
-    }
+    if (priceStart < 0.0f || priceEnd < 0.0f || priceStart == 0.0f)
+        return 0.0f;
 
-    float increase = (priceEnd - priceStart) / priceStart * 100.0f;
-    return increase;
+    return (priceEnd - priceStart) / priceStart * 100.0f;
+}
+
+
+std::string Company::GetName() {
+    return companyName;
+}
+
+std::string Company::GetDescription() {
+    return companyDescription;
+}
+
+std::string Company::GetStoreDescription() {
+    return companyStoreDescription;
 }
