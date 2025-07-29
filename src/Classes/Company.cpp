@@ -6,10 +6,9 @@
 
 #include <iostream>
 
-Company::Company(std::string companyName, std::string companyDescription, float baseStockPrice, float amplitude, float frequency, GraphDisplay* display) {
+Company::Company(std::string companyName, std::string companyDescription, float amplitude, float frequency, GraphDisplay* display) {
     this->companyName = companyName;
     this->companyDescription = companyDescription;
-    this->baseStockPrice = baseStockPrice;
 
     // initialize market
     market = new GenerateRandomMarket(amplitude, frequency);
@@ -27,6 +26,12 @@ Company::Company(std::string companyName, std::string companyDescription, float 
     */
     });
 }
+
+void Company::SetStoreValues(std::string storeDescription, float basePrice) {
+    this->companyStoreDescription = storeDescription;
+    this->baseStockPrice = baseStockPrice;
+}
+
 
 void Company::GenerateNext(GraphDisplay* display) {
     // Generate point
@@ -75,7 +80,7 @@ Company::~Company() {
     previousValues.clear();
 }
 
-float Company::GetCurrentPrice() const { return baseStockPrice * currentMarketData->stockPrice; }
+float Company::GetCurrentPrice() const { return currentMarketData->stockPrice; }
 
 float Company::CalculateIncrease(int startMonth, int startWeek, int endMonth, int endWeek) {
     float priceStart = -1.0f;

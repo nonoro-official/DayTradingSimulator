@@ -13,13 +13,13 @@
 
 class Company {
 public:
-    std::string companyName, companyDescription;
+    std::string companyName, companyDescription, companyStoreDescription;
     float baseStockPrice;
     GenerateRandomMarket *market;
     MarketData *currentMarketData;
     GraphDisplay* display;
 
-    Company(std::string companyName, std::string companyDescription, float baseStockPrice, float amplitude, float frequency, GraphDisplay* display);
+    Company(std::string companyName, std::string companyDescription, float amplitude, float frequency, GraphDisplay* display);
     ~Company();
 
     void DisplayOnGraph(GenerateRandomMarket *market);
@@ -30,6 +30,9 @@ public:
 
     std::string GetName();
     std::string GetDescription();
+    std::string GetStoreDescription();
+
+    void SetStoreValues(std::string storeDescription, float basePrice);
 private:
     std::vector<MarketData*> previousValues = std::vector<MarketData*>();
     int maximumAmountOfGraphData = 12; // 3 months

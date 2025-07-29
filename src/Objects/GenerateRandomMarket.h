@@ -50,6 +50,11 @@ public:
     GenerateRandomMarket(float amplitude, float frequency);
 
     void InitializeMarket();
+    void SetNormalValues(NoiseType noiseType, float noiseMultiplier);
+    void SetTrendValues(NoiseType noiseType, float noiseMultiplier, Vector2 timeRange, Vector2 trendStrengthRange);
+    void SetHoldValues(NoiseType noiseType, float noiseMultiplier, Vector2 timeRange);
+    void SetVolatileValues(NoiseType noiseType, float noiseMultiplier, Vector2 timeRange);
+
     const std::vector<GraphPoint*> &GetMarketValues() const;
     std::function<void()> OnFinishInitialize = nullptr;
 
@@ -59,9 +64,6 @@ private:
     float time = 0.0f;
     std::vector<GraphPoint*> generatedPoints;
     siv::PerlinNoise perlinNoise = siv::PerlinNoise(0); // default seed
-    float activeTrendStrength = 0.0f;
-    float activeTrendDuration = 0.0f;
-    int holdStepsRemaining = 0;           // How many steps left to hold
     float edgePadding = .1f;
 
     void SetMarketState(MarketState state);

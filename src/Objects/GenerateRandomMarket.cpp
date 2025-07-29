@@ -155,3 +155,27 @@ GraphPoint* GenerateRandomMarket::GenerateNextPoint() {
     time += 1;
     return newPoint;
 }
+
+void GenerateRandomMarket::SetNormalValues(NoiseType noiseType, float noiseMultiplier) {
+    defaultNoiseType = noiseType;
+    defaultNoiseMultiplier = noiseMultiplier;
+}
+
+void GenerateRandomMarket::SetTrendValues(NoiseType noiseType, float noiseMultiplier, Vector2 timeRange, Vector2 trendStrengthRange) {
+    trendNoiseType = noiseType;
+    trendNoiseMultiplier = noiseMultiplier;
+    trendTimeRange = timeRange;
+    randomTrendStrength = trendStrengthRange;
+}
+
+void GenerateRandomMarket::SetHoldValues(NoiseType noiseType, float noiseMultiplier, Vector2 timeRange) {
+    holdNoiseType = noiseType;
+    holdNoiseMultiplier = noiseMultiplier;
+    holdTimeRange = timeRange;
+}
+
+void GenerateRandomMarket::SetVolatileValues(NoiseType noiseType, float noiseMultiplier, Vector2 timeRange) {
+    volatileNoiseType = noiseType;
+    volatileNoiseMultiplier = noiseMultiplier;
+    volatileTimeRange = timeRange;
+}
