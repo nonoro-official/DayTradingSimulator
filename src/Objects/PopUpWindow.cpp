@@ -7,9 +7,9 @@
 
 
 
-void PopUpWindow::Show(const std::string& msg, float durationSeconds)
+void PopUpWindow::Show(const std::string& p, float durationSeconds)
 {
-    message = msg;
+    popUp = p;
     isVisible = true;
     remainingTime = durationSeconds;
 }
@@ -40,8 +40,8 @@ void PopUpWindow::Draw()
         DrawRectangleRec(messageRect, LIGHTGRAY);
         DrawRectangleLinesEx(messageRect, 1, DARKGRAY);
 
-        int textWidth = MeasureText(message.c_str(), 20);
-        DrawText(message.c_str(), GetScreenWidth() / 2 - textWidth / 2, GetScreenHeight() / 2 - 10, 20, BLACK);
+        int textWidth = MeasureText(popUp.c_str(), 20);
+        DrawText(popUp.c_str(), GetScreenWidth() / 2 - textWidth / 2, GetScreenHeight() / 2 - 10, 20, BLACK);
 
     }
 }
