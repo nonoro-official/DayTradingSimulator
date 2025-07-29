@@ -408,7 +408,7 @@ void Menu::DrawCompaniesScreen()
         // ==== Text Info ====
         std::string name = company->companyName;
         float price = company->GetCurrentPrice();
-        float increase = company->CalculateIncreaseFromWeeksAgo(12);
+        float increase = company->CalculateAverageIncreaseOverWeeks(12);
 
         // Use stringstream for proper formatting
         std::ostringstream priceInfoStream;

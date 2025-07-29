@@ -27,6 +27,7 @@ public:
 
     float GetCurrentPrice() const;
     float CalculateIncreaseFromWeeksAgo(int weeksAgo);
+    float CalculateAverageIncreaseOverWeeks(int totalWeeks);
 
     std::string GetName();
     std::string GetDescription();

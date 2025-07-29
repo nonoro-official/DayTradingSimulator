@@ -132,6 +132,42 @@ float Company::CalculateIncreaseFromWeeksAgo(int weeksAgo) {
     return (priceEnd - priceStart) / priceStart * 100.0f;
 }
 
+float Company::CalculateAverageIncreaseOverWeeks(int totalWeeks) {
+    if (previousValues.empty() || totalWeeks <= 0 || !currentMarketData)
+        return 0.0f;
+
+    int currentMonth = GameState::Instance().GetMonth();
+    int currentWeek = GameState::Instance().GetWeek();
+
+    float totalIncrease = 0.0f;
+    int validPairs = 0;
+
+    for (int i = 1; i <= totalWeeks; ++i) {
+        auto [startMonth, startWeek] = GetPastDate(currentMonth, currentWeek, i);
+        auto [endMonth, endWeek]     = GetPastDate(currentMonth, currentWeek, i - 1);
+
+        float priceStart = -1.0f, priceEnd = -1.0f;
+
+        for (const MarketData* data : previousValues) {
+            if (data->monthAcquired == startMonth && data->weekAcquired == startWeek)
+                priceStart = data->stockPrice;
+            else if (data->monthAcquired == endMonth && data->weekAcquired == endWeek)
+                priceEnd = data->stockPrice;
+        }
+
+        if (priceStart > 0.0f && priceEnd > 0.0f) {
+            float percentChange = (priceEnd - priceStart) / priceStart * 100.0f;
+            totalIncrease += percentChange;
+            validPairs++;
+        }
+    }
+
+    if (validPairs == 0)
+        return 0.0f;
+
+    return totalIncrease / validPairs;
+}
+
 
 std::string Company::GetName() {
     return companyName;

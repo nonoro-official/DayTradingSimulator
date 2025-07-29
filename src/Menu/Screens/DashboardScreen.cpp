@@ -127,7 +127,7 @@ void DashboardScreen::Draw() {
     if (*selectedCompanyIndex >= 0 && *selectedCompanyIndex < (int)companies->size()) {
         Company* selectedCompany = (*companies)[*selectedCompanyIndex];
         float price = selectedCompany->GetCurrentPrice();
-        float increase = selectedCompany->CalculateIncreaseFromWeeksAgo(1);
+        float increase = selectedCompany->CalculateAverageIncreaseOverWeeks(12);;
 
         std::ostringstream stream;
         stream << std::fixed << std::setprecision(2);
