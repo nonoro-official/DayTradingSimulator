@@ -78,6 +78,7 @@ void Menu::Init(GameState* gameRef) {
 
     // Initialize Screens
     dashboardScreen = new DashboardScreen(&companies, &selectedCompanyIndex);
+    companiesScreen = new CompaniesScreen(&companies);
 }
 //
 // void Menu::Update() {
@@ -131,8 +132,7 @@ void Menu::Draw() {
         // if (portfolioScreen) portfolioScreen->Draw();
         break;
     case SCREEN_COMPANIES:
-        DrawCompaniesScreen();
-        // if (companiesScreen) companiesScreen->Draw();
+        if (companiesScreen) companiesScreen->Draw();
         break;
     case SCREEN_UPGRADES:
         // if (upgradesScreen) upgradesScreen->Draw();
@@ -218,90 +218,90 @@ void Menu::DrawPortfolioScreen()
         DrawText("You don't own any stocks yet. Buy from a company to begin!", 140.0f, 300.0f, 20, GRAY);
     }
 }
-
-void Menu::DrawCompaniesScreen()
-{
-    Layout layout(GetScreenWidth(), GetScreenHeight());
-
-    DrawText("COMPANIES", 140, 70, 30, DARKGRAY);
-
-    Rectangle searchBox = { layout.screenWidth - 180.0f, layout.topOffset + 10.0f, 170.0f, 30.0f };
-
-    // Click detection
-    if (CheckCollisionPointRec(GetMousePosition(), searchBox)) {
-        if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) {
-            isSearchFocused = true;
-
-            // Clear placeholder when first clicked
-            if (strcmp(searchText, "Search...") == 0) {
-                searchText[0] = '\0'; // Clear text
-            }
-        }
-    } else if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) {
-        isSearchFocused = false;
-    }
-
-    // Show placeholder if not focused and empty
-    if (!isSearchFocused && strlen(searchText) == 0) {
-        strcpy(searchText, "Search...");
-    }
-
-    // Optional styles
-    GuiSetStyle(TEXTBOX, BASE_COLOR_NORMAL, ColorToInt(WHITE));
-    GuiSetStyle(TEXTBOX, BORDER_COLOR_NORMAL, ColorToInt(GRAY));
-    GuiSetStyle(TEXTBOX, TEXT_COLOR_NORMAL, ColorToInt(BLACK));
-
-    // Render the textbox (editable if focused)
-    GuiTextBox(searchBox, searchText, 32, isSearchFocused);
-
-    if (companies.empty()) {
-        DrawText("No companies found.", 140, 110, 20, RED);
-        return;
-    }
-
-    // ==== COMPANY LIST ====
-    for (size_t i = 0; i < companies.size(); ++i)
-    {
-        Company* company = companies[i];
-        if (company == nullptr) continue;
-
-        float y = layout.GetBoxStartY() + i * (layout.rowHeight + layout.spacing);
-
-        Rectangle row = {
-            layout.GetBoxX(),
-            y,
-            layout.GetBoxWidth(),
-            layout.rowHeight
-        };
-
-        // Skip rows that would go off screen
-        if (y + layout.rowHeight > layout.screenHeight) break;
-
-        // Alternate row color
-        Color bgColor = (i % 2 == 0) ? Color{ 230, 230, 230, 255 } : Color{ 250, 250, 250, 255 };
-        DrawRectangleRec(row, bgColor);
-        DrawRectangleLinesEx(row, 1, GRAY);
-
-        // ==== Text Info ====
-        std::string name = company->companyName;
-        float price = company->GetCurrentPrice();
-        float increase = company->CalculateAverageIncreaseOverWeeks(12);
-
-        // Use stringstream for proper formatting
-        std::ostringstream priceInfoStream;
-        priceInfoStream << std::fixed << std::setprecision(2);
-        priceInfoStream << "share price: $" << price
-                        << "  |  change: " << (increase >= 0 ? "+" : "") << increase;
-
-        std::string priceInfo = priceInfoStream.str();
-
-        // Text positions
-        float textY = row.y + (layout.rowHeight - 20) / 2;
-
-        DrawText(name.c_str(), row.x + 15, textY, 20, BLACK);
-        DrawText(priceInfo.c_str(), row.x + row.width - MeasureText(priceInfo.c_str(), 20) - 15, textY, 20, BLACK);
-    }
-}
+//
+// void Menu::DrawCompaniesScreen()
+// {
+//     Layout layout(GetScreenWidth(), GetScreenHeight());
+//
+//     DrawText("COMPANIES", 140, 70, 30, DARKGRAY);
+//
+//     Rectangle searchBox = { layout.screenWidth - 180.0f, layout.topOffset + 10.0f, 170.0f, 30.0f };
+//
+//     // Click detection
+//     if (CheckCollisionPointRec(GetMousePosition(), searchBox)) {
+//         if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) {
+//             isSearchFocused = true;
+//
+//             // Clear placeholder when first clicked
+//             if (strcmp(searchText, "Search...") == 0) {
+//                 searchText[0] = '\0'; // Clear text
+//             }
+//         }
+//     } else if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) {
+//         isSearchFocused = false;
+//     }
+//
+//     // Show placeholder if not focused and empty
+//     if (!isSearchFocused && strlen(searchText) == 0) {
+//         strcpy(searchText, "Search...");
+//     }
+//
+//     // Optional styles
+//     GuiSetStyle(TEXTBOX, BASE_COLOR_NORMAL, ColorToInt(WHITE));
+//     GuiSetStyle(TEXTBOX, BORDER_COLOR_NORMAL, ColorToInt(GRAY));
+//     GuiSetStyle(TEXTBOX, TEXT_COLOR_NORMAL, ColorToInt(BLACK));
+//
+//     // Render the textbox (editable if focused)
+//     GuiTextBox(searchBox, searchText, 32, isSearchFocused);
+//
+//     if (companies.empty()) {
+//         DrawText("No companies found.", 140, 110, 20, RED);
+//         return;
+//     }
+//
+//     // ==== COMPANY LIST ====
+//     for (size_t i = 0; i < companies.size(); ++i)
+//     {
+//         Company* company = companies[i];
+//         if (company == nullptr) continue;
+//
+//         float y = layout.GetBoxStartY() + i * (layout.rowHeight + layout.spacing);
+//
+//         Rectangle row = {
+//             layout.GetBoxX(),
+//             y,
+//             layout.GetBoxWidth(),
+//             layout.rowHeight
+//         };
+//
+//         // Skip rows that would go off screen
+//         if (y + layout.rowHeight > layout.screenHeight) break;
+//
+//         // Alternate row color
+//         Color bgColor = (i % 2 == 0) ? Color{ 230, 230, 230, 255 } : Color{ 250, 250, 250, 255 };
+//         DrawRectangleRec(row, bgColor);
+//         DrawRectangleLinesEx(row, 1, GRAY);
+//
+//         // ==== Text Info ====
+//         std::string name = company->companyName;
+//         float price = company->GetCurrentPrice();
+//         float increase = company->CalculateAverageIncreaseOverWeeks(12);
+//
+//         // Use stringstream for proper formatting
+//         std::ostringstream priceInfoStream;
+//         priceInfoStream << std::fixed << std::setprecision(2);
+//         priceInfoStream << "share price: $" << price
+//                         << "  |  change: " << (increase >= 0 ? "+" : "") << increase;
+//
+//         std::string priceInfo = priceInfoStream.str();
+//
+//         // Text positions
+//         float textY = row.y + (layout.rowHeight - 20) / 2;
+//
+//         DrawText(name.c_str(), row.x + 15, textY, 20, BLACK);
+//         DrawText(priceInfo.c_str(), row.x + row.width - MeasureText(priceInfo.c_str(), 20) - 15, textY, 20, BLACK);
+//     }
+// }
 
 void Menu::DrawUpgradesScreen()
 {
