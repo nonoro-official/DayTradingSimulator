@@ -410,14 +410,14 @@ void Menu::DrawUpgradesScreen()
         DrawRectangleRec(box, LIGHTGRAY);
         DrawRectangleLinesEx(box, 1, GRAY);
 
-        std::string info =
-            upgrade.getName() +
-            " | Desc: " + upgrade.getDescription() +
-            " | Cost: $: " + std::to_string(upgrade.getCost());
+        std::string upgradeInfo = upgrade.getName() + " | $" + std::to_string(upgrade.getCost());
 
-        DrawText(info.c_str(), box.x + 10.0f, box.y + 10.0f, 18, BLACK);
+        std::string upgradeDesc = upgrade.getDescription();
 
-        if (GuiButton({box.x + box.width - 160.0f, box.y + 10.0f, 60.0f, 30.0f}, "Buy")) {
+        DrawText(upgradeInfo.c_str(), box.x + 10.0f, box.y + 10.0f, 20, BLACK);
+        DrawText(upgradeDesc.c_str(), box.x + 10.0f, box.y + 50.0f, 18, BLACK);
+
+        if (GuiButton({box.x + box.width - 120.0f, box.y + 25.0f, 80.0f, 30.0f}, "Buy")) {
             upgradeHandler.handlePurchase(i, player, message);
         }
     }
