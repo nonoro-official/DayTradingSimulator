@@ -80,10 +80,8 @@ void GraphPoint::DrawTooltip(Vector2 graphCenter, Vector2 graphBounds) {
     DrawText(infoBuffer, boxPosition.x + 6, boxPosition.y + 6, fontSize, textColor);
 }
 
-
-
-
 void GraphDisplay::Update() {
+    if (!active) return;
     for (GraphPoint* node : nodes) {
         node->Update();
         if (node->hovering) {
