@@ -40,7 +40,6 @@ private:
 
 public:
     void InitializeCompanies();
-
     void InitializeStocks();
 
     void Init(GameState* gameRef);
@@ -48,6 +47,7 @@ public:
     void SetScreen(Screen screen);
     void Update();
     void Draw();
+    std::string BuildCompanyDropdownString();
 
     void DrawDashboardScreen();
     void DrawPortfolioScreen();

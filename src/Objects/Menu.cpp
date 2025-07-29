@@ -58,6 +58,15 @@ void Menu::InitializeStocks() {
     }
 }
 
+std::string Menu::BuildCompanyDropdownString() {
+    std::string result;
+    for (size_t i = 0; i < companies.size(); ++i) {
+        result += companies[i]->GetName();
+        if (i != companies.size() - 1) result += ";";
+    }
+    return result;
+}
+
 void Menu::Init(GameState* gameRef) {
     game = gameRef;
     upgradeHandler.init(*game);
@@ -114,29 +123,16 @@ void Menu::DrawDashboardScreen()
 {
     Layout layout(GetScreenWidth(), GetScreenHeight());
 
-    // 1. Top Section (Dropdown area)
-    Rectangle topBar = { layout.leftOffset, layout.topOffset, layout.screenWidth - layout.leftOffset, layout.sectionHeight };
+    // 1. Top Bar Section (Dropdown Area)
+    Rectangle topBar = {
+        layout.leftOffset,
+        layout.topOffset,
+        layout.screenWidth - layout.leftOffset,
+        layout.sectionHeight
+    };
     DrawRectangleRec(topBar, GRAY);
 
-    // Optional: Set dropdown styles (set once is enough — do this before or in Init())
-    GuiSetStyle(DROPDOWNBOX, BASE_COLOR_NORMAL, ColorToInt(WHITE));
-    GuiSetStyle(DROPDOWNBOX, BASE_COLOR_PRESSED, ColorToInt(LIGHTGRAY));
-    GuiSetStyle(DROPDOWNBOX, BORDER_COLOR_NORMAL, ColorToInt(DARKGRAY));
-    GuiSetStyle(DROPDOWNBOX, TEXT_COLOR_NORMAL, ColorToInt(BLACK));
-    GuiSetStyle(DROPDOWNBOX, TEXT_COLOR_PRESSED, ColorToInt(BLACK));
-
-    // Dropdown state (persistent between frames)
-    static bool dropdownOpen = false;
-
-    // Dropdown options
-    const char* companyNames = "Lemon Inc.;Banana Corp;Mango Ltd";
-
-    Rectangle dropdownBounds = { topBar.x + 20, topBar.y + 15, 180, 30 };
-    if (CheckCollisionPointRec(GetMousePosition(), dropdownBounds) && IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) {
-        dropdownOpen = !dropdownOpen;
-    }
-
-    // 2. Middle Section (Graph)
+    // --- 2. Graph Section
     Rectangle graphArea = {
         layout.leftOffset,
         topBar.y + layout.sectionHeight,
@@ -144,15 +140,63 @@ void Menu::DrawDashboardScreen()
         layout.screenHeight - layout.topOffset - layout.sectionHeight * 2
     };
 
-    if (selectedCompanyIndex >= 0 && selectedCompanyIndex < companies.size() && companies[selectedCompanyIndex]) {
+    if (selectedCompanyIndex >= 0 && selectedCompanyIndex < companies.size()) {
         companies[selectedCompanyIndex]->display->Draw();
         companies[selectedCompanyIndex]->display->DrawTooltips();
     }
 
-    // Dropdown
-    GuiDropdownBox(dropdownBounds, companyNames, &selectedCompanyIndex, dropdownOpen);
+    GuiSetStyle(DROPDOWNBOX, BASE_COLOR_NORMAL, ColorToInt(WHITE));
+    GuiSetStyle(DROPDOWNBOX, BASE_COLOR_PRESSED, ColorToInt(LIGHTGRAY));
+    GuiSetStyle(DROPDOWNBOX, BORDER_COLOR_NORMAL, ColorToInt(DARKGRAY));
+    GuiSetStyle(DROPDOWNBOX, TEXT_COLOR_NORMAL, ColorToInt(BLACK));
+    GuiSetStyle(DROPDOWNBOX, TEXT_COLOR_PRESSED, ColorToInt(BLACK));
 
-    // 3. Bottom Section (Buy/Sell)
+    static int selectedCompanyIndex = 0;
+    static bool dropdownOpen = false;
+    static float dropdownOpenTime = 0.0f; // Time since dropdown was opened
+
+    static std::string cachedDropdown = BuildCompanyDropdownString();
+    const char* companyItems = cachedDropdown.c_str();
+
+    Rectangle dropdownBounds = { topBar.x + 20, topBar.y + 15, 180, 30 };
+
+    // Get delta time each frame
+    float deltaTime = GetFrameTime();
+
+    // Update open time if dropdown is active
+    if (dropdownOpen) {
+        dropdownOpenTime += deltaTime;
+    }
+
+    // Toggle dropdown open on click
+    if (!dropdownOpen && IsMouseButtonPressed(MOUSE_LEFT_BUTTON) &&
+        CheckCollisionPointRec(GetMousePosition(), dropdownBounds)) {
+        dropdownOpen = true;
+        dropdownOpenTime = 0.0f;
+        }
+
+    // Draw dropdown and track selection
+    bool itemSelected = GuiDropdownBox(dropdownBounds, companyItems, &selectedCompanyIndex, dropdownOpen);
+
+    // Auto-close only if user clicked AND mouse is not inside the dropdown area
+    if (dropdownOpen && IsMouseButtonPressed(MOUSE_LEFT_BUTTON) && dropdownOpenTime > 0.15f) {
+        Vector2 mouse = GetMousePosition();
+
+        // This accounts for the full dropdown box height depending on option count (assuming 3)
+        Rectangle fullDropdownArea = {
+            dropdownBounds.x,
+            dropdownBounds.y,
+            dropdownBounds.width,
+            dropdownOpen ? dropdownBounds.height * 4 : dropdownBounds.height  // 1 label + 3 items
+        };
+
+        if (!CheckCollisionPointRec(mouse, fullDropdownArea)) {
+            dropdownOpen = false;
+        }
+    }
+
+
+    // --- 3. Bottom Bar (Buy/Sell + Info)
     Rectangle bottomBar = {
         layout.leftOffset,
         graphArea.y + graphArea.height,
@@ -179,25 +223,24 @@ void Menu::DrawDashboardScreen()
         TraceLog(LOG_INFO, "Sell button clicked!");
     }
 
-    // Info Display (on right side)
+    // Display actual info from selected company
     float infoX = sellBtn.x + buttonWidth + spacing * 2;
     float infoY = bottomBar.y + 10;
     int fontSize = 20;
 
-    // Dummy data for now — replace with company info later
-    const char* selectedCompany = "Lemon Inc.";
-    float price = 52.75f;
-    float increase = 12.5f;
+    if (selectedCompanyIndex >= 0 && selectedCompanyIndex < companies.size()) {
+        Company* selectedCompany = companies[selectedCompanyIndex];
+        float price = selectedCompany->GetCurrentPrice();
+        float increase = selectedCompany->CalculateIncreaseFromWeeksAgo(1); // Look back 1 week
 
-    std::ostringstream stream;
+        std::ostringstream stream;
+        stream << std::fixed << std::setprecision(2);
+        stream << "Share Price: $" << price
+               << " | Increase: " << (increase >= 0 ? "+" : "") << increase << "%";
 
-    stream << std::fixed << std::setprecision(2);
-    stream << "Share Price: $" << price
-           << " | Increase: " << (increase >= 0 ? "+" : "") << increase << "%";
-
-    std::string companyInfo = stream.str();
-
-    DrawText(companyInfo.c_str(), infoX + 70, infoY + 10, fontSize, BLACK);
+        std::string companyInfo = stream.str();
+        DrawText(companyInfo.c_str(), infoX + 70, infoY + 10, fontSize, BLACK);
+    }
 }
 
 void Menu::DrawPortfolioScreen()
