@@ -55,10 +55,6 @@ void DashboardScreen::Draw() {
     }
 
     GuiSetStyle(DROPDOWNBOX, BASE_COLOR_NORMAL, ColorToInt(WHITE));
-    //     GuiSetStyle(DROPDOWNBOX, BASE_COLOR_PRESSED, ColorToInt(LIGHTGRAY));
-    //     GuiSetStyle(DROPDOWNBOX, BORDER_COLOR_NORMAL, ColorToInt(DARKGRAY));
-    //     GuiSetStyle(DROPDOWNBOX, TEXT_COLOR_NORMAL, ColorToInt(BLACK));
-    //     GuiSetStyle(DROPDOWNBOX, TEXT_COLOR_PRESSED, ColorToInt(BLACK));
 
     // Build the dropdown string fresh each frame (in case companies update)
     std::string cachedDropdown = BuildCompanyDropdownString();
