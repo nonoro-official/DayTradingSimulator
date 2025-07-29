@@ -19,7 +19,7 @@ void UpgradeHandler::init(GameState& game)
         {
             player.weekExecutionDelay -= 1.5f;
             if (player.weekExecutionDelay < 0.5f) player.weekExecutionDelay = 0.5f;
-            std::cout << "weekExecution Speed improved: " << player.weekExecutionDelay << "s" << std::endl;
+            std::cout << "Execution Speed improved: " << player.weekExecutionDelay << "s" << std::endl;
         })
         .build());
 
