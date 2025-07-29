@@ -93,7 +93,7 @@ Company::~Company() {
 }
 
 float Company::GetCurrentPrice() const {
-    if (!currentMarketData) return 0.0f; // Failsafe: no current market data
+    if (currentMarketData == nullptr) return 0.0f; // Failsafe: no current market data
     return currentMarketData->stockPrice;
 }
 

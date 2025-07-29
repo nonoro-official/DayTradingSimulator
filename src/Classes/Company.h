@@ -15,8 +15,8 @@ class Company {
 public:
     std::string companyName, companyDescription, companyStoreDescription;
     float baseStockPrice;
-    GenerateRandomMarket *market;
-    MarketData *currentMarketData;
+    GenerateRandomMarket *market = nullptr;
+    MarketData *currentMarketData = nullptr;
     GraphDisplay* display;
 
     Company(std::string companyName, std::string companyDescription, float amplitude, float frequency, GraphDisplay* display);
