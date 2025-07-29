@@ -59,6 +59,7 @@ public:
     void ForceAddNode(GraphPoint* point);
 
     GraphDisplay(Vector2 center, Vector2 bounds);
+    void PrefillPoints(const std::vector<GraphPoint*>& points);
     void AddPointsFromVector(const std::vector<GraphPoint>& points);
 
     ~GraphDisplay();

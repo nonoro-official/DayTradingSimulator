@@ -167,20 +167,6 @@ GraphDisplay::GraphDisplay(Vector2 c, Vector2 b) {
     // calculate ppi
     pixelsPerInterval = ((center.x - bounds.x / 2) - (center.x + bounds.x / 2)) / pointsToDraw;
 
-    // Pre-fill with flat data
-    float rightBorder = center.x - bounds.x / 2;
-    for (int i = 0; i < pointsToDraw + 1; ++i) {
-        // Normalized Y → screen Y mapping (same as ForceAddNode)
-        float x = rightBorder - 5 - pixelsPerInterval * (i + 1);
-
-        GraphPoint* point = new GraphPoint(center.y);
-        point->position = {x, center.y};
-
-        // Link to previous node if any
-        if (!nodes.empty()) { point->prevPoint = nodes.back(); }
-        nodes.push_back(point);
-    }
-
     GameState::Instance().AddTickListener([this]() {
         // OnTick callback logic here
 
@@ -203,6 +189,25 @@ GraphDisplay::GraphDisplay(Vector2 c, Vector2 b) {
             queue.erase(queue.begin());
         }
     });
+}
+
+void GraphDisplay::PrefillPoints(const std::vector<GraphPoint*>& points) {
+    float rightBorder = center.x - bounds.x / 2;
+
+    for (int i = 0; i < points.size(); ++i) {
+        GraphPoint* point = points[i];
+
+        // Recalculate position just like in ForceAddNode
+        point->prevPoint = nodes.empty() ? nullptr : nodes.back();
+
+        float rawY = point->yValue;
+        Vector2 position;
+        position.x = rightBorder - 5 - pixelsPerInterval * (i + 1);
+        position.y = (center.y + bounds.y / 2) - rawY * bounds.y;
+        point->position = position;
+
+        nodes.push_back(point);
+    }
 }
 
 void GraphDisplay::AddPointsFromVector(const std::vector<GraphPoint>& points) {

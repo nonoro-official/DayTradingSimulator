@@ -48,6 +48,7 @@ public:
     Vector2 volatileTimeRange = {4, 16};
 
     GenerateRandomMarket(float amplitude, float frequency);
+    std::vector<GraphPoint*> GeneratePrefillPoints(int count);
 
     void InitializeMarket();
     void SetNormalValues(NoiseType noiseType, float noiseMultiplier);
