@@ -76,16 +76,9 @@ int main() {
     menu.Init(&GameState::Instance());
 
     // TODO: TEMPORARY
-    MonthDisplay m = MonthDisplay(20, {880, 30}, {200,60},2,BLACK, LIGHTGRAY, BLACK);
+    MonthDisplay m = MonthDisplay(20, {screenWidth - 100, 30}, {200,60},2,BLACK, LIGHTGRAY, BLACK);
 
     while (!WindowShouldClose()) {
-        // Global Controls
-        if (IsKeyPressed(KEY_P)) GameState::Instance().PauseGame();
-        if (IsKeyPressed(KEY_ONE)) GameState::Instance().SetTimeScale(1.0f);
-        if (IsKeyPressed(KEY_TWO)) GameState::Instance().SetTimeScale(2.0f);
-        if (IsKeyPressed(KEY_THREE)) GameState::Instance().SetTimeScale(3.0f);
-        if (IsKeyPressed(KEY_FOUR)) GameState::Instance().SetTimeScale(12.0f);
-
         GameState::Instance().Update();
         menu.Update();
 
