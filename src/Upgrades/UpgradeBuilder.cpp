@@ -10,6 +10,12 @@ UpgradeBuilder& UpgradeBuilder::setName(const std::string& name)
     return *this;
 }
 
+UpgradeBuilder& UpgradeBuilder::setDescription(const std::string& description)
+{
+    upgrade.setDescription(description);
+    return *this;
+}
+
 UpgradeBuilder& UpgradeBuilder::setCost(int cost)
 {
     upgrade.setCost(cost);

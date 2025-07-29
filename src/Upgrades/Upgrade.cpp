@@ -3,12 +3,16 @@
 //
 
 #include "Upgrade.h"
-#include <iostream>
 
 void Upgrade::setName(const std::string& name)
 {
     this->name = name;
 };
+
+void Upgrade::setDescription(const std::string& description)
+{
+    this->description = description;
+}
 
 void Upgrade::setCost(int cost)
 {
@@ -23,6 +27,11 @@ void Upgrade::setEffect(std::function<void(PlayerData&)> effect)
 const std::string& Upgrade::getName()
 {
     return name;
+}
+
+const std::string& Upgrade::getDescription()
+{
+    return description;
 }
 
 int Upgrade::getCost()
@@ -46,9 +55,3 @@ bool Upgrade::tryPurchase(PlayerData& player)
     }
     return false;
 }
-
-void Upgrade::display()
-{
-    std::cout << "UPGRADE: " << name << " ($" << cost << ") " << (purchased ? "YES" : "") << std::endl;
-}
-

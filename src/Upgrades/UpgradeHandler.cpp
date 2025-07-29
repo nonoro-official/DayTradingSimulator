@@ -13,6 +13,7 @@ void UpgradeHandler::init(GameState& game)
 
     upgrades.push_back(
         builder.setName("Faster Execution")
+        .setDescription("description 1")
         .setCost(150)
         .setEffect([](PlayerData& player)
         {
@@ -24,6 +25,7 @@ void UpgradeHandler::init(GameState& game)
 
     upgrades.push_back(
         builder.setName("Prediction Hint")
+        .setDescription("description 2")
         .setCost(200)
         .setEffect([](PlayerData& player)
         {
@@ -34,6 +36,7 @@ void UpgradeHandler::init(GameState& game)
 
     upgrades.push_back(
         builder.setName("Graph Zoom")
+        .setDescription("description 3")
         .setCost(250)
         .setEffect([](PlayerData& player)
         {
@@ -44,29 +47,26 @@ void UpgradeHandler::init(GameState& game)
 
 }
 
-void UpgradeHandler::showAvailable()
+std::vector<Upgrade>& UpgradeHandler::getUpgrades()
 {
-    std::cout << "Available Upgrades:" << std::endl;
-    for (size_t i = 0; i < upgrades.size(); i++)
-    {
-        auto& u = upgrades[i];
-        std::cout << "[" << i << "] "
-                  << std::setw(25) << std::left << u.getName()
-                  << "$" << std::setw(4) << u.getCost()
-                  << (u.isPurchased() ? " YES" : "") << std::endl;
-    }
+    return upgrades;
 }
 
-void UpgradeHandler::handlePurchase(int index, PlayerData& player)
+void UpgradeHandler::handlePurchase(int index, PlayerData& player, MessageDisplay& message)
 {
     if (index < 0 || index >= upgrades.size())
     {
-        std::cout << "Invalid index!" << std::endl;
+        message.Show("Invalid index.");
         return;
     }
 
     if (!upgrades[index].tryPurchase(player))
     {
-        std::cout << "Could not purchase." << std::endl;
+        message.Show("Could not purchase. Insufficient funds or already purchased.");
     }
+    else
+    {
+        message.Show("Purchase successful!");
+    }
+
 }

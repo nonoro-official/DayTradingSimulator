@@ -25,6 +25,8 @@ private:
     GraphDisplay* graphDisplay = nullptr;
     GameState* game = nullptr;
     UpgradeHandler upgradeHandler;
+    PlayerData player;
+    MessageDisplay message;
 
     // Dropdown state
     int selectedCompanyIndex = 0;

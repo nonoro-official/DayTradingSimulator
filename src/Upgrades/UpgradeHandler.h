@@ -5,7 +5,8 @@
 #pragma once
 #include <vector>
 #include "Upgrade.h"
-#include "../Classes/GameState.h"
+#include "Classes/GameState.h"
+#include "Objects/MessageDisplay.h"
 
 class UpgradeHandler
 {
@@ -14,6 +15,6 @@ private:
 
 public:
     void init(GameState& game);
-    void showAvailable();
-    void handlePurchase(int index, PlayerData& player);
+    void handlePurchase(int index, PlayerData& player, MessageDisplay& message);
+    std::vector<Upgrade>& getUpgrades();
 };
