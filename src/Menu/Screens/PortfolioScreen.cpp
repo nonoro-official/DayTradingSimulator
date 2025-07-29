@@ -41,15 +41,15 @@ void PortfolioScreen::Draw() {
     std::transform(searchLower.begin(), searchLower.end(), searchLower.begin(), ::tolower);
     bool searchEmpty = (strcmp(searchText, "Search...") == 0 || searchLower.empty());
 
-    std::vector<Stock>& stocks = PlayerData::Instance().GetStocks();
+    std::vector<Stock*>& stocks = PlayerData::Instance().GetStocks();
     int shownCount = 0;
 
     for (size_t i = 0; i < stocks.size(); ++i) {
-        Stock& stock = stocks[i];
-        Company* company = stock.company;
-        float shares = stock.shares;
+        Stock* stock = stocks[i];
+        Company* company = stock->company;
+        float shares = stock->shares;
 
-        if (shares < stock.minimumShares) continue;
+        if (shares < stock->minimumShares) continue;
 
         std::string nameLower = company->companyName;
         std::transform(nameLower.begin(), nameLower.end(), nameLower.begin(), ::tolower);
@@ -68,7 +68,7 @@ void PortfolioScreen::Draw() {
         DrawRectangleRec(row, (shownCount % 2 == 0) ? Color{230, 230, 230, 255} : Color{250, 250, 250, 255});
         DrawRectangleLinesEx(row, 1, GRAY);
 
-        float value = stock.GetShareValue();
+        float value = stock->GetShareValue();
         float increase = company->CalculateIncreaseFromWeeksAgo(12);
 
         std::ostringstream info;
@@ -88,9 +88,7 @@ void PortfolioScreen::Draw() {
         }
 
         if (GuiButton(sellBtn, "Sell")) {
-            if (PlayerData::Instance().SellStock(company, 1)) {
-                PlayerData::Instance().cash += company->GetCurrentPrice();
-            }
+            GameState::Instance().GetStockByCompany(company)->SellStock(1); // TODO: IMPROVE
         }
 
         shownCount++;

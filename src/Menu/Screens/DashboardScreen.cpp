@@ -118,6 +118,7 @@ void DashboardScreen::Draw() {
     }
 
     if (GuiButton(sellBtn, "SELL")) {
+        showSellPopup = true;
         TraceLog(LOG_INFO, "Sell button clicked!");
     }
 
@@ -149,6 +150,7 @@ void DashboardScreen::Draw() {
         PopUpWindow().DrawBuySellPopup(true, showBuyPopup, selectedCompany, PlayerData::Instance(), inputBuffer);
     }
     if (showSellPopup && selectedCompany) {
+        GameState::Instance().SetTempPause(true);
         PopUpWindow().DrawBuySellPopup(false, showSellPopup, selectedCompany, PlayerData::Instance(), inputBuffer);
     }
 

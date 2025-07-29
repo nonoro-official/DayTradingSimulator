@@ -11,51 +11,6 @@
 
 bool GraphDisplay::isAnyHovering = false;
 
-void Menu::InitializeCompanies() {
-    Company* lemon = new Company("Lemon Inc", "Develops sustainable tech for modern agriculture.", 0.6f, 0.9f, new GraphDisplay({540, 300}, {840, 360}));
-    lemon->market->SetNormalValues(GenerateRandomMarket::PerlinNoise, 0.3f);
-    lemon->market->SetTrendValues(GenerateRandomMarket::PerlinNoise, 0.25f, {8, 20}, {-0.01f, 0.02f});
-    lemon->market->SetHoldValues(GenerateRandomMarket::WhiteNoise, 0.05f, {6, 12});
-    lemon->market->SetVolatileValues(GenerateRandomMarket::WhiteNoise, 0.8f, {3, 6});
-    lemon->SetStoreValues(
-        "A slow-growing tech firm focused on sustainable agriculture and automation.\n"
-        "Stable and low-risk, it’s ideal for long-term investors looking for consistent gains.",
-        52.00f
-    );
-    companies.push_back(lemon);
-
-    Company* banana = new Company("Banana Corp", "Builds AI systems for automated fruit farming.", 1.25f, 1.4f, new GraphDisplay({540, 300}, {840, 360}));
-    banana->market->SetNormalValues(GenerateRandomMarket::WhiteNoise, 0.6f);
-    banana->market->SetTrendValues(GenerateRandomMarket::WhiteNoise, 0.5f, {3, 8}, {-0.04f, 0.06f});
-    banana->market->SetHoldValues(GenerateRandomMarket::WhiteNoise, 0.15f, {2, 5});
-    banana->market->SetVolatileValues(GenerateRandomMarket::WhiteNoise, 1.6f, {4, 10});
-    banana->SetStoreValues(
-        "A volatile AI startup blending biotech with fruit farming.\n"
-        "High-risk, high-reward — perfect for traders chasing sharp spikes and quick flips.",
-        38.00f
-    );
-    companies.push_back(banana);
-
-    Company* mango = new Company("Mango Ltd", "Manages cargo and logistics across tropical regions.", 0.9f, 1.1f, new GraphDisplay({540, 300}, {840, 360}));
-    mango->market->SetNormalValues(GenerateRandomMarket::PerlinNoise, 0.4f);
-    mango->market->SetTrendValues(GenerateRandomMarket::WhiteNoise, 0.3f, {6, 14}, {-0.015f, 0.035f});
-    mango->market->SetHoldValues(GenerateRandomMarket::WhiteNoise, 0.1f, {4, 10});
-    mango->market->SetVolatileValues(GenerateRandomMarket::PerlinNoise, 1.2f, {5, 12});
-    mango->SetStoreValues(
-        "A dependable logistics company serving tropical trade routes.\n"
-        "Moderately stable with occasional bursts, it's best bought before seasonal demand ramps up.",
-        46.00f
-    );
-    companies.push_back(mango);
-}
-
-void Menu::InitializeStocks() {
-    for (Company * company: companies) {
-        Stock* stock = new Stock(*company, .5f);
-        stocks.push_back(stock);
-    }
-}
-
 std::string Menu::BuildCompanyDropdownString() {
     std::string result;
     for (size_t i = 0; i < companies.size(); ++i) {
@@ -70,31 +25,13 @@ void Menu::Init(GameState* gameRef)
     game = gameRef;
     upgradeHandler.init(*game);
 
-    // Initialize Companies
-    InitializeCompanies();
+    game->InitializeCompaniesAndStocks();
 
-    // Initialize Stocks
-    InitializeStocks();
-
-    // Initialize Screens
-    dashboardScreen = new DashboardScreen(&companies, &selectedCompanyIndex);
-    companiesScreen = new CompaniesScreen(&companies);
+    dashboardScreen = new DashboardScreen(&game->GetCompanies(), &game->GetSelectedCompanyIndex());
+    companiesScreen = new CompaniesScreen(&game->GetCompanies());
     portfolioScreen = new PortfolioScreen();
     upgradesScreen = new UpgradesScreen(&upgradeHandler, &player, &message);
 }
-
-//
-// void Menu::Update() {
-//     GraphDisplay::isAnyHovering = false;
-//
-//     if (currentScreen == SCREEN_DASHBOARD) {
-//         for (int i = 0; i < companies.size(); i++) {
-//             if (i == selectedCompanyIndex) companies[i]->display->active = true;
-//             else companies[i]->display->active = false;
-//             companies[i]->display->Update();
-//         }
-//     }
-// }
 
 void Menu::Update() {
     GraphDisplay::isAnyHovering = false;

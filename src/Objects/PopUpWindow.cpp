@@ -48,6 +48,7 @@ void PopUpWindow::Draw()
 
 void PopUpWindow::DrawBuySellPopup(bool isBuyMode, bool& isVisible, Company* company, PlayerData& player, char* inputText)
 {
+    Stock* stock = GameState::Instance().GetStockByCompany(company);
     if (!isVisible || !company) return;
 
     Rectangle popup = { GetScreenWidth() / 2.0f - 300, GetScreenHeight() / 2.0f - 200, 600, 400 };
@@ -56,10 +57,11 @@ void PopUpWindow::DrawBuySellPopup(bool isBuyMode, bool& isVisible, Company* com
 
     float pricePerShare = company->GetCurrentPrice();
     float playerBalance = player.cash;
-    float ownedShares = player.GetTotalShares(company);
-    float minShares = player.GetMinimumShares(company);  // make sure this is accessible
+    float ownedShares = stock->shares;
+    float minShares = stock->minimumShares;
     float inputValue = std::atof(inputText);
-    float estimatedCostOrValue = isBuyMode ? inputValue : inputValue * pricePerShare;
+    float sharesToBuy = inputValue / pricePerShare;
+    float estimatedValue = inputValue * pricePerShare;
 
     int y = popup.y + 20;
 
@@ -76,15 +78,16 @@ void PopUpWindow::DrawBuySellPopup(bool isBuyMode, bool& isVisible, Company* com
         inputFocused = false;
     y += 50;
 
-    // Show info
-    if (isBuyMode) {
-        DrawText(TextFormat("Approximate Units: %.2f", inputValue / pricePerShare), popup.x + 20, y, 20, DARKGRAY); y += 30;
-    } else {
-        DrawText(TextFormat("Approximate Value: $%.2f", estimatedCostOrValue), popup.x + 20, y, 20, DARKGRAY); y += 30;
+    // New: show owned units if selling
+    if (!isBuyMode) {
+        DrawText(TextFormat("Owned Units: %.2f", ownedShares), popup.x + 20, y, 20, DARKGRAY);
+        y += 30;
     }
 
-    if (!isBuyMode && ownedShares > 0) {
-        DrawText(TextFormat("Owned Shares: %.2f", ownedShares), popup.x + 20, y, 20, DARKGRAY); y += 30;
+    if (isBuyMode) {
+        DrawText(TextFormat("Approximate Units: %.2f", sharesToBuy), popup.x + 20, y, 20, DARKGRAY); y += 30;
+    } else {
+        DrawText(TextFormat("Approximate Value: $%.2f", estimatedValue), popup.x + 20, y, 20, DARKGRAY); y += 30;
     }
 
     if (isBuyMode && ownedShares > 0) {
@@ -98,34 +101,45 @@ void PopUpWindow::DrawBuySellPopup(bool isBuyMode, bool& isVisible, Company* com
     Rectangle confirmBtn = { popup.x + popup.width - 220, popup.y + popup.height - 50, 90, 30 };
     Rectangle cancelBtn  = { popup.x + popup.width - 110, popup.y + popup.height - 50, 90, 30 };
 
+    // Validity checks
+    bool canBuy = inputValue >= 0.01f && inputValue <= playerBalance && sharesToBuy >= minShares;
+    bool canSell = inputValue >= 0.01f && inputValue <= ownedShares &&
+                   (ownedShares - inputValue >= minShares || ownedShares - inputValue <= 0.001f);
+
+    // Red button if invalid
+    if ((isBuyMode && !canBuy) || (!isBuyMode && !canSell)) {
+        GuiSetStyle(BUTTON, BASE_COLOR_NORMAL, ColorToInt(RED));
+    }
+
     if (GuiButton(confirmBtn, isBuyMode ? "BUY" : "SELL")) {
         if (isBuyMode) {
-            if (inputValue < 0.01f) {
-                Show("Enter a valid investment amount.");
-            } else if (inputValue > playerBalance) {
-                Show("Not enough funds.");
+            if (!canBuy) {
+                if (inputValue < 0.01f) Show("Enter a valid investment amount.");
+                else if (inputValue > playerBalance) Show("Not enough funds.");
+                else Show("Must meet minimum shares requirement.");
             } else {
-                Stock stock(*company, minShares);
-                stock.shares = inputValue / pricePerShare;
-                player.AddStock(stock);
-                player.cash -= inputValue;
+                stock->BuyStock(sharesToBuy, inputValue);
                 Show("Stock purchased!");
                 isVisible = false;
                 strcpy(inputText, "");
             }
         } else {
-            if (inputValue > ownedShares) {
-                Show("You don't own that many shares.");
-            } else if (inputValue < 0.01f) {
-                Show("Enter a valid share amount.");
+            if (!canSell) {
+                if (inputValue < 0.01f) Show("Enter a valid share amount.");
+                else if (inputValue > ownedShares) Show("You don't own that many shares.");
+                else Show("Selling would drop you below the minimum shares.");
             } else {
-                player.SellStock(company, inputValue);
-                player.cash += estimatedCostOrValue;
+                stock->SellStock(inputValue);
                 Show("Shares sold!");
                 isVisible = false;
                 strcpy(inputText, "");
             }
         }
+    }
+
+    // Reset color
+    if ((isBuyMode && !canBuy) || (!isBuyMode && !canSell)) {
+        GuiSetStyle(BUTTON, BASE_COLOR_NORMAL, ColorToInt(LIGHTGRAY));
     }
 
     if (GuiButton(cancelBtn, "CANCEL")) {

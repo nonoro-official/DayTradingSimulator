@@ -25,17 +25,13 @@
 
         PlayerData();
 
-        void AddStock(Stock& stock);
-        bool BuyStock(Stock& stock, float moneyInserted);
-        bool SellStock(Company* company, float sharesToSell);
-        float GetTotalShares(Company* company);
-        std::vector<Stock>& GetStocks();
-        float GetMinimumShares(Company* company);
+        void AddStock(Stock* stock);
+        std::vector<Stock*>& GetStocks();
         float GetTotalPortfolioValue(); // total value of all stocks
         float GetTotalProfitLoss(Company* company, float avgBuyPrice);
 
     private:
-        std::vector<Stock> stocks = std::vector<Stock>();
+        std::vector<Stock*> stocks = std::vector<Stock*>();
     };
 
     #endif //PLAYERDATA_H

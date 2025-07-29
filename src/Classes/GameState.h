@@ -1,6 +1,9 @@
 #pragma once
 #include <functional>
 
+class Stock;
+class Company;
+
 class GameState {
 public:
     // Access the singleton instance
@@ -26,6 +29,15 @@ public:
 
     void Update();
 
+    void InitializeCompaniesAndStocks();
+
+    std::vector<Company*>& GetCompanies();
+    int& GetSelectedCompanyIndex();
+    Company* GetCompanyByIndex(int index);
+    Stock* GetStockByCompany(Company* company);
+    Stock* GetStockByCompanyIndex(int index);
+
+
 private:
     // Private constructor prevents external instancing
     GameState() = default;
@@ -44,4 +56,7 @@ private:
 
     int month = 0;
     int week = 0;
+
+    std::vector<Company*> companies;
+    int selectedCompanyIndex = 0;
 };

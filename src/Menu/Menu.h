@@ -37,7 +37,6 @@ private:
     int selectedCompanyIndex = 0;
     bool dropdownActive = false;
     std::vector<Company*> companies;  // Use this to store all companies
-    std::vector<Stock*> stocks;
 
     // Search bar
     char searchText[32] = "Search...";
