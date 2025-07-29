@@ -61,10 +61,5 @@ public:
 
     std::string BuildCompanyDropdownString();
 
-    void DrawDashboardScreen();
-    void DrawPortfolioScreen();
-    void DrawCompaniesScreen();
-    void DrawUpgradesScreen();
-
     ~Menu();
 };

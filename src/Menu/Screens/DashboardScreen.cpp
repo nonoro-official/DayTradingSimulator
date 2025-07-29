@@ -119,7 +119,7 @@ void DashboardScreen::Draw() {
 
     if (GuiButton(sellBtn, "SELL")) {
         showSellPopup = true;
-        TraceLog(LOG_INFO, "Sell button clicked!");
+        strcpy(inputBuffer, "0.0");
     }
 
     // --- Company Info Text

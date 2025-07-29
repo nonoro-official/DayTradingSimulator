@@ -45,11 +45,12 @@ void PopUpWindow::Draw()
 
     }
 }
-
 void PopUpWindow::DrawBuySellPopup(bool isBuyMode, bool& isVisible, Company* company, PlayerData& player, char* inputText)
 {
-    Stock* stock = GameState::Instance().GetStockByCompany(company);
     if (!isVisible || !company) return;
+
+    Stock* stock = GameState::Instance().GetStockByCompany(company);
+    if (!stock) return;
 
     Rectangle popup = { GetScreenWidth() / 2.0f - 300, GetScreenHeight() / 2.0f - 200, 600, 400 };
     DrawRectangleRec(popup, RAYWHITE);
@@ -64,49 +65,55 @@ void PopUpWindow::DrawBuySellPopup(bool isBuyMode, bool& isVisible, Company* com
     float estimatedValue = inputValue * pricePerShare;
 
     int y = popup.y + 20;
+    const float left = popup.x + 20;
 
-    DrawText(isBuyMode ? "ENTER AMOUNT TO INVEST" : "ENTER AMOUNT OF SHARES TO SELL", popup.x + 20, y, 24, BLACK);
-    y += 50;
+    // Title
+    DrawText(isBuyMode ? "ENTER AMOUNT TO INVEST" : "ENTER NUMBER OF SHARES TO SELL", left, y, 24, BLACK);
+    y += 40;
 
-    // Input textbox
-    Rectangle inputBox = { popup.x + 20, (float)y, 160, 30 };
+    // Input box
+    Rectangle inputBox = { left, (float)y, 160, 30 };
     static bool inputFocused = false;
     GuiTextBox(inputBox, inputText, 16, inputFocused);
     if (CheckCollisionPointRec(GetMousePosition(), inputBox) && IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
         inputFocused = true;
     else if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
         inputFocused = false;
-    y += 50;
+    y += 40;
 
-    // New: show owned units if selling
-    if (!isBuyMode) {
-        DrawText(TextFormat("Owned Units: %.2f", ownedShares), popup.x + 20, y, 20, DARKGRAY);
+    // --- Shared Info ---
+    DrawText(TextFormat("Price per Share: $%.2f", pricePerShare), left, y, 20, DARKGRAY);
+    y += 30;
+
+    if (isBuyMode) {
+        DrawText(TextFormat("Approx. Units You Can Buy: %.2f", sharesToBuy), left, y, 20, DARKGRAY);
+        y += 30;
+        if (ownedShares > 0) {
+            DrawText(TextFormat("Current Shares Owned: %.2f", ownedShares), left, y, 20, DARKGRAY);
+            y += 30;
+        }
+        DrawText(TextFormat("Minimum Required to Buy: %.2f shares", minShares), left, y, 20, DARKGRAY);
+        y += 30;
+        DrawText(TextFormat("Your Balance: $%.2f", playerBalance), left, y, 20, DARKGRAY);
+        y += 30;
+    } else {
+        DrawText(TextFormat("You Own: %.2f Shares", ownedShares), left, y, 20, DARKGRAY);
+        y += 30;
+        DrawText(TextFormat("Estimated Sale Value: $%.2f", estimatedValue), left, y, 20, DARKGRAY);
+        y += 30;
+        DrawText(TextFormat("Minimum Remaining: %.2f (or sell all)", minShares), left, y, 20, DARKGRAY);
         y += 30;
     }
 
-    if (isBuyMode) {
-        DrawText(TextFormat("Approximate Units: %.2f", sharesToBuy), popup.x + 20, y, 20, DARKGRAY); y += 30;
-    } else {
-        DrawText(TextFormat("Approximate Value: $%.2f", estimatedValue), popup.x + 20, y, 20, DARKGRAY); y += 30;
-    }
-
-    if (isBuyMode && ownedShares > 0) {
-        DrawText(TextFormat("Current Shares: %.2f", ownedShares), popup.x + 20, y, 20, DARKGRAY); y += 30;
-    }
-
-    DrawText(TextFormat("Minimum Shares Required: %.2f", minShares), popup.x + 20, y, 20, DARKGRAY); y += 30;
-    DrawText(TextFormat("Balance: $%.2f", playerBalance), popup.x + 20, y, 20, DARKGRAY); y += 30;
-
-    // Buttons
+    // --- Button Logic ---
     Rectangle confirmBtn = { popup.x + popup.width - 220, popup.y + popup.height - 50, 90, 30 };
     Rectangle cancelBtn  = { popup.x + popup.width - 110, popup.y + popup.height - 50, 90, 30 };
 
-    // Validity checks
     bool canBuy = inputValue >= 0.01f && inputValue <= playerBalance && sharesToBuy >= minShares;
     bool canSell = inputValue >= 0.01f && inputValue <= ownedShares &&
-                   (ownedShares - inputValue >= minShares || ownedShares - inputValue <= 0.001f);
+                   (ownedShares - inputValue >= minShares || fabsf(ownedShares - inputValue) <= 0.001f);
 
-    // Red button if invalid
+    // Change confirm button to red if invalid
     if ((isBuyMode && !canBuy) || (!isBuyMode && !canSell)) {
         GuiSetStyle(BUTTON, BASE_COLOR_NORMAL, ColorToInt(RED));
     }
@@ -122,6 +129,7 @@ void PopUpWindow::DrawBuySellPopup(bool isBuyMode, bool& isVisible, Company* com
                 Show("Stock purchased!");
                 isVisible = false;
                 strcpy(inputText, "");
+                GameState::Instance().SetTempPause(false);
             }
         } else {
             if (!canSell) {
@@ -133,11 +141,12 @@ void PopUpWindow::DrawBuySellPopup(bool isBuyMode, bool& isVisible, Company* com
                 Show("Shares sold!");
                 isVisible = false;
                 strcpy(inputText, "");
+                GameState::Instance().SetTempPause(false);
             }
         }
     }
 
-    // Reset color
+    // Reset color if changed
     if ((isBuyMode && !canBuy) || (!isBuyMode && !canSell)) {
         GuiSetStyle(BUTTON, BASE_COLOR_NORMAL, ColorToInt(LIGHTGRAY));
     }

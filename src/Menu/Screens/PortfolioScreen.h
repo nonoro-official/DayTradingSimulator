@@ -16,4 +16,9 @@ private:
 public:
     PortfolioScreen() = default;
     void Draw();
+
+    Company* popupCompany = nullptr;
+    bool showBuyPopup = false;
+    bool showPopup = false;
+    char inputBuffer[32] = "0.0";
 };

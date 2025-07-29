@@ -11,6 +11,8 @@
 #include <string>
 #include <cstring>
 
+#include "Objects/PopUpWindow.h"
+
 void PortfolioScreen::Draw() {
     Layout layout(GetScreenWidth(), GetScreenHeight());
 
@@ -84,11 +86,17 @@ void PortfolioScreen::Draw() {
         Rectangle sellBtn = {row.x + row.width - 80.0f, row.y + 10.0f, 60.0f, 30.0f};
 
         if (GuiButton(buyBtn, "Buy")) {
-            // Optional: implement buy logic (e.g. open popup)
+            popupCompany = company;
+            showPopup = true;
+            showBuyPopup = true;
+            strcpy(inputBuffer, "0.0");
         }
 
         if (GuiButton(sellBtn, "Sell")) {
-            GameState::Instance().GetStockByCompany(company)->SellStock(1); // TODO: IMPROVE
+            popupCompany = company;
+            showBuyPopup = false; // for sell
+            showPopup = true;
+            strcpy(inputBuffer, "0.0");
         }
 
         shownCount++;
@@ -96,5 +104,11 @@ void PortfolioScreen::Draw() {
 
     if (shownCount == 0) {
         DrawText("You don't own any stocks yet. Buy from a company to begin!", 140.0f, 300.0f, 20, GRAY);
+    }
+
+    // ===== POPUP HANDLER =====
+    if (popupCompany) {
+        GameState::Instance().SetTempPause(true);
+        PopUpWindow().DrawBuySellPopup(showBuyPopup, showPopup, popupCompany, PlayerData::Instance(), inputBuffer);
     }
 }
