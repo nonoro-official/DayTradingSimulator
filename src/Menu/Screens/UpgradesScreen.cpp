@@ -3,3 +3,111 @@
 //
 
 #include "UpgradesScreen.h"
+#include "raylib.h"
+#include "raygui.h"
+#include "Objects/Layout.h"
+#include <sstream>
+#include <iomanip>
+#include <string>
+#include <cstring>
+
+#include "CompaniesScreen.h"
+
+UpgradesScreen::UpgradesScreen(UpgradeHandler* handlerRef, PlayerData* playerRef, PopUpWindow* popupRef)
+    : handler(handlerRef), player(playerRef), popup(popupRef) {}
+
+void UpgradesScreen::Draw()
+{
+    Layout layout(GetScreenWidth(), GetScreenHeight());
+
+    // ===== Title =====
+    DrawText("UPGRADES", layout.leftOffset + 20.0f, layout.topOffset + 10.0f, 30, DARKGRAY);
+
+    // ===== Search Box =====
+    Rectangle searchBox = {
+        layout.screenWidth - 180.0f,
+        layout.topOffset + 10.0f,
+        170.0f,
+        30.0f
+    };
+
+    if (CheckCollisionPointRec(GetMousePosition(), searchBox)) {
+        if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) {
+            isSearchFocused = true;
+            if (strcmp(searchText, "Search...") == 0) {
+                searchText[0] = '\0';
+            }
+        }
+    } else if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) {
+        isSearchFocused = false;
+    }
+
+    if (!isSearchFocused && strlen(searchText) == 0) {
+        strcpy(searchText, "Search...");
+    }
+
+    GuiSetStyle(TEXTBOX, BASE_COLOR_NORMAL, ColorToInt(WHITE));
+    GuiSetStyle(TEXTBOX, BORDER_COLOR_NORMAL, ColorToInt(GRAY));
+    GuiSetStyle(TEXTBOX, TEXT_COLOR_NORMAL, ColorToInt(BLACK));
+    GuiTextBox(searchBox, searchText, 32, isSearchFocused);
+
+    // ===== Upgrade List =====
+    std::string searchLower = searchText;
+    std::transform(searchLower.begin(), searchLower.end(), searchLower.begin(), ::tolower);
+    bool searchEmpty = (strcmp(searchText, "Search...") == 0 || searchLower.empty());
+
+    std::vector<Upgrade>& upgrades = handler->getUpgrades();
+
+    int shownCount = 0;
+    for (size_t i = 0; i < upgrades.size(); ++i) {
+        Upgrade& upgrade = upgrades[i];
+
+        std::string nameLower = upgrade.getName();
+        std::transform(nameLower.begin(), nameLower.end(), nameLower.begin(), ::tolower);
+
+        if (!searchEmpty && nameLower.find(searchLower) == std::string::npos) continue;
+
+        float y = layout.GetBoxStartY() + shownCount * (layout.rowHeight + layout.spacing);
+
+        // Prevent drawing past screen
+        if (y + layout.rowHeight > layout.screenHeight) break;
+
+        Rectangle row = {
+            layout.GetBoxX(),
+            y,
+            layout.GetBoxWidth(),
+            layout.rowHeight
+        };
+
+        Color bgColor = (shownCount % 2 == 0) ? Color{230, 230, 230, 255} : Color{250, 250, 250, 255};
+        DrawRectangleRec(row, bgColor);
+        DrawRectangleLinesEx(row, 1, GRAY);
+
+        std::ostringstream upgradeInfo;
+        upgradeInfo << std::fixed << std::setprecision(2);
+        upgradeInfo << upgrade.getName() << " | $" << upgrade.getCost();
+
+        float textY = row.y + 10.0f;
+        DrawText(upgradeInfo.str().c_str(), row.x + 10.0f, textY, 20, BLACK);
+        DrawText(upgrade.getDescription().c_str(), row.x + 10.0f, textY + 30.0f, 18, BLACK);
+
+        Rectangle buyBtn = {
+            row.x + row.width - 100.0f,
+            row.y + (layout.rowHeight - 30.0f) / 2.0f,
+            80.0f,
+            30.0f
+        };
+
+        if (GuiButton(buyBtn, "Buy")) {
+            handler->handlePurchase(i, *player, *popup);
+        }
+
+        shownCount++;
+    }
+
+    if (shownCount == 0) {
+        DrawText("No matching upgrades found.", layout.leftOffset, layout.GetBoxStartY(), 20, RED);
+    }
+
+    popup->Draw();
+}

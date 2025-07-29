@@ -8,7 +8,6 @@
 #include "Classes/Company.h"
 #include "Classes/Stock.h"
 #include "Classes/PlayerData.h"
-#include "Objects/Layout.h"
 
 bool GraphDisplay::isAnyHovering = false;
 
@@ -66,7 +65,8 @@ std::string Menu::BuildCompanyDropdownString() {
     return result;
 }
 
-void Menu::Init(GameState* gameRef) {
+void Menu::Init(GameState* gameRef)
+{
     game = gameRef;
     upgradeHandler.init(*game);
 
@@ -79,7 +79,9 @@ void Menu::Init(GameState* gameRef) {
     // Initialize Screens
     dashboardScreen = new DashboardScreen(&companies, &selectedCompanyIndex);
     companiesScreen = new CompaniesScreen(&companies);
+    upgradesScreen = new UpgradesScreen(&upgradeHandler, &player, &message);
 }
+
 //
 // void Menu::Update() {
 //     GraphDisplay::isAnyHovering = false;
@@ -135,7 +137,7 @@ void Menu::Draw() {
         if (companiesScreen) companiesScreen->Draw();
         break;
     case SCREEN_UPGRADES:
-        // if (upgradesScreen) upgradesScreen->Draw();
+        if (upgradesScreen) upgradesScreen->Draw();
         break;
     }
 }
@@ -218,68 +220,68 @@ void Menu::DrawPortfolioScreen()
         DrawText("You don't own any stocks yet. Buy from a company to begin!", 140.0f, 300.0f, 20, GRAY);
     }
 }
-
-void Menu::DrawUpgradesScreen()
-{
-    DrawText("UPGRADES", 140, 70, 30, DARKGRAY);
-
-    Rectangle searchBox = { GetScreenWidth() - 180.0f, 60.0f + 10.0f, 170.0f, 30.0f };
-
-    // Click detection
-    if (CheckCollisionPointRec(GetMousePosition(), searchBox)) {
-        if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) {
-            isSearchFocused = true;
-
-            // Clear placeholder when first clicked
-            if (strcmp(searchText, "Search...") == 0) {
-                searchText[0] = '\0'; // Clear text
-            }
-        }
-    } else if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) {
-        isSearchFocused = false;
-    }
-
-    // Show placeholder if not focused and empty
-    if (!isSearchFocused && strlen(searchText) == 0) {
-        strcpy(searchText, "Search...");
-    }
-
-    // Optional styles
-    GuiSetStyle(TEXTBOX, BASE_COLOR_NORMAL, ColorToInt(WHITE));
-    GuiSetStyle(TEXTBOX, BORDER_COLOR_NORMAL, ColorToInt(GRAY));
-    GuiSetStyle(TEXTBOX, TEXT_COLOR_NORMAL, ColorToInt(BLACK));
-
-    // Render the textbox (editable if focused)
-    GuiTextBox(searchBox, searchText, 32, isSearchFocused);
-
-    float boxStartY = 110.0f;
-    float boxHeight = 80.0f;
-    float boxWidth = GetScreenWidth() - 160.0f;
-
-    std::vector<Upgrade>& upgrades = upgradeHandler.getUpgrades();
-
-    for (size_t i = 0; i < upgrades.size(); ++i) {
-        Upgrade& upgrade = upgrades[i];
-
-        float y = boxStartY + i * (boxHeight + 10.0f);
-        Rectangle box = {140.0f, y, boxWidth, boxHeight};
-
-        DrawRectangleRec(box, LIGHTGRAY);
-        DrawRectangleLinesEx(box, 1, GRAY);
-
-        std::string upgradeInfo = upgrade.getName() + " | $" + std::to_string(upgrade.getCost());
-
-        std::string upgradeDesc = upgrade.getDescription();
-
-        DrawText(upgradeInfo.c_str(), box.x + 10.0f, box.y + 10.0f, 20, BLACK);
-        DrawText(upgradeDesc.c_str(), box.x + 10.0f, box.y + 50.0f, 18, BLACK);
-
-        if (GuiButton({box.x + box.width - 120.0f, box.y + 25.0f, 80.0f, 30.0f}, "Buy")) {
-            upgradeHandler.handlePurchase(i, player, message);
-        }
-        message.Draw();
-    }
-}
+//
+// void Menu::DrawUpgradesScreen()
+// {
+//     DrawText("UPGRADES", 140, 70, 30, DARKGRAY);
+//
+//     Rectangle searchBox = { GetScreenWidth() - 180.0f, 60.0f + 10.0f, 170.0f, 30.0f };
+//
+//     // Click detection
+//     if (CheckCollisionPointRec(GetMousePosition(), searchBox)) {
+//         if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) {
+//             isSearchFocused = true;
+//
+//             // Clear placeholder when first clicked
+//             if (strcmp(searchText, "Search...") == 0) {
+//                 searchText[0] = '\0'; // Clear text
+//             }
+//         }
+//     } else if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) {
+//         isSearchFocused = false;
+//     }
+//
+//     // Show placeholder if not focused and empty
+//     if (!isSearchFocused && strlen(searchText) == 0) {
+//         strcpy(searchText, "Search...");
+//     }
+//
+//     // Optional styles
+//     GuiSetStyle(TEXTBOX, BASE_COLOR_NORMAL, ColorToInt(WHITE));
+//     GuiSetStyle(TEXTBOX, BORDER_COLOR_NORMAL, ColorToInt(GRAY));
+//     GuiSetStyle(TEXTBOX, TEXT_COLOR_NORMAL, ColorToInt(BLACK));
+//
+//     // Render the textbox (editable if focused)
+//     GuiTextBox(searchBox, searchText, 32, isSearchFocused);
+//
+//     float boxStartY = 110.0f;
+//     float boxHeight = 80.0f;
+//     float boxWidth = GetScreenWidth() - 160.0f;
+//
+//     std::vector<Upgrade>& upgrades = upgradeHandler.getUpgrades();
+//
+//     for (size_t i = 0; i < upgrades.size(); ++i) {
+//         Upgrade& upgrade = upgrades[i];
+//
+//         float y = boxStartY + i * (boxHeight + 10.0f);
+//         Rectangle box = {140.0f, y, boxWidth, boxHeight};
+//
+//         DrawRectangleRec(box, LIGHTGRAY);
+//         DrawRectangleLinesEx(box, 1, GRAY);
+//
+//         std::string upgradeInfo = upgrade.getName() + " | $" + std::to_string(upgrade.getCost());
+//
+//         std::string upgradeDesc = upgrade.getDescription();
+//
+//         DrawText(upgradeInfo.c_str(), box.x + 10.0f, box.y + 10.0f, 20, BLACK);
+//         DrawText(upgradeDesc.c_str(), box.x + 10.0f, box.y + 50.0f, 18, BLACK);
+//
+//         if (GuiButton({box.x + box.width - 120.0f, box.y + 25.0f, 80.0f, 30.0f}, "Buy")) {
+//             upgradeHandler.handlePurchase(i, player, message);
+//         }
+//         message.Draw();
+//     }
+// }
 
 Menu::~Menu()
 {

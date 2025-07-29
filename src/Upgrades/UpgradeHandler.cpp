@@ -64,7 +64,7 @@ void UpgradeHandler::handlePurchase(int index, PlayerData& player, PopUpWindow& 
 
     if (!upgrades[index].tryPurchase(player))
     {
-        message.Show("Could not purchase. Insufficient funds or already purchased.");
+        message.Show("Could not purchase. \nInsufficient funds or already purchased.");
     }
     else
     {
