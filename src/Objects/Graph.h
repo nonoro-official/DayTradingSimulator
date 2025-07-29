@@ -46,6 +46,7 @@ private:
 };
 class GraphDisplay {
 public:
+    bool active = false;
     static bool isAnyHovering;
     int pointsToDraw = 24;
 

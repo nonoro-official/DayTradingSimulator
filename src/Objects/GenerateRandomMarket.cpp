@@ -125,9 +125,8 @@ GraphPoint* GenerateRandomMarket::GenerateNextPoint() {
 
     switch (noiseType) {
         case PerlinNoise: noiseValue = perlinNoise.noise1D(amplitude * time * frequency) * noiseMultiplier; break;
-        case WhiteNoise: noiseValue = Remap(static_cast<float>(rand()) / RAND_MAX, 0, 1, -.5, .5) * noiseMultiplier;
+        case WhiteNoise: noiseValue = Remap(static_cast<float>(rand()) / RAND_MAX, 0.025, 0.95, -.5, .5) * noiseMultiplier;
     }
-
 
     // If we're hitting the edges, steer the market back
     if (currentState != Volatile && currentState != Hold && currentState != Cooldown) {
@@ -141,8 +140,8 @@ GraphPoint* GenerateRandomMarket::GenerateNextPoint() {
     float yValue = currentValue + (currentValue * noiseValue);
 
     // Clamp to minmax
-    currentValue = Clamp(currentValue, 0.025, 1.0f);
-    yValue = Clamp(yValue, 0.025f, 1.0f);
+    currentValue = Clamp(currentValue, 0.025, 0.95);
+    yValue = Clamp(yValue, 0.025, 0.95);
 
     // Apply value
     GraphPoint* newPoint = new GraphPoint(yValue);

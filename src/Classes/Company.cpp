@@ -41,7 +41,7 @@ Company::Company(std::string companyName, std::string companyDescription, float 
 
 void Company::SetStoreValues(std::string storeDescription, float basePrice) {
     this->companyStoreDescription = storeDescription;
-    this->baseStockPrice = baseStockPrice;
+    this->baseStockPrice = basePrice;
 }
 
 
@@ -55,11 +55,17 @@ void Company::GenerateNext(GraphDisplay* display) {
     newData->monthAcquired = GameState::Instance().GetMonth();
     newData->weekAcquired = GameState::Instance().GetWeek();
 
-    float multiplier = nextPoint->position.y;
+    float multiplier = nextPoint->yValue;
     newData->stockPrice = this->baseStockPrice * multiplier;
 
+    std::cout << multiplier << std::endl;
+
     // Pass tooltip data
-    nextPoint->InitializeTooltip(newData->weekAcquired, newData->monthAcquired, newData->stockPrice, newData->company->CalculateIncreaseFromWeeksAgo(1));
+    float increase = 0;
+    if (!previousValues.empty()) {
+        increase = newData->stockPrice - previousValues.back()->stockPrice;
+    }
+    nextPoint->InitializeTooltip(newData->weekAcquired, newData->monthAcquired, newData->stockPrice, increase);
 
     // Save data
     this->currentMarketData = newData;

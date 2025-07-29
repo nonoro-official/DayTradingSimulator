@@ -73,8 +73,10 @@ void Menu::Update() {
     GraphDisplay::isAnyHovering = false;
 
     if (currentScreen == SCREEN_DASHBOARD) {
-        for (Company* c: companies) {
-            c->display->Update();
+        for (int i = 0; i < companies.size(); i++) {
+            if (i == selectedCompanyIndex) companies[i]->display->active = true;
+            else companies[i]->display->active = false;
+            companies[i]->display->Update();
         }
     }
 }
@@ -124,7 +126,6 @@ void Menu::DrawDashboardScreen()
     GuiSetStyle(DROPDOWNBOX, TEXT_COLOR_PRESSED, ColorToInt(BLACK));
 
     // Dropdown state (persistent between frames)
-    static int selectedCompanyIndex = 0;
     static bool dropdownOpen = false;
 
     // Dropdown options
