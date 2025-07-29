@@ -62,6 +62,8 @@ add_executable(${PROJECT_NAME}
         src/Objects/ToggleButton.cpp
         src/Objects/ToggleButton.h
         src/Objects/Layout.h
+        src/Classes/StockOrder.cpp
+        src/Classes/StockOrder.h
 )
 
 # Include paths

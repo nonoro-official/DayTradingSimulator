@@ -12,3 +12,14 @@ Stock::Stock(Company& c, float startingStockPrice)
 
 
 float Stock::GetShareValue() { return shares * company->GetCurrentPrice(); }
+
+float Stock::SellStock(float amountToSell) {
+    float value = amountToSell * company->GetCurrentPrice();
+    this->shares -= amountToSell;
+
+    return value;
+}
+
+void Stock::BuyStock(float amountToBuy) {
+    this->shares += amountToBuy;
+}

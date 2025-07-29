@@ -15,6 +15,9 @@ public:
     Stock(Company &c, float startingStockPrice);
 
     float GetShareValue();
+
+    float SellStock(float shares);
+    void BuyStock(float shares);
 };
 
 #endif //STOCK_H
