@@ -62,6 +62,9 @@ private:
     float activeTrendStrength = 0.0f;
     float activeTrendDuration = 0.0f;
     int holdStepsRemaining = 0;           // How many steps left to hold
+    float edgePadding = .1f;
+
+    void SetMarketState(MarketState state);
 };
 
 #endif //GENERATERANDOMMARKET_H

@@ -31,6 +31,36 @@ const std::vector<GraphPoint*>& GenerateRandomMarket::GetMarketValues() const {
     return generatedPoints;
 }
 
+void GenerateRandomMarket::SetMarketState(MarketState state) {
+    currentState = state;
+
+    switch (currentState) {
+        case Normal: break;
+
+        case TrendUp: {
+            timeInState = GetRandomValue(trendTimeRange.x, trendTimeRange.y);
+        } break;
+
+        case TrendDown: {
+            timeInState = GetRandomValue(trendTimeRange.x, trendTimeRange.y);
+        } break;
+
+        case Hold: {
+            timeInState = GetRandomValue(holdTimeRange.x, holdTimeRange.y);
+        } break;
+
+        case Volatile: {
+            timeInState = GetRandomValue(volatileTimeRange.x, volatileTimeRange.y);
+        } break;
+
+        case Cooldown: {
+            currentState = Cooldown;
+
+            timeInState = GetRandomValue(eventCooldownRange.x, eventCooldownRange.y);
+        } break;
+    }
+}
+
 GraphPoint* GenerateRandomMarket::GenerateNextPoint() {
 
     char* MarketStateNames[] = {
@@ -38,20 +68,16 @@ GraphPoint* GenerateRandomMarket::GenerateNextPoint() {
 
     if (timeInState <= 0) {
         if (currentState != Cooldown) {
-            currentState = Cooldown;
-
-            timeInState = GetRandomValue(eventCooldownRange.x, eventCooldownRange.y);
+            SetMarketState(Cooldown);
         }
 
         if (currentState == Cooldown) {
-            currentState = Normal;
+            SetMarketState(Normal);
         }
     }
     else timeInState--;
 
     std::cout << std::endl << MarketStateNames[static_cast<int>(currentState)] << std::endl << "timeleft: " << timeInState << std::endl;
-
-    float yValue = currentValue;
 
     // Events
     if (currentState == Normal) {
@@ -60,27 +86,8 @@ GraphPoint* GenerateRandomMarket::GenerateNextPoint() {
         if (chance >= eventChance) {
             // chooseRandomEvent
             MarketState randomState = static_cast<MarketState>(GetRandomValue(1, 4));
-            currentState = randomState;
 
-            switch (currentState) {
-                case Normal: break;
-
-                case TrendUp: {
-                    timeInState = GetRandomValue(trendTimeRange.x, trendTimeRange.y);
-                } break;
-
-                case TrendDown: {
-                    timeInState = GetRandomValue(trendTimeRange.x, trendTimeRange.y);
-                } break;
-
-                case Hold: {
-                    timeInState = GetRandomValue(holdTimeRange.x, holdTimeRange.y);
-                } break;
-
-                case Volatile: {
-                    timeInState = GetRandomValue(volatileTimeRange.x, volatileTimeRange.y);
-                } break;
-            }
+            SetMarketState(randomState);
         }
     }
 
@@ -123,7 +130,17 @@ GraphPoint* GenerateRandomMarket::GenerateNextPoint() {
         case WhiteNoise: noiseValue = Remap(static_cast<float>(rand()) / RAND_MAX, 0, 1, -.5, .5) * noiseMultiplier;
     }
 
-    yValue += yValue * noiseValue;
+
+    // If we're hitting the edges, steer the market back
+    if (currentState != Volatile && currentState != Hold && currentState != Cooldown) {
+        if (currentValue >= 1.0f - edgePadding) {
+            SetMarketState(TrendUp);
+        } else if (currentValue <= 0.025f + edgePadding) {
+            SetMarketState(TrendDown);
+        }
+    }
+
+    float yValue = currentValue + (currentValue * noiseValue);
 
     // Clamp to minmax
     currentValue = Clamp(currentValue, 0.025, 1.0f);
