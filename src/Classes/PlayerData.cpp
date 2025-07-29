@@ -6,7 +6,7 @@
 #include "Stock.h"
 
 PlayerData::PlayerData() {
-    cash = 0;
+    cash = 150;
     weekExecutionDelay = 4;
 }
 
