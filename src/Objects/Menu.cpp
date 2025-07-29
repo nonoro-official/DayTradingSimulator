@@ -3,15 +3,13 @@
 //
 
 #include "Menu.h"
-
-#include <iostream>
-
 #include "raylib.h"
 #include "raygui.h"
 #include "Classes/Company.h"
 #include "Classes/Stock.h"
 #include "Classes/PlayerData.h"
 #include "Objects/Layout.h"
+#include "Objects/MessageDisplay.h"
 
 bool GraphDisplay::isAnyHovering = false;
 
@@ -95,19 +93,18 @@ void Menu::Draw()
 {
     switch (currentScreen)
     {
-        case SCREEN_DASHBOARD:
-            // graphDisplay->Draw();
-            DrawDashboardScreen();
-            break;
-        case SCREEN_PORTFOLIO:
-            DrawPortfolioScreen();
-            break;
-        case SCREEN_COMPANIES:
-            DrawCompaniesScreen();
-            break;
-        case SCREEN_UPGRADES:
-            DrawUpgradesScreen();
-            break;
+    case SCREEN_DASHBOARD:
+        DrawDashboardScreen();
+        break;
+    case SCREEN_PORTFOLIO:
+        DrawPortfolioScreen();
+        break;
+    case SCREEN_COMPANIES:
+        DrawCompaniesScreen();
+        break;
+    case SCREEN_UPGRADES:
+        DrawUpgradesScreen();
+        break;
     }
 }
 
@@ -365,7 +362,6 @@ void Menu::DrawCompaniesScreen()
     }
 }
 
-
 void Menu::DrawUpgradesScreen()
 {
     DrawText("UPGRADES", 140, 70, 30, DARKGRAY);
@@ -403,14 +399,10 @@ void Menu::DrawUpgradesScreen()
     float boxHeight = 80.0f;
     float boxWidth = GetScreenWidth() - 160.0f;
 
-    std::vector<Stock>& stocks = PlayerData::Instance().GetStocks();
+    std::vector<Upgrade>& upgrades = upgradeHandler.getUpgrades();
 
-    for (size_t i = 0; i < stocks.size(); ++i) {
-        Stock& stock = stocks[i];
-        Company* company = stock.company;
-        float shares = stock.shares;
-        float value = stock.GetShareValue();
-        float increase = company->CalculateIncreaseFromWeeksAgo(12);
+    for (size_t i = 0; i < upgrades.size(); ++i) {
+        Upgrade& upgrade = upgrades[i];
 
         float y = boxStartY + i * (boxHeight + 10.0f);
         Rectangle box = {140.0f, y, boxWidth, boxHeight};
@@ -418,21 +410,15 @@ void Menu::DrawUpgradesScreen()
         DrawRectangleRec(box, LIGHTGRAY);
         DrawRectangleLinesEx(box, 1, GRAY);
 
-        std::string info = company->companyName +
-            " | Shares: " + std::to_string((int)shares) +
-            " | Value: $" + std::to_string((int)value) +
-            " | Increase: " + (increase >= 0 ? "+" : "") + std::to_string((int)increase) + "%";
+        std::string info =
+            upgrade.getName() +
+            " | Desc: " + upgrade.getDescription() +
+            " | Cost: $: " + std::to_string(upgrade.getCost());
 
         DrawText(info.c_str(), box.x + 10.0f, box.y + 10.0f, 18, BLACK);
 
         if (GuiButton({box.x + box.width - 160.0f, box.y + 10.0f, 60.0f, 30.0f}, "Buy")) {
-            // Optional: Pre-fill dropdown or trigger auto-buy
-        }
-        if (GuiButton({box.x + box.width - 80.0f, box.y + 10.0f, 60.0f, 30.0f}, "Sell")) {
-            // Sell one share
-            if (PlayerData::Instance().SellStock(company, 1)) {
-                PlayerData::Instance().cash += company->GetCurrentPrice();
-            }
+            upgradeHandler.handlePurchase(i, player, message);
         }
     }
 }

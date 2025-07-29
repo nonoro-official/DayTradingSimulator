@@ -4,6 +4,7 @@
 
 #pragma once
 #include "Upgrade.h"
+#include <string>
 
 class UpgradeBuilder
 {
@@ -12,6 +13,7 @@ private:
 
 public:
     UpgradeBuilder& setName(const std::string& name);
+    UpgradeBuilder& setDescription(const std::string& description);
     UpgradeBuilder& setCost(int cost);
     UpgradeBuilder& setEffect(std::function<void(PlayerData&)> effect);
 
