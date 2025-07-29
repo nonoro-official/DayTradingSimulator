@@ -22,49 +22,84 @@ GraphPoint::GraphPoint(float y) {
 
 void GraphPoint::Update() {
     hovering = CheckCollisionPointCircle(GetMousePosition(), position, collisionRadius);
-
-    GameState::Instance().SetTempPause(hovering); //todo: FIX DGNBSJGFGJSDNDG
 }
 
-void GraphPoint::Draw(Vector2 graphCenter, Vector2 graphBounds) {
+void GraphPoint::DrawLineToPrevious() {
     if (prevPoint != nullptr) {
         DrawLineEx(position, prevPoint->position, 2.5f, lineColor);
     }
-
-    DrawCircle(position.x, position.y, radius, pointColor);
-
-    if (hovering) {
-        const float padding = 8.0f;
-
-        Vector2 boxPosition = {position.x - width / 2, position.y + yOffset + height / 2};
-        Vector2 linePosition = {position.x, boxPosition.y};
-
-        // Graph bounds
-        float left   = graphCenter.x - graphBounds.x / 2.0f + padding;
-        float right  = graphCenter.x + graphBounds.x / 2.0f - padding - width;
-        float top    = graphCenter.y - graphBounds.y / 2.0f + padding;
-        float bottom = graphCenter.y + graphBounds.y / 2.0f - padding - height;
-
-        // Clamp the tooltip position within graph area
-        if (boxPosition.x < left) boxPosition.x = left;
-        if (boxPosition.x > right) boxPosition.x = right;
-
-        if (boxPosition.y < top) boxPosition.y = top;
-        if (boxPosition.y > bottom) boxPosition.y = bottom;
-
-        DrawLineEx(position, linePosition, 2.5f, lineColor);
-        DrawRectangle(boxPosition.x, boxPosition.y, width, height, boxColor);
-
-        snprintf(infoBuffer, sizeof(infoBuffer), "Value: %.2f\nDifference: %.2f", 100.0f, -5.0f);
-        DrawText(infoBuffer, boxPosition.x, boxPosition.y, fontSize, textColor);
-    }
 }
+
+void GraphPoint::DrawPoint() {
+    DrawCircleV(position, radius, pointColor);
+}
+
+void GraphPoint::DrawTooltip(Vector2 graphCenter, Vector2 graphBounds) {
+    if (!hovering) return;
+
+    const float padding = 8.0f;
+
+    Vector2 boxPosition = {
+        position.x - width / 2,
+        position.y + yOffset + height / 2
+    };
+
+    // Clamp within bounds
+    float left   = graphCenter.x - graphBounds.x / 2.0f + padding;
+    float right  = graphCenter.x + graphBounds.x / 2.0f - padding - width;
+    float top    = graphCenter.y - graphBounds.y / 2.0f + padding;
+    float bottom = graphCenter.y + graphBounds.y / 2.0f - padding - height;
+
+    if (boxPosition.x < left) boxPosition.x = left;
+    if (boxPosition.x > right) boxPosition.x = right;
+    if (boxPosition.y < top) boxPosition.y = top;
+    if (boxPosition.y > bottom) boxPosition.y = bottom;
+
+    // Draw connector line to center of tooltip box
+    Vector2 lineTarget = {
+        boxPosition.x + width / 2.0f,
+        boxPosition.y + height / 2.0f
+    };
+
+    DrawLineEx(position, lineTarget, 2.5f, lineColor);
+    DrawRectangle(boxPosition.x, boxPosition.y, width, height, boxColor);
+
+    // Placeholder values — replace with real data later
+    snprintf(infoBuffer, sizeof(infoBuffer),
+             "Month: %d\nWeek: %d\nPrice: %.2f\nChange: %.2f",
+             1, 3, 123.45f, +4.20f);
+
+    DrawText(infoBuffer, boxPosition.x + 6, boxPosition.y + 6, fontSize, textColor);
+}
+
 
 
 
 void GraphDisplay::Update() {
     for (GraphPoint* node : nodes) {
-        node->Update(); // Pass graph bounds
+        node->Update();
+        if (node->hovering) {
+            isAnyHovering = true;
+        }
+    }
+
+    if (isAnyHovering == true) {
+        hoverCooldownFrames = hoverGracePeriod;
+        GameState::Instance().SetTempPause(true);
+    } else {
+        if (hoverCooldownFrames > 0) {
+            hoverCooldownFrames--;
+        } else {
+            GameState::Instance().SetTempPause(false);
+        }
+    }
+}
+
+
+
+void GraphDisplay::DrawTooltips() {
+    for (GraphPoint* node : nodes) {
+        node->DrawTooltip(center, bounds); // Pass graph bounds
     }
 }
 
@@ -84,7 +119,11 @@ void GraphDisplay::Draw() {
 
     // Draw all graph points and connections
     for (GraphPoint* node : nodes) {
-        node->Draw(center, bounds); // Pass graph bounds
+        node->DrawLineToPrevious(); // Pass graph bounds
+    }
+
+    for (GraphPoint* node : nodes) {
+        node->DrawPoint(); // Pass graph bounds
     }
 
     // Draw the outline of the graph area
@@ -109,7 +148,6 @@ void GraphDisplay::ForceAddNode(GraphPoint* point) {
     Vector2 position;
     position.x = center.x + bounds.x / 2.0f - 5;
     position.y = (center.y + bounds.y / 2) - rawY * bounds.y;
-
 
     // Assign prevPoint
     point->position = position;

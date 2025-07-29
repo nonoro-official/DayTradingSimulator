@@ -13,6 +13,8 @@
 #include "Classes/PlayerData.h"
 #include "Objects/Layout.h"
 
+bool GraphDisplay::isAnyHovering = false;
+
 void Menu::InitializeCompanies() {
     Company* lemon = new Company("Lemon Inc", "Develops sustainable tech for modern agriculture.", 0.6f, 0.9f, new GraphDisplay({540, 300}, {840, 360}));
     lemon->market->SetNormalValues(GenerateRandomMarket::PerlinNoise, 0.3f);
@@ -70,7 +72,9 @@ void Menu::Init(GameState* gameRef) {
 }
 
 void Menu::Update() {
-    if (currentScreen == SCREEN_DASHBOARD && !game->IsPaused()) {
+    GraphDisplay::isAnyHovering = false;
+
+    if (currentScreen == SCREEN_DASHBOARD) {
         for (Company* c: companies) {
             c->display->Update();
         }
@@ -91,19 +95,19 @@ void Menu::Draw()
 {
     switch (currentScreen)
     {
-    case SCREEN_DASHBOARD:
-        // graphDisplay->Draw();
-        DrawDashboardScreen();
-        break;
-    case SCREEN_PORTFOLIO:
-        DrawPortfolioScreen();
-        break;
-    case SCREEN_COMPANIES:
-        DrawCompaniesScreen();
-        break;
-    case SCREEN_UPGRADES:
-        DrawUpgradesScreen();
-        break;
+        case SCREEN_DASHBOARD:
+            // graphDisplay->Draw();
+            DrawDashboardScreen();
+            break;
+        case SCREEN_PORTFOLIO:
+            DrawPortfolioScreen();
+            break;
+        case SCREEN_COMPANIES:
+            DrawCompaniesScreen();
+            break;
+        case SCREEN_UPGRADES:
+            DrawUpgradesScreen();
+            break;
     }
 }
 
@@ -144,6 +148,7 @@ void Menu::DrawDashboardScreen()
 
     if (selectedCompanyIndex >= 0 && selectedCompanyIndex < companies.size() && companies[selectedCompanyIndex]) {
         companies[selectedCompanyIndex]->display->Draw();
+        companies[selectedCompanyIndex]->display->DrawTooltips();
     }
 
     // Dropdown

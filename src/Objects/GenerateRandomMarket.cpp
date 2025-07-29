@@ -77,8 +77,6 @@ GraphPoint* GenerateRandomMarket::GenerateNextPoint() {
     }
     else timeInState--;
 
-    std::cout << std::endl << MarketStateNames[static_cast<int>(currentState)] << std::endl << "timeleft: " << timeInState << std::endl;
-
     // Events
     if (currentState == Normal) {
         // Event Selection

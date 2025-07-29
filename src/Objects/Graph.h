@@ -7,6 +7,7 @@
 #include <vector>
 
 #include "../Classes/GameState.h"
+#include "Classes/MarketData.h"
 
 extern char infoBuffer[64];
 
@@ -15,31 +16,39 @@ public:
     float yValue;
     Vector2 position = {0, 0};
     GraphPoint* prevPoint = nullptr;
-    Color pointColor = DARKGREEN, lineColor = Fade(DARKGREEN, .25f);
+
+    Color pointColor = {0, 200, 83, 255};           // Emerald green
+    Color lineColor  = Fade(pointColor, 0.25f);     // Light transparent line
+
+    bool hovering = false;
 
     GraphPoint(float y);
-    void Draw(Vector2 graphCenter, Vector2 graphBounds);
+    void DrawLineToPrevious();
+    void DrawPoint();
+    void DrawTooltip(Vector2 graphCenter, Vector2 graphBounds);
     void Update();
 
 private:
     float radius = 5.0f;
-    float collisionRadius = 10.0f;
+    float collisionRadius = 18.0f;
+
     float yOffset = -125;
-    float width = 80, height = 40;
+    float width = 100, height = 60;
     float fontSize = 8;
-    Color textColor = BLACK, boxColor = SKYBLUE;
 
-    bool hovering;
+    Color textColor = {34, 34, 34, 255};            // Near-black text
+    Color boxColor  = {255, 255, 255, 230};         // Soft white tooltip box
 };
-
 class GraphDisplay {
 public:
-    int pointsToDraw = 25;
+    static bool isAnyHovering;
+    int pointsToDraw = 24;
 
     Vector2 center;
     Vector2 bounds;
     void Update();
     void Draw();
+    void DrawTooltips();
     void AddNode(GraphPoint* point);
     void ForceAddNode(GraphPoint* point);
 
@@ -59,4 +68,7 @@ private:
     Color displayColor = Fade(BLACK, 0.9f);
     Color borderColor = BLACK;
     int borderWidth = 5;
+
+    int hoverCooldownFrames = 0;
+    const int hoverGracePeriod = 24;
 };
