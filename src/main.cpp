@@ -2,7 +2,7 @@
 #include "raygui.h"
 #include "Classes/GameState.h"
 #include "Classes/PlayerData.h"
-#include "Objects/Menu.h"
+#include "Menu/Menu.h"
 #include "Objects/MonthDisplay.h"
 
 const int screenWidth = 960;

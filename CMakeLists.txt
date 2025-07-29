@@ -40,8 +40,8 @@ add_executable(${PROJECT_NAME}
         src/Objects/Graph.h
         src/Objects/GenerateRandomMarket.cpp
         src/Objects/GenerateRandomMarket.h
-        src/Objects/Menu.cpp
-        src/Objects/Menu.h
+        src/Menu/Menu.cpp
+        src/Menu/Menu.h
         src/Classes/GameState.cpp
         src/Classes/GameState.h
         src/Upgrades/Upgrade.cpp
@@ -62,8 +62,16 @@ add_executable(${PROJECT_NAME}
         src/Objects/ToggleButton.cpp
         src/Objects/ToggleButton.h
         src/Objects/Layout.h
-        src/Objects/MessageDisplay.cpp
-        src/Objects/MessageDisplay.h
+        src/Objects/PopUpWindow.cpp
+        src/Objects/PopUpWindow.h
+        src/Menu/Screens/DashboardScreen.cpp
+        src/Menu/Screens/DashboardScreen.h
+        src/Menu/Screens/CompaniesScreen.cpp
+        src/Menu/Screens/CompaniesScreen.h
+        src/Menu/Screens/UpgradesScreen.cpp
+        src/Menu/Screens/UpgradesScreen.h
+        src/Menu/Screens/PortfolioScreen.cpp
+        src/Menu/Screens/PortfolioScreen.h
 )
 
 # Include paths

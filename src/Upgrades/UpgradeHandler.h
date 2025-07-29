@@ -6,7 +6,7 @@
 #include <vector>
 #include "Upgrade.h"
 #include "Classes/GameState.h"
-#include "Objects/MessageDisplay.h"
+#include "Objects/PopUpWindow.h"
 
 class UpgradeHandler
 {
@@ -15,6 +15,6 @@ private:
 
 public:
     void init(GameState& game);
-    void handlePurchase(int index, PlayerData& player, MessageDisplay& message);
+    void handlePurchase(int index, PlayerData& player, PopUpWindow& message);
     std::vector<Upgrade>& getUpgrades();
 };

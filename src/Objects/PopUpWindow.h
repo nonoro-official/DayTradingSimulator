@@ -5,13 +5,14 @@
 #pragma once
 #include <string>
 
-class MessageDisplay
+class PopUpWindow
 {
 private:
     std::string message;
     bool isVisible = false;
+    float remainingTime = 0.0f;
 public:
-    void Show(const std::string& msg);
+    void Show(const std::string& msg, float durationSeconds = 4.0f);
     void Hide();
     void Draw();
 };

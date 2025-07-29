@@ -52,7 +52,7 @@ std::vector<Upgrade>& UpgradeHandler::getUpgrades()
     return upgrades;
 }
 
-void UpgradeHandler::handlePurchase(int index, PlayerData& player, MessageDisplay& message)
+void UpgradeHandler::handlePurchase(int index, PlayerData& player, PopUpWindow& message)
 {
     if (index < 0 || index >= upgrades.size())
     {
@@ -60,12 +60,16 @@ void UpgradeHandler::handlePurchase(int index, PlayerData& player, MessageDispla
         return;
     }
 
+    Upgrade& upgrade = upgrades[index];
+
     if (!upgrades[index].tryPurchase(player))
     {
         message.Show("Could not purchase. Insufficient funds or already purchased.");
     }
     else
     {
+        // Deduct the cost after a successful check
+        PlayerData::Instance().cash -= upgrade.getCost();
         message.Show("Purchase successful!");
     }
 

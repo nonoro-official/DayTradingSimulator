@@ -5,6 +5,11 @@
 #include "../Classes/Company.h"
 #include "../Classes/PlayerData.h"
 #include "Upgrades/UpgradeHandler.h"
+#include "Objects/PopUpWindow.h"
+#include "Screens/CompaniesScreen.h"
+#include "Screens/DashboardScreen.h"
+#include "Screens/PortfolioScreen.h"
+#include "Screens/UpgradesScreen.h"
 #include <vector>
 #include <cstring>
 #include <sstream>
@@ -26,7 +31,7 @@ private:
     GameState* game = nullptr;
     UpgradeHandler upgradeHandler;
     PlayerData player;
-    MessageDisplay message;
+    PopUpWindow message;
 
     // Dropdown state
     int selectedCompanyIndex = 0;
@@ -38,15 +43,23 @@ private:
     char searchText[32] = "Search...";
     bool isSearchFocused = false;
 
+    // Screens
+    DashboardScreen* dashboardScreen = nullptr;
+    PortfolioScreen* portfolioScreen = nullptr;
+    CompaniesScreen* companiesScreen = nullptr;
+    UpgradesScreen* upgradesScreen = nullptr;
+
 public:
     void InitializeCompanies();
     void InitializeStocks();
-
     void Init(GameState* gameRef);
+
     Screen GetCurrentScreen();
     void SetScreen(Screen screen);
+
     void Update();
     void Draw();
+
     std::string BuildCompanyDropdownString();
 
     void DrawDashboardScreen();

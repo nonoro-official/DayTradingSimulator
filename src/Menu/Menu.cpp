@@ -9,7 +9,6 @@
 #include "Classes/Stock.h"
 #include "Classes/PlayerData.h"
 #include "Objects/Layout.h"
-#include "Objects/MessageDisplay.h"
 
 bool GraphDisplay::isAnyHovering = false;
 
@@ -76,19 +75,42 @@ void Menu::Init(GameState* gameRef) {
 
     // Initialize Stocks
     InitializeStocks();
+
+    // Initialize Screens
+    dashboardScreen = new DashboardScreen(&companies, &selectedCompanyIndex);
 }
+//
+// void Menu::Update() {
+//     GraphDisplay::isAnyHovering = false;
+//
+//     if (currentScreen == SCREEN_DASHBOARD) {
+//         for (int i = 0; i < companies.size(); i++) {
+//             if (i == selectedCompanyIndex) companies[i]->display->active = true;
+//             else companies[i]->display->active = false;
+//             companies[i]->display->Update();
+//         }
+//     }
+// }
 
 void Menu::Update() {
     GraphDisplay::isAnyHovering = false;
 
-    if (currentScreen == SCREEN_DASHBOARD) {
-        for (int i = 0; i < companies.size(); i++) {
-            if (i == selectedCompanyIndex) companies[i]->display->active = true;
-            else companies[i]->display->active = false;
-            companies[i]->display->Update();
-        }
+    switch (currentScreen) {
+    case SCREEN_DASHBOARD:
+        if (dashboardScreen) dashboardScreen->Update();
+        break;
+    case SCREEN_PORTFOLIO:
+        // if (portfolioScreen) portfolioScreen->Update();
+        break;
+    case SCREEN_COMPANIES:
+        // if (companiesScreen) companiesScreen->Update();
+        break;
+    case SCREEN_UPGRADES:
+        // if (upgradesScreen) upgradesScreen->Update();
+        break;
     }
 }
+
 
 Screen Menu::GetCurrentScreen()
 {
@@ -100,148 +122,146 @@ void Menu::SetScreen(Screen screen)
     currentScreen = screen;
 }
 
-void Menu::Draw()
-{
-    switch (currentScreen)
-    {
+void Menu::Draw() {
+    switch (currentScreen) {
     case SCREEN_DASHBOARD:
-        DrawDashboardScreen();
+        if (dashboardScreen) dashboardScreen->Draw();
         break;
     case SCREEN_PORTFOLIO:
-        DrawPortfolioScreen();
+        // if (portfolioScreen) portfolioScreen->Draw();
         break;
     case SCREEN_COMPANIES:
         DrawCompaniesScreen();
+        // if (companiesScreen) companiesScreen->Draw();
         break;
     case SCREEN_UPGRADES:
-        DrawUpgradesScreen();
+        // if (upgradesScreen) upgradesScreen->Draw();
         break;
     }
 }
 
-void Menu::DrawDashboardScreen()
-{
-    Layout layout(GetScreenWidth(), GetScreenHeight());
 
-    // 1. Top Bar Section (Dropdown Area)
-    Rectangle topBar = {
-        layout.leftOffset,
-        layout.topOffset,
-        layout.screenWidth - layout.leftOffset,
-        layout.sectionHeight
-    };
-    DrawRectangleRec(topBar, GRAY);
-
-    // --- 2. Graph Section
-    Rectangle graphArea = {
-        layout.leftOffset,
-        topBar.y + layout.sectionHeight,
-        layout.screenWidth - layout.leftOffset,
-        layout.screenHeight - layout.topOffset - layout.sectionHeight * 2
-    };
-
-    if (selectedCompanyIndex >= 0 && selectedCompanyIndex < companies.size()) {
-        companies[selectedCompanyIndex]->display->Draw();
-        companies[selectedCompanyIndex]->display->DrawTooltips();
-    }
-
-    GuiSetStyle(DROPDOWNBOX, BASE_COLOR_NORMAL, ColorToInt(WHITE));
-    GuiSetStyle(DROPDOWNBOX, BASE_COLOR_PRESSED, ColorToInt(LIGHTGRAY));
-    GuiSetStyle(DROPDOWNBOX, BORDER_COLOR_NORMAL, ColorToInt(DARKGRAY));
-    GuiSetStyle(DROPDOWNBOX, TEXT_COLOR_NORMAL, ColorToInt(BLACK));
-    GuiSetStyle(DROPDOWNBOX, TEXT_COLOR_PRESSED, ColorToInt(BLACK));
-
-    static int selectedCompanyIndex = 0;
-    static bool dropdownOpen = false;
-    static float dropdownOpenTime = 0.0f; // Time since dropdown was opened
-
-    static std::string cachedDropdown = BuildCompanyDropdownString();
-    const char* companyItems = cachedDropdown.c_str();
-
-    Rectangle dropdownBounds = { topBar.x + 20, topBar.y + 15, 180, 30 };
-
-    // Get delta time each frame
-    float deltaTime = GetFrameTime();
-
-    // Update open time if dropdown is active
-    if (dropdownOpen) {
-        dropdownOpenTime += deltaTime;
-    }
-
-    // Toggle dropdown open on click
-    if (!dropdownOpen && IsMouseButtonPressed(MOUSE_LEFT_BUTTON) &&
-        CheckCollisionPointRec(GetMousePosition(), dropdownBounds)) {
-        dropdownOpen = true;
-        dropdownOpenTime = 0.0f;
-        }
-
-    // Draw dropdown and track selection
-    bool itemSelected = GuiDropdownBox(dropdownBounds, companyItems, &selectedCompanyIndex, dropdownOpen);
-
-    // Auto-close only if user clicked AND mouse is not inside the dropdown area
-    if (dropdownOpen && IsMouseButtonPressed(MOUSE_LEFT_BUTTON) && dropdownOpenTime > 0.15f) {
-        Vector2 mouse = GetMousePosition();
-
-        // This accounts for the full dropdown box height depending on option count (assuming 3)
-        Rectangle fullDropdownArea = {
-            dropdownBounds.x,
-            dropdownBounds.y,
-            dropdownBounds.width,
-            dropdownOpen ? dropdownBounds.height * 4 : dropdownBounds.height  // 1 label + 3 items
-        };
-
-        if (!CheckCollisionPointRec(mouse, fullDropdownArea)) {
-            dropdownOpen = false;
-        }
-    }
-
-
-    // --- 3. Bottom Bar (Buy/Sell + Info)
-    Rectangle bottomBar = {
-        layout.leftOffset,
-        graphArea.y + graphArea.height,
-        layout.screenWidth - layout.leftOffset,
-        layout.sectionHeight
-    };
-    DrawRectangleRec(bottomBar, GRAY);
-
-    float buttonWidth = 100;
-    float buttonHeight = 30;
-    float spacing = 20;
-    float buttonY = bottomBar.y + (layout.sectionHeight - buttonHeight) / 2;
-
-    Rectangle buyBtn = { bottomBar.x + 20, buttonY, buttonWidth, buttonHeight };
-    Rectangle sellBtn = { buyBtn.x + buttonWidth + spacing, buttonY, buttonWidth, buttonHeight };
-
-    GuiSetStyle(DEFAULT, TEXT_SIZE, 18);
-
-    if (GuiButton(buyBtn, "BUY")) {
-        TraceLog(LOG_INFO, "Buy button clicked!");
-    }
-
-    if (GuiButton(sellBtn, "SELL")) {
-        TraceLog(LOG_INFO, "Sell button clicked!");
-    }
-
-    // Display actual info from selected company
-    float infoX = sellBtn.x + buttonWidth + spacing * 2;
-    float infoY = bottomBar.y + 10;
-    int fontSize = 20;
-
-    if (selectedCompanyIndex >= 0 && selectedCompanyIndex < companies.size()) {
-        Company* selectedCompany = companies[selectedCompanyIndex];
-        float price = selectedCompany->GetCurrentPrice();
-        float increase = selectedCompany->CalculateIncreaseFromWeeksAgo(1); // Look back 1 week
-
-        std::ostringstream stream;
-        stream << std::fixed << std::setprecision(2);
-        stream << "Share Price: $" << price
-               << " | Increase: " << (increase >= 0 ? "+" : "") << increase << "%";
-
-        std::string companyInfo = stream.str();
-        DrawText(companyInfo.c_str(), infoX + 70, infoY + 10, fontSize, BLACK);
-    }
-}
+// void Menu::DrawDashboardScreen()
+// {
+//     Layout layout(GetScreenWidth(), GetScreenHeight());
+//
+//     // 1. Top Bar Section (Dropdown Area)
+//     Rectangle topBar = {
+//         layout.leftOffset,
+//         layout.topOffset,
+//         layout.screenWidth - layout.leftOffset,
+//         layout.sectionHeight
+//     };
+//     DrawRectangleRec(topBar, GRAY);
+//
+//     // --- 2. Graph Section
+//     Rectangle graphArea = {
+//         layout.leftOffset,
+//         topBar.y + layout.sectionHeight,
+//         layout.screenWidth - layout.leftOffset,
+//         layout.screenHeight - layout.topOffset - layout.sectionHeight * 2
+//     };
+//
+//     if (selectedCompanyIndex >= 0 && selectedCompanyIndex < companies.size()) {
+//         companies[selectedCompanyIndex]->display->Draw();
+//         companies[selectedCompanyIndex]->display->DrawTooltips();
+//     }
+//
+//     GuiSetStyle(DROPDOWNBOX, BASE_COLOR_NORMAL, ColorToInt(WHITE));
+//     GuiSetStyle(DROPDOWNBOX, BASE_COLOR_PRESSED, ColorToInt(LIGHTGRAY));
+//     GuiSetStyle(DROPDOWNBOX, BORDER_COLOR_NORMAL, ColorToInt(DARKGRAY));
+//     GuiSetStyle(DROPDOWNBOX, TEXT_COLOR_NORMAL, ColorToInt(BLACK));
+//     GuiSetStyle(DROPDOWNBOX, TEXT_COLOR_PRESSED, ColorToInt(BLACK));
+//
+//     static bool dropdownOpen = false;
+//     static float dropdownOpenTime = 0.0f; // Time since dropdown was opened
+//
+//     static std::string cachedDropdown = BuildCompanyDropdownString();
+//     const char* companyItems = cachedDropdown.c_str();
+//
+//     Rectangle dropdownBounds = { topBar.x + 20, topBar.y + 15, 180, 30 };
+//
+//     // Get delta time each frame
+//     float deltaTime = GetFrameTime();
+//
+//     // Update open time if dropdown is active
+//     if (dropdownOpen) {
+//         dropdownOpenTime += deltaTime;
+//     }
+//
+//     // Toggle dropdown open on click
+//     if (!dropdownOpen && IsMouseButtonPressed(MOUSE_LEFT_BUTTON) &&
+//         CheckCollisionPointRec(GetMousePosition(), dropdownBounds)) {
+//         dropdownOpen = true;
+//         dropdownOpenTime = 0.0f;
+//         }
+//
+//     // Draw dropdown and track selection
+//     bool itemSelected = GuiDropdownBox(dropdownBounds, companyItems, &selectedCompanyIndex, dropdownOpen);
+//
+//     // Auto-close only if user clicked AND mouse is not inside the dropdown area
+//     if (dropdownOpen && IsMouseButtonPressed(MOUSE_LEFT_BUTTON) && dropdownOpenTime > 0.15f) {
+//         Vector2 mouse = GetMousePosition();
+//
+//         // This accounts for the full dropdown box height depending on option count (assuming 3)
+//         Rectangle fullDropdownArea = {
+//             dropdownBounds.x,
+//             dropdownBounds.y,
+//             dropdownBounds.width,
+//             dropdownOpen ? dropdownBounds.height * 4 : dropdownBounds.height  // 1 label + 3 items
+//         };
+//
+//         if (!CheckCollisionPointRec(mouse, fullDropdownArea)) {
+//             dropdownOpen = false;
+//         }
+//     }
+//
+//     // --- 3. Bottom Bar (Buy/Sell + Info)
+//     Rectangle bottomBar = {
+//         layout.leftOffset,
+//         graphArea.y + graphArea.height,
+//         layout.screenWidth - layout.leftOffset,
+//         layout.sectionHeight
+//     };
+//     DrawRectangleRec(bottomBar, GRAY);
+//
+//     float buttonWidth = 100;
+//     float buttonHeight = 30;
+//     float spacing = 20;
+//     float buttonY = bottomBar.y + (layout.sectionHeight - buttonHeight) / 2;
+//
+//     Rectangle buyBtn = { bottomBar.x + 20, buttonY, buttonWidth, buttonHeight };
+//     Rectangle sellBtn = { buyBtn.x + buttonWidth + spacing, buttonY, buttonWidth, buttonHeight };
+//
+//     GuiSetStyle(DEFAULT, TEXT_SIZE, 18);
+//
+//     if (GuiButton(buyBtn, "BUY")) {
+//         TraceLog(LOG_INFO, "Buy button clicked!");
+//     }
+//
+//     if (GuiButton(sellBtn, "SELL")) {
+//         TraceLog(LOG_INFO, "Sell button clicked!");
+//     }
+//
+//     // Display actual info from selected company
+//     float infoX = sellBtn.x + buttonWidth + spacing * 2;
+//     float infoY = bottomBar.y + 10;
+//     int fontSize = 20;
+//
+//     if (selectedCompanyIndex >= 0 && selectedCompanyIndex < companies.size()) {
+//         Company* selectedCompany = companies[selectedCompanyIndex];
+//         float price = selectedCompany->GetCurrentPrice();
+//         float increase = selectedCompany->CalculateIncreaseFromWeeksAgo(1); // Look back 1 week
+//
+//         std::ostringstream stream;
+//         stream << std::fixed << std::setprecision(2);
+//         stream << "Share Price: $" << price
+//                << " | Increase: " << (increase >= 0 ? "+" : "") << increase << "%";
+//
+//         std::string companyInfo = stream.str();
+//         DrawText(companyInfo.c_str(), infoX + 70, infoY + 10, fontSize, BLACK);
+//     }
+// }
 
 void Menu::DrawPortfolioScreen()
 {
@@ -464,6 +484,7 @@ void Menu::DrawUpgradesScreen()
         if (GuiButton({box.x + box.width - 120.0f, box.y + 25.0f, 80.0f, 30.0f}, "Buy")) {
             upgradeHandler.handlePurchase(i, player, message);
         }
+        message.Draw();
     }
 }
 
