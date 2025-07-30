@@ -27,12 +27,7 @@ void UpgradesScreen::Draw()
     DrawText("UPGRADES", layout.leftOffset + 20.0f, layout.topOffset + 10.0f, 30, DARKGRAY);
 
     // ===== Search Box =====
-    Rectangle searchBox = {
-        layout.screenWidth - 180.0f,
-        layout.topOffset + 10.0f,
-        170.0f,
-        30.0f
-    };
+    Rectangle searchBox = {layout.screenWidth - 180.0f,layout.topOffset + 10.0f, 170.0f,30.0f};
 
     if (CheckCollisionPointRec(GetMousePosition(), searchBox)) {
         if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) {
@@ -75,12 +70,7 @@ void UpgradesScreen::Draw()
         // Prevent drawing past screen
         if (y + layout.rowHeight > layout.screenHeight) break;
 
-        Rectangle row = {
-            layout.GetBoxX(),
-            y,
-            layout.GetBoxWidth(),
-            layout.rowHeight
-        };
+        Rectangle row = {layout.GetBoxX(), y, layout.GetBoxWidth(), layout.rowHeight};
 
         Color bgColor = (shownCount % 2 == 0) ? Color{230, 230, 230, 255} : Color{250, 250, 250, 255};
         DrawRectangleRec(row, bgColor);
@@ -117,12 +107,7 @@ void UpgradesScreen::Draw()
 
         DrawTextEx(descriptionFont, dynamicDescription.c_str(), descPos, 18, 1, DARKGRAY);
 
-        Rectangle buyBtn = {
-            row.x + row.width - 100.0f,
-            row.y + (layout.rowHeight - 30.0f) / 2.0f,
-            80.0f,
-            30.0f
-        };
+        Rectangle buyBtn = {row.x + row.width - 100.0f, row.y + (layout.rowHeight - 30.0f) / 2.0f, 80.0f,30.0f};
 
         bool isMaxed = upgrade.getTier() >= upgrade.getMaxTier();
         if (isMaxed) {
