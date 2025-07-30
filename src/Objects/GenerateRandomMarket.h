@@ -62,7 +62,7 @@ public:
 
     GraphPoint* GenerateNextPoint();
 
-    float PredictAverageOverWeeks(int weeks, float variationAmount);
+    float PredictAverageOverWeeks(int weeks, float variationAmount, float valueAtStart);
 
 private:
     float time = 0.0f;

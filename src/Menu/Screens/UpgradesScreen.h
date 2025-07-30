@@ -17,7 +17,12 @@ private:
      char searchText[32] = "Search...";
      bool isSearchFocused = false;
 
+    Font descriptionFont;
+
+
 public:
      UpgradesScreen(UpgradeHandler* handlerRef, PlayerData* playerRef, PopUpWindow* popupRef);
      void Draw();
+
+    ~UpgradesScreen();
 };

@@ -10,8 +10,17 @@
 #include <iomanip>
 #include <cstring>
 
+void UpdatePrediction() {}
+
 DashboardScreen::DashboardScreen(std::vector<Company*>* companiesRef, int* selectedIndex)
-    : companies(companiesRef), selectedCompanyIndex(selectedIndex) {}
+    : companies(companiesRef), selectedCompanyIndex(selectedIndex) {
+
+    prediction = PlayerData::Instance().GetMarketPrediction(GameState::Instance().GetCompanyByIndex(*selectedCompanyIndex));
+
+    GameState::Instance().AddTickListener([this]() {
+        prediction = PlayerData::Instance().GetMarketPrediction(GameState::Instance().GetCompanyByIndex(*this->selectedCompanyIndex));
+    });
+}
 
 std::string DashboardScreen::BuildCompanyDropdownString() {
     std::string result;
@@ -145,7 +154,13 @@ void DashboardScreen::Draw() {
                << " | Increase: " << (increase >= 0 ? "+" : "") << increase << "%";
 
         std::string companyInfo = stream.str();
-        DrawText(companyInfo.c_str(), infoX + 70, infoY + 10, fontSize, BLACK);
+        int infoWidth = MeasureText(companyInfo.c_str(), fontSize);
+        float rightPadding = 20.0f;
+        float infoXRight = layout.screenWidth - infoWidth - rightPadding;
+        float infoYCentered = bottomBar.y + (layout.sectionHeight - fontSize) / 2;
+
+        DrawText(companyInfo.c_str(), infoXRight, infoYCentered, fontSize, BLACK);
+
     }
 
     // Now this will work since selectedCompany is in scope
@@ -156,6 +171,20 @@ void DashboardScreen::Draw() {
     if (showSellPopup && selectedCompany) {
         GameState::Instance().SetTempPause(true);
         PopUpWindow().DrawBuySellPopup(false, showSellPopup, selectedCompany, PlayerData::Instance(), inputBuffer);
+    }
+
+    // Prediction hint
+
+    if (selectedCompany) {
+        int predictionFontSize = 18;
+
+        // Measure prediction width so we can align it to the right
+        int textWidth = MeasureText(prediction.c_str(), predictionFontSize);
+        float padding = 20.0f;
+        float textX = layout.screenWidth - textWidth - padding;
+        float textY = topBar.y + (layout.sectionHeight - predictionFontSize) / 2;
+
+        DrawText(prediction.c_str(), textX, textY, predictionFontSize, BLACK);
     }
 
 }

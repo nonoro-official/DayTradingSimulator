@@ -25,11 +25,11 @@ void UpgradeHandler::init(GameState& game)
 
     upgrades.push_back(
         builder.setName("Prediction Hint")
-        .setDescription("description 2")
+        .setDescription("Enables market prediction leveraging cutting edge technology. Current level: " + std::to_string(PlayerData::Instance().showPredictionTier))
         .setCost(200)
         .setEffect([](PlayerData& player)
         {
-            player.showPrediction = true;
+            player.UpgradePrediction();
             std::cout << "Prediction Hints activated!" << std::endl;
         })
         .build());

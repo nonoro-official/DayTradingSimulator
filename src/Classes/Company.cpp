@@ -66,6 +66,7 @@ void Company::SetStoreValues(std::string storeDescription, float basePrice) {
         data->weekAcquired = week;
 
         float multiplier = point->yValue;
+        data->yValue = point->yValue;
         data->stockPrice = baseStockPrice * multiplier;
 
         lastMultiplier = multiplier;
@@ -100,8 +101,9 @@ void Company::GenerateNext(GraphDisplay* display) {
     newData->weekAcquired = GameState::Instance().GetWeek();
 
     float multiplier = nextPoint->yValue;
+    newData->yValue = nextPoint->yValue;
     newData->stockPrice = this->baseStockPrice * multiplier;
-    
+
     // Pass tooltip data
     float increase = 0;
     if (!previousValues.empty()) {
