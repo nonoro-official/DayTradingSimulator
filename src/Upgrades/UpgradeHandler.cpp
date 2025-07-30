@@ -71,6 +71,28 @@ void UpgradeHandler::handlePurchase(int index, PlayerData& player, PopUpWindow& 
     {
         PlayerData::Instance().cash -= upgrade.getCost();
         message.Show("Purchase successful!");
+
+        scheduleUpgradeEffectPopup = true;
+        scheduledUpgradeIndex = index;
     }
 }
 
+void UpgradeHandler::updatePopups(PlayerData& player, PopUpWindow& message)
+{
+    if (!message.IsVisible() && scheduleUpgradeEffectPopup)
+    {
+        scheduleUpgradeEffectPopup = false;
+
+        if (scheduledUpgradeIndex >= 0 && scheduledUpgradeIndex < (int)upgrades.size())
+        {
+            Upgrade& upgrade = upgrades[scheduledUpgradeIndex];
+            int delayWeeks = player.weekExecutionDelay;
+
+            std::ostringstream oss;
+            oss << "Upgrade '" << upgrade.getName() << "' will take " << delayWeeks << " week"
+                << (delayWeeks > 1 ? "s" : "") << " to take effect.";
+
+            message.Show(oss.str(), 3.0f);
+        }
+    }
+}

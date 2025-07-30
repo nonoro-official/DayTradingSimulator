@@ -21,6 +21,7 @@ private:
 public:
     void Show(const std::string& p, float durationSeconds = 1.0f);
     void Hide();
+    bool IsVisible() const;
     void Draw();
     void DrawBuySellPopup(bool isBuyMode, bool& isVisible, Company* company, PlayerData& player);
 

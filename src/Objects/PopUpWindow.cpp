@@ -22,6 +22,10 @@ void PopUpWindow::Hide()
     isVisible = false;
 }
 
+bool PopUpWindow::IsVisible() const {
+    return isVisible;
+}
+
 const char* PopUpWindow::GetInputBuffer() const
 {
     return inputBuffer;

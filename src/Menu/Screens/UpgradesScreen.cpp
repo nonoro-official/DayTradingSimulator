@@ -129,6 +129,7 @@ void UpgradesScreen::Draw()
     }
 
     popup->Draw();
+    handler->updatePopups(*player, *popup);
 }
 
 UpgradesScreen::~UpgradesScreen() {
