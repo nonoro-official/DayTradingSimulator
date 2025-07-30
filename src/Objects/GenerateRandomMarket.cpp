@@ -103,11 +103,11 @@ GraphPoint* GenerateRandomMarket::GenerateNextPoint() {
         // Event Loop
         switch (currentState) {
             case TrendUp: {
-                currentValue += GetRandomFloat(0, randomTrendStrength.x);  // Correct: increase
+                currentValue += GetRandomFloat(randomTrendStrength.x, 0);
             } break;
 
             case TrendDown: {
-                currentValue += GetRandomFloat(-randomTrendStrength.y, 0); // Correct: decrease
+                currentValue += GetRandomFloat(0, randomTrendStrength.y);
             } break;
 
             case Hold: {
@@ -269,10 +269,9 @@ float GenerateRandomMarket::PredictAverageOverWeeks(int weeks, float variationAm
 
         // Apply trend
         if (fakeState == TrendUp)
-            simulatedValue += GetRandomFloat(0, randomTrendStrength.x);
+            simulatedValue += GetRandomFloat(randomTrendStrength.x, 0);
         else if (fakeState == TrendDown)
-            simulatedValue += GetRandomFloat(-randomTrendStrength.y, 0);
-
+            simulatedValue += GetRandomFloat(0, randomTrendStrength.y);
 
         // Noise parameters
         NoiseType noiseType = defaultNoiseType;

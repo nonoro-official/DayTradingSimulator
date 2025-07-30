@@ -67,8 +67,8 @@ public:
     const char* MarketStateToString(MarketState state) {
         switch (state) {
             case Normal:     return "Normal";
-            case TrendUp:    return "Trend Up";
-            case TrendDown:  return "Trend Down";
+            case TrendUp:    return "Trend Down";
+            case TrendDown:  return "Trend Up";
             case Hold:       return "Hold";
             case Volatile:   return "Volatile";
             case Cooldown:   return "Cooldown";
