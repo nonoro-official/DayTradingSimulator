@@ -10,7 +10,6 @@
 #include <iomanip>
 #include <string>
 #include <cstring>
-
 void HistoryScreen::Draw() {
     Layout layout(GetScreenWidth(), GetScreenHeight());
 
@@ -74,10 +73,50 @@ void HistoryScreen::Draw() {
             layout.rowHeight
         };
 
-        Color bgColor = (shownCount % 2 == 0) ? Color{245, 245, 245, 255} : Color{255, 255, 255, 255};
+        // --- Background color based on type
+        Color bgColor;
+        switch (record.type) {
+            case TransactionRecord::Buy:
+                bgColor = Color{220, 255, 220, 255}; // light green
+                break;
+            case TransactionRecord::Sell:
+                bgColor = Color{255, 220, 220, 255}; // light red
+                break;
+            case TransactionRecord::PlacedBuy:
+                bgColor = Color{220, 240, 255, 255}; // light blue
+                break;
+            case TransactionRecord::PlacedSell:
+                bgColor = Color{255, 240, 200, 255}; // light orange
+                break;
+            default:
+                bgColor = Color{245, 245, 245, 255}; // fallback
+                break;
+        }
+
         DrawRectangleRec(row, bgColor);
         DrawRectangleLinesEx(row, 1, GRAY);
 
+        // --- Text color based on type
+        Color textColor;
+        switch (record.type) {
+            case TransactionRecord::Buy:
+                textColor = DARKGREEN;
+                break;
+            case TransactionRecord::Sell:
+                textColor = MAROON;
+                break;
+            case TransactionRecord::PlacedBuy:
+                textColor = DARKBLUE;
+                break;
+            case TransactionRecord::PlacedSell:
+                textColor = ORANGE;
+                break;
+            default:
+                textColor = BLACK;
+                break;
+        }
+
+        // --- Text content
         std::ostringstream info;
         info << (record.type == TransactionRecord::Buy ? "BUY" :
                  record.type == TransactionRecord::Sell ? "SELL" :
@@ -92,7 +131,7 @@ void HistoryScreen::Draw() {
         dateStr << "Month " << record.month << ", Week " << record.week;
 
         float textY = row.y + 10.0f;
-        DrawText(info.str().c_str(), row.x + 10.0f, textY, 18, BLACK);
+        DrawText(info.str().c_str(), row.x + 10.0f, textY, 18, textColor);
         DrawText(dateStr.str().c_str(), row.x + 10.0f, textY + 25.0f, 16, DARKGRAY);
 
         shownCount++;
@@ -137,8 +176,6 @@ void HistoryScreen::Draw() {
                 selectedType = i;
                 dropdownOpen = false;
             }
-
         }
     }
-
 }
