@@ -10,7 +10,9 @@
 #include <iomanip>
 #include <cstring>
 
-void UpdatePrediction() {}
+void DashboardScreen::UpdatePrediction() {
+    prediction = PlayerData::Instance().GetMarketPrediction(GameState::Instance().GetCompanyByIndex(*selectedCompanyIndex));
+}
 
 DashboardScreen::DashboardScreen(std::vector<Company*>* companiesRef, int* selectedIndex)
     : companies(companiesRef), selectedCompanyIndex(selectedIndex) {
@@ -18,7 +20,7 @@ DashboardScreen::DashboardScreen(std::vector<Company*>* companiesRef, int* selec
     prediction = PlayerData::Instance().GetMarketPrediction(GameState::Instance().GetCompanyByIndex(*selectedCompanyIndex));
 
     GameState::Instance().AddTickListener([this]() {
-        prediction = PlayerData::Instance().GetMarketPrediction(GameState::Instance().GetCompanyByIndex(*this->selectedCompanyIndex));
+        UpdatePrediction();
     });
 }
 
@@ -88,6 +90,8 @@ void DashboardScreen::Draw() {
     // Update selection (but do not close dropdown)
     if (*selectedCompanyIndex != tempIndex) {
         *selectedCompanyIndex = tempIndex;
+
+        UpdatePrediction();
     }
 
     // Close dropdown only when clicking outside

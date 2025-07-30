@@ -26,6 +26,8 @@ class DashboardScreen {
 
     std::string prediction;
 
+    void UpdatePrediction();
+
     public:
     DashboardScreen(std::vector<Company*>* companiesRef, int* selectedIndex);
     void Update();

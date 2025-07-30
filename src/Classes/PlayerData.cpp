@@ -11,8 +11,6 @@
 PlayerData::PlayerData() {
     cash = 150;
     weekExecutionDelay = 6;
-
-    showPredictionTier = 3;
 }
 
 float PlayerData::GetTotalPortfolioValue() {
