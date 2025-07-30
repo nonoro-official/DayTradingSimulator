@@ -16,9 +16,14 @@ void HistoryScreen::Draw() {
 
     DrawText("TRANSACTION HISTORY", 140, 70, 30, DARKGRAY);
 
+    // --- Filter dropdown state
+    static bool dropdownOpen = false;
+    const char* filterOptions[] = { "All", "Buy", "Sell", "Placed Buy", "Placed Sell" };
+    const int optionCount = sizeof(filterOptions) / sizeof(filterOptions[0]);
+
+    // --- Search Box
     Rectangle searchBox = { layout.screenWidth - 180.0f, layout.topOffset + 10.0f, 170.0f, 30.0f };
 
-    // --- Search box behavior
     if (CheckCollisionPointRec(GetMousePosition(), searchBox)) {
         if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) {
             isSearchFocused = true;
@@ -37,6 +42,7 @@ void HistoryScreen::Draw() {
     GuiSetStyle(TEXTBOX, TEXT_COLOR_NORMAL, ColorToInt(BLACK));
     GuiTextBox(searchBox, searchText, 32, isSearchFocused);
 
+    // Prepare search and filter
     std::string searchLower = searchText;
     std::transform(searchLower.begin(), searchLower.end(), searchLower.begin(), ::tolower);
     bool searchEmpty = (strcmp(searchText, "Search...") == 0 || searchLower.empty());
@@ -51,23 +57,27 @@ void HistoryScreen::Draw() {
         std::string nameLower = companyName;
         std::transform(nameLower.begin(), nameLower.end(), nameLower.begin(), ::tolower);
 
-        if (!searchEmpty && nameLower.find(searchLower) == std::string::npos) continue;
+        // --- Apply filter
+        if (selectedType != 0 && static_cast<int>(record.type) != selectedType - 1)
+            continue;
+
+        if (!searchEmpty && nameLower.find(searchLower) == std::string::npos)
+            continue;
 
         float y = layout.GetBoxStartY() + shownCount * (layout.rowHeight + layout.spacing);
         if (y + layout.rowHeight > layout.screenHeight) break;
 
         Rectangle row = {
             layout.GetBoxX(),
-            y,
+            y + 30.0f,
             layout.GetBoxWidth(),
             layout.rowHeight
         };
 
-        Color bgColor = (shownCount % 2 == 0) ? Color{ 245, 245, 245, 255 } : Color{ 255, 255, 255, 255 };
+        Color bgColor = (shownCount % 2 == 0) ? Color{245, 245, 245, 255} : Color{255, 255, 255, 255};
         DrawRectangleRec(row, bgColor);
         DrawRectangleLinesEx(row, 1, GRAY);
 
-        // Format info line
         std::ostringstream info;
         info << (record.type == TransactionRecord::Buy ? "BUY" :
                  record.type == TransactionRecord::Sell ? "SELL" :
@@ -89,6 +99,46 @@ void HistoryScreen::Draw() {
     }
 
     if (shownCount == 0) {
-        DrawText("No transactions found.", 140, 140, 20, RED);
+        DrawText("No transactions found.", 140, 160, 20, RED);
     }
+
+    Rectangle dropdownBounds = { 205, 110, 150, 30 };
+    GuiSetStyle(DROPDOWNBOX, BASE_COLOR_NORMAL, ColorToInt(WHITE));
+
+    // Toggle dropdown on click
+    if (CheckCollisionPointRec(GetMousePosition(), dropdownBounds) && IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) {
+        dropdownOpen = !dropdownOpen;
+    }
+
+    // Draw selected item
+    DrawText("Filter: ", 140, 115, 20, DARKGRAY);
+    DrawRectangleRec(dropdownBounds, LIGHTGRAY);
+    DrawText(filterOptions[selectedType], dropdownBounds.x + 10, dropdownBounds.y + 7, 20, BLACK);
+    DrawRectangleLinesEx(dropdownBounds, 1, DARKGRAY);
+
+    // Draw dropdown options
+    if (dropdownOpen) {
+        for (int i = 0; i < optionCount; ++i) {
+            Rectangle optionBounds = {
+                dropdownBounds.x,
+                dropdownBounds.y + (i + 1) * dropdownBounds.height,
+                dropdownBounds.width,
+                dropdownBounds.height
+            };
+
+            bool isHovered = CheckCollisionPointRec(GetMousePosition(), optionBounds);
+            Color hoverBlue = Color{ 173, 216, 230, 255 }; // Light blue
+
+            DrawRectangleRec(optionBounds, isHovered ? hoverBlue : RAYWHITE);
+            DrawRectangleLinesEx(optionBounds, 1, GRAY);
+            DrawText(filterOptions[i], optionBounds.x + 10, optionBounds.y + 7, 20, BLACK);
+
+            if (isHovered && IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) {
+                selectedType = i;
+                dropdownOpen = false;
+            }
+
+        }
+    }
+
 }

@@ -15,7 +15,7 @@ private:
     bool isVisible = false;
     float remainingTime = 0.0f;
 public:
-    void Show(const std::string& p, float durationSeconds = 4.0f);
+    void Show(const std::string& p, float durationSeconds = 2.0f);
     void Hide();
     void Draw();
     void DrawBuySellPopup(bool isBuyMode, bool& isVisible, Company* company, PlayerData& player, char* inputText);

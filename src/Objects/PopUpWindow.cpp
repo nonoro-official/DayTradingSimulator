@@ -6,6 +6,7 @@
 #include "raylib.h"
 #include "raygui.h"
 #include <cstring>
+#include <sstream>
 
 #include "Classes/Transactions/TransactionManager.h"
 
@@ -23,30 +24,69 @@ void PopUpWindow::Hide()
 
 void PopUpWindow::Draw()
 {
-    if (isVisible)
+    if (!isVisible) return;
+
+    // Update timer
+    remainingTime -= GetFrameTime();
+    if (remainingTime <= 0.0f)
     {
-        // Update timer
-        remainingTime -= GetFrameTime();
-        if (remainingTime <= 0.0f)
-        {
-            Hide();
-            return;
-        }
+        Hide();
+        return;
+    }
 
-        Rectangle messageRect = {
-            GetScreenWidth() / 2.0f - 600 / 2.0f,
-            GetScreenHeight() / 2.0f - 400 / 2.0f,
-            600,
-            400
-        };
-        DrawRectangleRec(messageRect, LIGHTGRAY);
-        DrawRectangleLinesEx(messageRect, 1, DARKGRAY);
+    // === Line parsing ===
+    std::istringstream stream(popUp);
+    std::vector<std::string> lines;
+    std::string line;
+    while (std::getline(stream, line)) {
+        lines.push_back(line);
+    }
 
-        int textWidth = MeasureText(popUp.c_str(), 20);
-        DrawText(popUp.c_str(), GetScreenWidth() / 2 - textWidth / 2, GetScreenHeight() / 2 - 10, 20, BLACK);
+    int fontSize = 20;
+    float lineSpacing = 1.5f;
+    float textPadding = 20.0f;
 
+    // === Calculate max line width and total height ===
+    int maxLineWidth = 0;
+    for (const auto& l : lines) {
+        int w = MeasureText(l.c_str(), fontSize);
+        if (w > maxLineWidth) maxLineWidth = w;
+    }
+
+    int numLines = lines.size();
+    float textHeight = numLines * fontSize * lineSpacing;
+    float popupWidth = maxLineWidth + textPadding * 2;
+    float popupHeight = textHeight + textPadding * 2;
+
+    Rectangle messageRect = {
+        GetScreenWidth() / 2.0f - popupWidth / 2.0f,
+        GetScreenHeight() / 2.0f - popupHeight / 2.0f,
+        popupWidth,
+        popupHeight
+    };
+
+    // === Determine popup background color based on content ===
+    Color bgColor = LIGHTGRAY;
+    if (popUp.find("successful") != std::string::npos) bgColor = Color{ 200, 255, 200, 255 }; // Light green
+    else if (popUp.find("not") != std::string::npos || popUp.find("Invalid") != std::string::npos || popUp.find("Could") != std::string::npos)
+        bgColor = Color{ 255, 220, 220, 255 }; // Light red
+    else if (popUp.find("Enter") != std::string::npos)
+        bgColor = Color{ 255, 245, 200, 255 }; // Light yellow
+
+    // === Draw background and border ===
+    DrawRectangleRec(messageRect, bgColor);
+    DrawRectangleLinesEx(messageRect, 2, DARKGRAY);
+
+    // === Draw centered text line-by-line ===
+    float startY = messageRect.y + (popupHeight - textHeight) / 2;
+    for (int i = 0; i < numLines; ++i) {
+        int lineWidth = MeasureText(lines[i].c_str(), fontSize);
+        float x = messageRect.x + (popupWidth - lineWidth) / 2;
+        float y = startY + i * fontSize * lineSpacing;
+        DrawText(lines[i].c_str(), x, y, fontSize, BLACK);
     }
 }
+
 void PopUpWindow::DrawBuySellPopup(bool isBuyMode, bool& isVisible, Company* company, PlayerData& player, char* inputText)
 {
     if (!isVisible || !company) return;

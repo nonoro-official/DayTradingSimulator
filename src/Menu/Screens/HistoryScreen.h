@@ -12,6 +12,7 @@ private:
     Vector2 scroll = {0, 0};
     char searchText[32] = "Search...";
     bool isSearchFocused = false;
+    int selectedType = 0;
 
 public:
     void Draw();
