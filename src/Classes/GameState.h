@@ -10,9 +10,7 @@ public:
     static GameState& Instance() {
         static GameState instance; // Guaranteed to be initialized only once
         return instance;
-    }
-
-    int numTrades = 0;
+    } 
 
     // Game state control
     bool IsPaused();
