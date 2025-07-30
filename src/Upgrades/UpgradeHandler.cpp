@@ -69,6 +69,7 @@ void UpgradeHandler::handlePurchase(int index, PlayerData& player, PopUpWindow& 
     }
     else
     {
+        PlayerData::Instance().cash -= upgrade.getCost();
         message.Show("Purchase successful!");
     }
 }

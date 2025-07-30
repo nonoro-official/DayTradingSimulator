@@ -15,7 +15,7 @@ private:
     char searchText[32] = "Search...";
     bool isSearchFocused = false;
 public:
-    PortfolioScreen(PopUpWindow* popupRef);
+    explicit PortfolioScreen(PopUpWindow* popupRef);
     void Draw();
 
     PopUpWindow* popup;

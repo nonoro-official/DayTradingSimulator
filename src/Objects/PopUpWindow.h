@@ -19,7 +19,7 @@ private:
     char inputBuffer[32] = "0.0";
     bool isInputFocused = false;
 public:
-    void Show(const std::string& p, float durationSeconds = 2.0f);
+    void Show(const std::string& p, float durationSeconds = 1.0f);
     void Hide();
     void Draw();
     void DrawBuySellPopup(bool isBuyMode, bool& isVisible, Company* company, PlayerData& player);

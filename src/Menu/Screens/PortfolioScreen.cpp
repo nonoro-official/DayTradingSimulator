@@ -112,7 +112,7 @@ void PortfolioScreen::Draw() {
     // ===== POPUP HANDLER =====
     if (popupCompany) {
         GameState::Instance().SetTempPause(true);
-        popup->DrawBuySellPopup(true, showBuyPopup, popupCompany, PlayerData::Instance());
+        popup->DrawBuySellPopup(showBuyPopup, showPopup, popupCompany, PlayerData::Instance());
 
         if (!showBuyPopup) {
             GameState::Instance().SetTempPause(false);
