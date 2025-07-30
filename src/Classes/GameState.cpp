@@ -74,22 +74,10 @@ void GameState::InitializeCompaniesAndStocks() {
     lemon->market->SetVolatileValues(GenerateRandomMarket::WhiteNoise, 0.8f, {3, 6});
     lemon->SetStoreValues(
         "A slow-growing tech firm focused on sustainable agriculture and automation.\n"
-        "Stable and low-risk, it’s ideal for long-term investors looking for consistent gains.",
+        "Stable and low-risk, its ideal for long-term investors looking for consistent gains.",
         52.00f
     );
     companies.push_back(lemon);
-
-    Company* banana = new Company("Banana Corp", "Builds AI systems for automated fruit farming.", 1.25f, 1.4f, new GraphDisplay({540, 300}, {840, 360}));
-    banana->market->SetNormalValues(GenerateRandomMarket::WhiteNoise, 0.6f);
-    banana->market->SetTrendValues(GenerateRandomMarket::WhiteNoise, 0.5f, {3, 8}, {-0.04f, 0.06f});
-    banana->market->SetHoldValues(GenerateRandomMarket::WhiteNoise, 0.15f, {2, 5});
-    banana->market->SetVolatileValues(GenerateRandomMarket::WhiteNoise, 1.6f, {4, 10});
-    banana->SetStoreValues(
-        "A volatile AI startup blending biotech with fruit farming.\n"
-        "High-risk, high-reward — perfect for traders chasing sharp spikes and quick flips.",
-        38.00f
-    );
-    companies.push_back(banana);
 
     Company* mango = new Company("Mango Ltd", "Manages cargo and logistics across tropical regions.", 0.9f, 1.1f, new GraphDisplay({540, 300}, {840, 360}));
     mango->market->SetNormalValues(GenerateRandomMarket::PerlinNoise, 0.4f);
@@ -102,6 +90,18 @@ void GameState::InitializeCompaniesAndStocks() {
         46.00f
     );
     companies.push_back(mango);
+
+    Company* banana = new Company("Banana Corp", "Builds AI systems for automated fruit farming.", 1.25f, 1.4f, new GraphDisplay({540, 300}, {840, 360}));
+    banana->market->SetNormalValues(GenerateRandomMarket::WhiteNoise, 0.6f);
+    banana->market->SetTrendValues(GenerateRandomMarket::WhiteNoise, 0.5f, {3, 8}, {-0.04f, 0.06f});
+    banana->market->SetHoldValues(GenerateRandomMarket::WhiteNoise, 0.15f, {2, 5});
+    banana->market->SetVolatileValues(GenerateRandomMarket::WhiteNoise, 1.6f, {4, 10});
+    banana->SetStoreValues(
+        "A volatile AI startup blending biotech with fruit farming.\n"
+        "High-risk, high-reward, perfect for traders chasing sharp spikes and quick flips.",
+        38.00f
+    );
+    companies.push_back(banana);
 
     // Add starter stocks to player
     for (Company* company : companies) {

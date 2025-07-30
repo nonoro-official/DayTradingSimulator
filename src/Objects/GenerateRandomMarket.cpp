@@ -225,9 +225,9 @@ void GenerateRandomMarket::SetCurrentValue(float value) {
 }
 
 
-float GenerateRandomMarket::PredictAverageOverWeeks(int weeks, float variationAmount)
+float GenerateRandomMarket::PredictAverageOverWeeks(int weeks, float variationAmount, float valueAtStart)
 {
-    if (weeks <= 0) return currentValue;
+    if (weeks <= 0 || valueAtStart <= 0.0f) return 0.0f;
 
     int totalPoints = weeks * 7; // assuming 1 point per day
     float simulatedValue = currentValue;
@@ -266,7 +266,7 @@ float GenerateRandomMarket::PredictAverageOverWeeks(int weeks, float variationAm
         if (fakeState == Normal) {
             float chance = static_cast<float>(rand()) / RAND_MAX;
             if (chance >= eventChance) {
-                fakeState = static_cast<MarketState>(GetRandomValue(1, 4));  // Random non-Normal state
+                fakeState = static_cast<MarketState>(GetRandomValue(1, 4));
                 fakeTimeInState = GetRandomValue(5, 20);
             }
         }
@@ -325,5 +325,8 @@ float GenerateRandomMarket::PredictAverageOverWeeks(int weeks, float variationAm
     float variation = GetRandomFloat(-variationAmount, variationAmount);
     float variedAverage = Clamp(average + (average * variation), 0.025f, 0.95f);
 
-    return variedAverage;
+    // Return percent change from given valueAtStart
+    float percentChange = (variedAverage - valueAtStart) / valueAtStart;
+    return percentChange;
 }
+

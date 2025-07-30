@@ -25,6 +25,10 @@ class DashboardScreen {
     PopUpWindow popup;
     int shareAmount = 0.5f;
 
+    std::string prediction;
+
+    void UpdatePrediction();
+
     public:
     DashboardScreen(std::vector<Company*>* companiesRef, int* selectedIndex);
     void Update();

@@ -9,6 +9,7 @@ class Company;
 
 struct MarketData {
     Company* company;
+    float yValue;
     float stockPrice;
     int monthAcquired;
     int weekAcquired;

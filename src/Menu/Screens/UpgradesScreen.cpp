@@ -14,7 +14,10 @@
 #include "CompaniesScreen.h"
 
 UpgradesScreen::UpgradesScreen(UpgradeHandler* handlerRef, PlayerData* playerRef, PopUpWindow* popupRef)
-    : handler(handlerRef), player(playerRef), popup(popupRef) {}
+    : handler(handlerRef), player(playerRef), popup(popupRef) {
+
+    descriptionFont = LoadFontEx("../Fonts/VT323-Regular.ttf", 18, 0, 0); // adjust size as needed
+}
 
 void UpgradesScreen::Draw()
 {
@@ -89,7 +92,8 @@ void UpgradesScreen::Draw()
 
         float textY = row.y + 10.0f;
         DrawText(upgradeInfo.str().c_str(), row.x + 10.0f, textY, 20, BLACK);
-        DrawText(upgrade.getDescription().c_str(), row.x + 10.0f, textY + 30.0f, 18, BLACK);
+        Vector2 descPos = { row.x + 10.0f, textY + 24.0f };
+        DrawTextEx(descriptionFont, upgrade.getDescription().c_str(), descPos, 18, 1, DARKGRAY);
 
         Rectangle buyBtn = {
             row.x + row.width - 100.0f,
@@ -110,4 +114,8 @@ void UpgradesScreen::Draw()
     }
 
     popup->Draw();
+}
+
+UpgradesScreen::~UpgradesScreen() {
+    UnloadFont(descriptionFont);
 }

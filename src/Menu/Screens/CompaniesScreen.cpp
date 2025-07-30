@@ -12,7 +12,10 @@
 #include <cstring>
 
 CompaniesScreen::CompaniesScreen(std::vector<Company*>* companiesRef)
-    : companies(companiesRef) {}
+    : companies(companiesRef) {
+
+    descriptionFont = LoadFontEx("../Fonts/VT323-Regular.ttf", 18, 0, 0); // adjust size as needed
+}
 
 void CompaniesScreen::Draw() {
     Layout layout(GetScreenWidth(), GetScreenHeight());
@@ -48,6 +51,8 @@ void CompaniesScreen::Draw() {
     std::transform(lowerSearch.begin(), lowerSearch.end(), lowerSearch.begin(), ::tolower);
     bool isSearchEmpty = (strcmp(searchText, "Search...") == 0 || lowerSearch.empty());
 
+        layout.rowHeight = 100; // ← Increased height for each panel
+
     for (size_t i = 0; i < companies->size(); ++i) {
         Company* company = (*companies)[i];
         if (!company) continue;
@@ -71,9 +76,16 @@ void CompaniesScreen::Draw() {
                   << "  |  change: " << (company->CalculateAverageIncreaseOverWeeks(12) >= 0 ? "+" : "")
                   << company->CalculateAverageIncreaseOverWeeks(12);
 
-        float textY = row.y + (layout.rowHeight - 20) / 2;
+        float textY = row.y + 10;
         DrawText(company->companyName.c_str(), row.x + 15, textY, 20, BLACK);
+
         DrawText(priceInfo.str().c_str(), row.x + row.width - MeasureText(priceInfo.str().c_str(), 20) - 200, textY, 20, BLACK);
+
+        // 🆕 Description line
+        const char* desc = company->companyStoreDescription.c_str(); // or however you access it
+        Vector2 descPos = { row.x + 15, textY + 36 };
+        DrawTextEx(descriptionFont, desc, descPos, 18, 1, DARKGRAY);
+
 
         Rectangle buyBtn = {
             row.x + row.width - 100.0f,
@@ -83,11 +95,10 @@ void CompaniesScreen::Draw() {
         };
 
         if (GuiButton(buyBtn, "Buy")) {
-            popupCompany = company; // ← set which company to buy from
+            popupCompany = company;
             showBuyPopup = true;
-            strcpy(inputBuffer, "0.0"); // reset input
+            strcpy(inputBuffer, "0.0");
         }
-
 
         shownCount++;
     }
@@ -100,5 +111,10 @@ void CompaniesScreen::Draw() {
         GameState::Instance().SetTempPause(true); // optional pause
         PopUpWindow().DrawBuySellPopup(true, showBuyPopup, popupCompany, PlayerData::Instance(), inputBuffer);
     }
+
+}
+
+CompaniesScreen::~CompaniesScreen() {
+    UnloadFont(descriptionFont);
 
 }

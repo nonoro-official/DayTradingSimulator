@@ -20,7 +20,8 @@
         int weekExecutionDelay;
 
         // Upgrade effects
-        bool showPrediction = false;   // Enables trend hints
+        int showPredictionTier = 0;   // Enables trend hints
+        int weekExecutionDelayTier = 0;   // Increases transaction turn-around
         int graphZoom = 1;             // Graph zoom level
 
         PlayerData();
@@ -29,6 +30,11 @@
         std::vector<Stock*>& GetStocks();
         float GetTotalPortfolioValue(); // total value of all stocks
         float GetTotalProfitLoss(Company* company, float avgBuyPrice);
+
+        void UpgradePrediction();
+        void UpgradeWeekExecution();
+
+        std::string GetMarketPrediction(Company* company);
 
     private:
         std::vector<Stock*> stocks = std::vector<Stock*>();

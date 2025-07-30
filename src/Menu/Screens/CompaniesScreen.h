@@ -18,9 +18,13 @@ private:
     Company* popupCompany = nullptr;
     char inputBuffer[16] = "0.0";  // For entering investment amount
 
+    ~CompaniesScreen();
+
 public:
     CompaniesScreen(std::vector<Company*>* companiesRef);
     void Draw();
+
+    Font descriptionFont;
 };
 
 
