@@ -26,6 +26,7 @@ DashboardScreen::DashboardScreen(std::vector<Company*>* companiesRef, int* selec
     });
 }
 
+
 std::string DashboardScreen::BuildCompanyDropdownString()
 {
     std::string result;
@@ -51,12 +52,16 @@ bool DashboardScreen::CanTrade(Company *company)
 {
     if (!company)
         return false;
+
     Stock *stock = GameState::Instance().GetStockByCompany(company);
-    if (TransactionManager::Instance().HasPendingOrder(stock))
+
+    // Optional sanity check (e.g., not enough cash or shares)
+    if (PlayerData::Instance().cash < 0.01f && stock->shares < 0.01f)
     {
-        PopUpWindow().Show("Wait for your current order to complete before trading again.");
+        popup->Show("You don't have enough funds or shares to trade.");
         return false;
     }
+
     return true;
 }
 
@@ -155,35 +160,19 @@ void DashboardScreen::Draw()
 
     if (GuiButton(buyBtn, "BUY"))
     {
-        if (selectedCompany)
+        if (selectedCompany && CanTrade(selectedCompany))
         {
-            Stock *stock = GameState::Instance().GetStockByCompany(selectedCompany);
-            if (TransactionManager::Instance().HasPendingOrder(stock))
-            {
-                popup->Show("Wait for your current order to complete before buying again.");
-            }
-            else
-            {
-                showBuyPopup = true;
-                strcpy(inputBuffer, "0.0");
-            }
+            showBuyPopup = true;
+            strcpy(inputBuffer, "0.0");
         }
     }
 
     if (GuiButton(sellBtn, "SELL"))
     {
-        if (selectedCompany)
+        if (selectedCompany && CanTrade(selectedCompany))
         {
-            Stock *stock = GameState::Instance().GetStockByCompany(selectedCompany);
-            if (TransactionManager::Instance().HasPendingOrder(stock))
-            {
-                PopUpWindow().Show("Wait for your current order to complete before selling again.");
-            }
-            else
-            {
-                showSellPopup = true;
-                strcpy(inputBuffer, "0.0");
-            }
+            showSellPopup = true;
+            strcpy(inputBuffer, "0.0");
         }
     }
 

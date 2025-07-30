@@ -36,6 +36,7 @@ void PopUpWindow::Draw()
     if (remainingTime <= 0.0f)
     {
         Hide();
+        GameState::Instance().SetTempPause(false);
         return;
     }
 
@@ -187,12 +188,9 @@ void PopUpWindow::DrawBuySellPopup(bool isBuyMode, bool& isVisible, Company* com
                 else if (inputValue > playerBalance) Show("Not enough funds.");
                 else Show("Must meet minimum shares requirement.");
             }
-            else if (TransactionManager::Instance().HasPendingBuy(stock)) {
-                Show("You already have a buy order for this stock.");
-            }
             else {
                 TransactionManager::Instance().CreateBuyOrder(stock, PlayerData::Instance().weekExecutionDelay, inputValue);
-                Show("Stock purchase placed! Will execute after delay.");
+                Show("Stock purchase placed! Shares will be added after delay.");
                 isVisible = false;
                 strcpy(inputBuffer, "");
                 GameState::Instance().SetTempPause(false);
@@ -202,9 +200,6 @@ void PopUpWindow::DrawBuySellPopup(bool isBuyMode, bool& isVisible, Company* com
                 if (inputValue < 0.01f) Show("Enter a valid share amount.");
                 else if (inputValue > ownedShares) Show("You don't own that many shares.");
                 else Show("Selling would drop you below the minimum shares.");
-            }
-            else if (TransactionManager::Instance().HasPendingSell(stock)) {
-                Show("You already have a sell order for this stock.");
             }
             else {
                 TransactionManager::Instance().CreateSellOrder(stock, PlayerData::Instance().weekExecutionDelay, inputValue);

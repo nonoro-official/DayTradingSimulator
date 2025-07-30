@@ -110,6 +110,10 @@ void CompaniesScreen::Draw() {
     if (showBuyPopup && popupCompany) {
         GameState::Instance().SetTempPause(true);
         popup->DrawBuySellPopup(true, showBuyPopup, popupCompany, PlayerData::Instance());
+
+        if (!showBuyPopup) {
+            GameState::Instance().SetTempPause(false);
+        }
     }
 
 }
