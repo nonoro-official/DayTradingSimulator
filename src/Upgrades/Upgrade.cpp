@@ -54,17 +54,43 @@ bool Upgrade::isPurchased()
     return tier >= maxTier;
 }
 
-bool Upgrade::tryPurchase(PlayerData& player)
+bool Upgrade::isPending() const
 {
-    if (player.cash >= cost && tier < maxTier)
+    return pendingWeeks > 0;
+}
+
+void Upgrade::setPending(int weeks)
+{
+    pendingWeeks = weeks;
+}
+
+void Upgrade::decrementPending()
+{
+    if (pendingWeeks > 0)
+        pendingWeeks--;
+}
+
+int Upgrade::getPendingWeeks() const
+{
+    return pendingWeeks;
+}
+
+bool Upgrade::tryPurchase(PlayerData& player, int delayWeeks)
+{
+    if (player.cash >= cost && tier < maxTier && !isPending())
     {
         player.cash -= cost;
-        effect(player);
-        tier++;
+        pendingWeeks = delayWeeks;  // Start countdown
+        // effect will be applied later, after countdown
         return true;
     }
-
     return false;
+}
+
+void Upgrade::applyEffect(PlayerData& player) {
+    if (effect) effect(player);
+    tier++;
+    pendingWeeks = 0;
 }
 
 

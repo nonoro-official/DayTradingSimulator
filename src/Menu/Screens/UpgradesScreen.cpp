@@ -110,16 +110,17 @@ void UpgradesScreen::Draw()
         Rectangle buyBtn = {row.x + row.width - 100.0f, row.y + (layout.rowHeight - 30.0f) / 2.0f, 80.0f,30.0f};
 
         bool isMaxed = upgrade.getTier() >= upgrade.getMaxTier();
-        if (isMaxed) {
-            GuiDisable();
-        }
-        if (GuiButton(buyBtn, isMaxed ? "Maxed" : "Buy")) {
-            if (!isMaxed)
+        bool isPending = upgrade.isPending();
+
+        if (isMaxed || isPending) GuiDisable();
+
+        if (GuiButton(buyBtn, isMaxed ? "Maxed" : (isPending ? "Pending..." : "Buy")))
+        {
+            if (!isMaxed && !isPending)
                 handler->handlePurchase(i, *player, *popup);
         }
-        if (isMaxed) {
-            GuiEnable();
-        }
+
+        if (isMaxed || isPending) GuiEnable();
 
         shownCount++;
     }

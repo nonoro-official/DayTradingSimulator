@@ -20,4 +20,5 @@ public:
     void handlePurchase(int index, PlayerData& player, PopUpWindow& message);
     void updatePopups(PlayerData& player, PopUpWindow& message);
     std::vector<Upgrade>& getUpgrades();
+    void progressWeek(PlayerData& player, PopUpWindow& popup);
 };

@@ -19,6 +19,9 @@ void Menu::Init(GameState* gameRef)
     game->AddTickListener([]() {
         TransactionManager::Instance().Update();
     });
+    game->AddTickListener([this]() {
+        upgradeHandler.progressWeek(player, popup);
+    });
 
     game->InitializeCompaniesAndStocks();
 

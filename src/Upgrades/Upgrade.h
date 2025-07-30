@@ -16,6 +16,7 @@ private:
     int tier = 0;
     int maxTier = 3;
     std::function<void(PlayerData&)> effect;
+    int pendingWeeks = 0;
 
 public:
     Upgrade() = default;
@@ -32,5 +33,11 @@ public:
     int getTier();
     int getMaxTier();
 
-    bool tryPurchase(PlayerData& player);
+    bool isPending() const;
+    void setPending(int weeks);
+    void decrementPending();
+    int getPendingWeeks() const;
+
+    bool tryPurchase(PlayerData& player, int delayWeeks);
+    void applyEffect(PlayerData& player);
 };
