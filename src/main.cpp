@@ -34,9 +34,9 @@ void DrawTopBar() {
 void DrawSidebar() {
     DrawRectangle(0, 0, 120, screenHeight, LIGHTGRAY);
 
-    const char* labels[] = { "Portfolio", "Dashboard", "Companies", "Upgrades" };
-    Screen screens[] = { SCREEN_PORTFOLIO, SCREEN_DASHBOARD, SCREEN_COMPANIES, SCREEN_UPGRADES };
-    const int buttonCount = 4;
+    const char* labels[] = { "Portfolio", "Dashboard", "Companies", "Upgrades", "History" };
+    Screen screens[] = { SCREEN_PORTFOLIO, SCREEN_DASHBOARD, SCREEN_COMPANIES, SCREEN_UPGRADES, SCREEN_HISTORY };
+    const int buttonCount = 5;
 
     int baseNormal = GuiGetStyle(BUTTON, BASE_COLOR_NORMAL);
     int borderNormal = GuiGetStyle(BUTTON, BORDER_COLOR_NORMAL);

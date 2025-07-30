@@ -10,11 +10,11 @@
 #include "Screens/DashboardScreen.h"
 #include "Screens/PortfolioScreen.h"
 #include "Screens/UpgradesScreen.h"
+#include "Screens/HistoryScreen.h"
 #include <vector>
 #include <cstring>
 #include <sstream>
 #include <iomanip>
-
 #include "Classes/Transactions/TransactionManager.h"
 
 enum Screen
@@ -22,7 +22,8 @@ enum Screen
     SCREEN_DASHBOARD,
     SCREEN_PORTFOLIO,
     SCREEN_COMPANIES,
-    SCREEN_UPGRADES
+    SCREEN_UPGRADES,
+    SCREEN_HISTORY
 };
 
 class Menu {
@@ -49,10 +50,9 @@ private:
     PortfolioScreen* portfolioScreen = nullptr;
     CompaniesScreen* companiesScreen = nullptr;
     UpgradesScreen* upgradesScreen = nullptr;
+    HistoryScreen* historyScreen = nullptr;
 
 public:
-    void InitializeCompanies();
-    void InitializeStocks();
     void Init(GameState* gameRef);
 
     Screen GetCurrentScreen();

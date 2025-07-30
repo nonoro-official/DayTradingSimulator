@@ -74,6 +74,8 @@ add_executable(${PROJECT_NAME}
         src/Menu/Screens/PortfolioScreen.h
         src/Classes/Transactions/TransactionManager.cpp
         src/Classes/Transactions/TransactionManager.h
+        src/Menu/Screens/HistoryScreen.cpp
+        src/Menu/Screens/HistoryScreen.h
 )
 
 # Include paths

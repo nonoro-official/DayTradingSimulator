@@ -35,6 +35,7 @@ void Menu::Init(GameState* gameRef)
     companiesScreen = new CompaniesScreen(&game->GetCompanies());
     portfolioScreen = new PortfolioScreen();
     upgradesScreen = new UpgradesScreen(&upgradeHandler, &player, &message);
+    historyScreen = new HistoryScreen();
 }
 
 void Menu::Update() {
@@ -79,6 +80,9 @@ void Menu::Draw() {
         break;
     case SCREEN_UPGRADES:
         if (upgradesScreen) upgradesScreen->Draw();
+        break;
+    case SCREEN_HISTORY:
+        if (historyScreen) historyScreen->Draw();
         break;
     }
 }
