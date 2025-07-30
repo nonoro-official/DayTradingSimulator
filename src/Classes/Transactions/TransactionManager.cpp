@@ -6,28 +6,45 @@
 #include "Classes/PlayerData.h"
 
 void TransactionManager::Update() {
-    // Process Buy Orders
-    for (int i = static_cast<int>(buyOrders.size()) - 1; i >= 0; --i) {
+    // Process buy orders
+    for (int i = 0; i < buyOrders.size(); ++i) {
         BuyOrder& order = buyOrders[i];
-        order.timeLeft--;
+        order.delay--;
 
-        if (order.timeLeft <= 0 && order.stock) {
-            order.stock->BuyStock(order.cashDeposited);
+        if (order.delay <= 0) {
+            float price = order.stock->company->GetCurrentPrice();
+            float shares = std::round((order.deposit / price) * 100.0f) / 100.0f;
+            order.stock->BuyStock(order.deposit);
+
+            transactionHistory.emplace_back(
+                TransactionRecord::Buy, order.stock, shares, price, shares * price
+            );
+
             buyOrders.erase(buyOrders.begin() + i);
+            --i;
         }
     }
 
-    // Process Sell Orders
-    for (int i = static_cast<int>(sellOrders.size()) - 1; i >= 0; --i) {
+    // Process sell orders
+    for (int i = 0; i < sellOrders.size(); ++i) {
         SellOrder& order = sellOrders[i];
-        order.timeLeft--;
+        order.delay--;
 
-        if (order.timeLeft <= 0 && order.stock) {
-            order.stock->SellStock(order.unitsWithdrawn);
+        if (order.delay <= 0) {
+            float price = order.stock->company->GetCurrentPrice();
+            float value = order.units * price;
+            order.stock->SellStock(order.units);
+
+            transactionHistory.emplace_back(
+                TransactionRecord::Sell, order.stock, order.units, price, value
+            );
+
             sellOrders.erase(sellOrders.begin() + i);
+            --i;
         }
     }
 }
+
 
 
 void TransactionManager::CreateBuyOrder(Stock* stock, int delay, float cashDeposited) {

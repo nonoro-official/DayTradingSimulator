@@ -24,6 +24,8 @@ float Stock::SellStock(float amountToSell) {
     return value;
 }
 
+
 void Stock::BuyStock(float depositAmount) {
-    this->shares += depositAmount / this->company->GetCurrentPrice();
+    float rawShares = depositAmount / this->company->GetCurrentPrice();
+    this->shares += std::round(rawShares * 100.0f) / 100.0f;  // Round to 2 decimal places
 }

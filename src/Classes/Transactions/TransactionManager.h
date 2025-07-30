@@ -6,6 +6,7 @@
 #define TRANSACTIONORDER_H
 #include "BuyOrder.h"
 #include "SellOrder.h"
+#include "TransactionRecord.h"
 
 
 class TransactionManager {
@@ -18,12 +19,17 @@ class TransactionManager {
 
     std::vector<BuyOrder> buyOrders;
     std::vector<SellOrder> sellOrders;
+    std::vector<TransactionRecord> transactionHistory;
 
     TransactionManager(){};
 
     void Update();
     void CreateBuyOrder(Stock* stock, int delay, float cashDeposited);
     void CreateSellOrder(Stock* stock, int delay, float unitsToSell);
+
+    const std::vector<TransactionRecord>& GetHistory() const {
+        return transactionHistory;
+    }
 };
 
 
