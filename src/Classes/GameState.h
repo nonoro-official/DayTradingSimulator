@@ -12,8 +12,6 @@ public:
         return instance;
     }
 
-    int numTrades = 0;
-
     // Game state control
     bool IsPaused();
     float GetTimeScale();

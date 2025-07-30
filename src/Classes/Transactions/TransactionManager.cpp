@@ -87,3 +87,25 @@ void TransactionManager::CreateSellOrder(Stock* stock, int delay, float unitsToS
         TransactionRecord::PlacedSell, stock, unitsToSell, price, estimatedReturn
     );
 }
+
+bool TransactionManager::HasPendingBuy(Stock* stock)
+{
+    for (auto& order : buyOrders)
+    {
+        if (order.stock == stock) return true;
+    }
+    return false;
+}
+
+bool TransactionManager::HasPendingSell(Stock* stock)
+{
+    for (auto& order : sellOrders)
+    {
+        if (order.stock == stock) return true;
+    }
+    return false;
+}
+
+bool TransactionManager::HasPendingOrder(Stock* stock) {
+    return HasPendingBuy(stock) || HasPendingSell(stock);
+}

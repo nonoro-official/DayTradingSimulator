@@ -27,6 +27,10 @@ class TransactionManager {
     void CreateBuyOrder(Stock* stock, int delay, float cashDeposited);
     void CreateSellOrder(Stock* stock, int delay, float unitsToSell);
 
+    bool HasPendingBuy(Stock* stock);
+    bool HasPendingSell(Stock* stock);
+    bool HasPendingOrder(Stock* stock);
+
     const std::vector<TransactionRecord>& GetHistory() const {
         return transactionHistory;
     }
