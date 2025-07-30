@@ -64,6 +64,19 @@ public:
 
     float PredictAverageOverWeeks(int weeks, float variationAmount, float valueAtStart);
 
+    const char* MarketStateToString(MarketState state) {
+        switch (state) {
+            case Normal:     return "Normal";
+            case TrendUp:    return "Trend Up";
+            case TrendDown:  return "Trend Down";
+            case Hold:       return "Hold";
+            case Volatile:   return "Volatile";
+            case Cooldown:   return "Cooldown";
+            default:         return "Unknown";
+        }
+    }
+
+
 private:
     float time = 0.0f;
     std::vector<GraphPoint*> generatedPoints;

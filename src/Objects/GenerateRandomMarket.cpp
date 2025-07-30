@@ -76,10 +76,6 @@ void GenerateRandomMarket::SetMarketState(MarketState state) {
 }
 
 GraphPoint* GenerateRandomMarket::GenerateNextPoint() {
-
-    char* MarketStateNames[] = {
-        "Normal", "TrendUp", "TrendDown", "Hold", "Volatile", "Cooldown"};
-
     if (timeInState <= 0) {
         if (currentState != Cooldown) {
             SetMarketState(Cooldown);
@@ -107,11 +103,11 @@ GraphPoint* GenerateRandomMarket::GenerateNextPoint() {
         // Event Loop
         switch (currentState) {
             case TrendUp: {
-                currentValue += GetRandomFloat(randomTrendStrength.x, 0);
+                currentValue += GetRandomFloat(0, randomTrendStrength.x);  // Correct: increase
             } break;
 
             case TrendDown: {
-                currentValue += GetRandomFloat(0, randomTrendStrength.y);
+                currentValue += GetRandomFloat(-randomTrendStrength.y, 0); // Correct: decrease
             } break;
 
             case Hold: {
@@ -273,9 +269,10 @@ float GenerateRandomMarket::PredictAverageOverWeeks(int weeks, float variationAm
 
         // Apply trend
         if (fakeState == TrendUp)
-            simulatedValue += GetRandomFloat(randomTrendStrength.x, 0);
+            simulatedValue += GetRandomFloat(0, randomTrendStrength.x);
         else if (fakeState == TrendDown)
-            simulatedValue += GetRandomFloat(0, randomTrendStrength.y);
+            simulatedValue += GetRandomFloat(-randomTrendStrength.y, 0);
+
 
         // Noise parameters
         NoiseType noiseType = defaultNoiseType;

@@ -224,3 +224,5 @@ std::string Company::GetDescription() {
 std::string Company::GetStoreDescription() {
     return companyStoreDescription;
 }
+
+void Company::SetMinimumShares(float minimumShares) { this->minimumShares = minimumShares; }
