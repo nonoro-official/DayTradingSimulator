@@ -88,12 +88,34 @@ void UpgradesScreen::Draw()
 
         std::ostringstream upgradeInfo;
         upgradeInfo << std::fixed << std::setprecision(2);
-        upgradeInfo << upgrade.getName() << " | $" << upgrade.getCost();
+        upgradeInfo << upgrade.getName() << " | $" << upgrade.getCost()
+                    << " | Tier " << upgrade.getTier() << "/" << upgrade.getMaxTier();
 
         float textY = row.y + 10.0f;
         DrawText(upgradeInfo.str().c_str(), row.x + 10.0f, textY, 20, BLACK);
         Vector2 descPos = { row.x + 10.0f, textY + 24.0f };
-        DrawTextEx(descriptionFont, upgrade.getDescription().c_str(), descPos, 18, 1, DARKGRAY);
+        std::string dynamicDescription;
+
+        if (upgrade.getName() == "Faster Execution") {
+            dynamicDescription = upgrade.getDescription() + "Current delay:"
+                + std::to_string(player->weekExecutionDelay) + " weeks";
+        }
+        else if (upgrade.getName() == "Prediction Hint") {
+            dynamicDescription = upgrade.getDescription() + "Current level: "
+                + std::to_string(player->showPredictionTier);
+        }
+        else if (upgrade.getName() == "Sell Bonus") {
+            float percent = (player->sellBonusMultiplier - 1.0f) * 100.0f;
+            std::ostringstream bonusStream;
+            bonusStream << std::fixed << std::setprecision(1) << percent;
+
+            dynamicDescription = upgrade.getDescription() + "Current bonus: " + bonusStream.str() + "%";
+        }
+        else {
+            dynamicDescription = upgrade.getDescription(); // fallback
+        }
+
+        DrawTextEx(descriptionFont, dynamicDescription.c_str(), descPos, 18, 1, DARKGRAY);
 
         Rectangle buyBtn = {
             row.x + row.width - 100.0f,
@@ -102,8 +124,16 @@ void UpgradesScreen::Draw()
             30.0f
         };
 
-        if (GuiButton(buyBtn, "Buy")) {
-            handler->handlePurchase(i, *player, *popup);
+        bool isMaxed = upgrade.getTier() >= upgrade.getMaxTier();
+        if (isMaxed) {
+            GuiDisable();
+        }
+        if (GuiButton(buyBtn, isMaxed ? "Maxed" : "Buy")) {
+            if (!isMaxed)
+                handler->handlePurchase(i, *player, *popup);
+        }
+        if (isMaxed) {
+            GuiEnable();
         }
 
         shownCount++;

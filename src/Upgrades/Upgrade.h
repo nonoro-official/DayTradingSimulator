@@ -13,7 +13,8 @@ private:
     std::string name;
     std::string description;
     int cost = 0;
-    bool purchased = false;
+    int tier = 0;
+    int maxTier = 3;
     std::function<void(PlayerData&)> effect;
 
 public:
@@ -28,6 +29,8 @@ public:
     const std::string& getDescription();
     int getCost();
     bool isPurchased();
+    int getTier();
+    int getMaxTier();
 
     bool tryPurchase(PlayerData& player);
 };

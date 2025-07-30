@@ -32,8 +32,11 @@ void TransactionManager::Update() {
 
         if (order.timeLeft <= 0) {
             float price = order.stock->company->GetCurrentPrice();
-            float value = order.unitsWithdrawn * price;
+            float baseValue = order.unitsWithdrawn * price;
+            float value = baseValue * PlayerData::Instance().sellBonusMultiplier;
+
             order.stock->SellStock(order.unitsWithdrawn);
+            PlayerData::Instance().cash += value;
 
             transactionHistory.emplace_back(
                 TransactionRecord::Sell, order.stock, order.unitsWithdrawn, price, value
@@ -44,8 +47,6 @@ void TransactionManager::Update() {
         }
     }
 }
-
-
 
 void TransactionManager::CreateBuyOrder(Stock* stock, int delay, float cashDeposited) {
     if (!stock || cashDeposited <= 0) return;

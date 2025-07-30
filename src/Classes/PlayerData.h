@@ -22,7 +22,7 @@
         // Upgrade effects
         int showPredictionTier = 0;   // Enables trend hints
         int weekExecutionDelayTier = 0;   // Increases transaction turn-around
-        int graphZoom = 1;             // Graph zoom level
+        float sellBonusMultiplier = 1.0f; // No bonus by default
 
         PlayerData();
 

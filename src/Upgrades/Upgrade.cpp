@@ -39,19 +39,34 @@ int Upgrade::getCost()
     return cost;
 }
 
+int Upgrade::getTier()
+{
+    return tier;
+}
+
+int Upgrade::getMaxTier()
+{
+    return maxTier;
+}
+
 bool Upgrade::isPurchased()
 {
-    return purchased;
+    return tier >= maxTier;
 }
 
 bool Upgrade::tryPurchase(PlayerData& player)
 {
-    if (!purchased && player.cash >= cost)
+    if (player.cash >= cost && tier < maxTier)
     {
         player.cash -= cost;
         effect(player);
-        purchased = true;
+        tier++;
         return true;
     }
+
     return false;
 }
+
+
+
+

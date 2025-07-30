@@ -13,19 +13,18 @@ void UpgradeHandler::init(GameState& game)
 
     upgrades.push_back(
         builder.setName("Faster Execution")
-        .setDescription("Reduces transaction delay upon purchase. Current transaction delay: " + std::to_string(PlayerData::Instance().weekExecutionDelay))
+        .setDescription("Reduces transaction delay upon purchase. ")
         .setCost(150)
         .setEffect([](PlayerData& player)
         {
-            player.weekExecutionDelay -= 1;
-            if (player.weekExecutionDelay < 1) player.weekExecutionDelay = 1;
-            std::cout << "Execution Speed improved: " << player.weekExecutionDelay << "s" << std::endl;
+            player.UpgradeWeekExecution();
+            std::cout << "Execution Speed improved: " << player.weekExecutionDelay << "weeks" << std::endl;
         })
         .build());
 
     upgrades.push_back(
         builder.setName("Prediction Hint")
-        .setDescription("Enables market prediction leveraging cutting edge technology. Current level: " + std::to_string(PlayerData::Instance().showPredictionTier))
+        .setDescription("Enables market prediction leveraging cutting edge technology. ")
         .setCost(200)
         .setEffect([](PlayerData& player)
         {
@@ -35,13 +34,15 @@ void UpgradeHandler::init(GameState& game)
         .build());
 
     upgrades.push_back(
-        builder.setName("Graph Zoom")
-        .setDescription("description 3")
+        builder.setName("Sell Bonus")
+        .setDescription("Gain +0.5% more from stock sales. ")
         .setCost(250)
         .setEffect([](PlayerData& player)
         {
-            player.graphZoom++;
-            std::cout << "Graph Zoom level: " << player.graphZoom << std::endl;
+            player.sellBonusMultiplier += 0.005f;
+            std::cout << "Sell Bonus active! New multiplier: "
+                      << std::fixed << std::setprecision(3)
+                      << player.sellBonusMultiplier << "x" << std::endl;
         })
         .build());
 
@@ -62,15 +63,13 @@ void UpgradeHandler::handlePurchase(int index, PlayerData& player, PopUpWindow& 
 
     Upgrade& upgrade = upgrades[index];
 
-    if (!upgrades[index].tryPurchase(player))
+    if (!upgrade.tryPurchase(player))
     {
         message.Show("Could not purchase. \nInsufficient funds or already purchased.");
     }
     else
     {
-        // Deduct the cost after a successful check
-        PlayerData::Instance().cash -= upgrade.getCost();
         message.Show("Purchase successful!");
     }
-
 }
+
