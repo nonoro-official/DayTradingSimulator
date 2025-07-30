@@ -13,12 +13,12 @@ void UpgradeHandler::init(GameState& game)
 
     upgrades.push_back(
         builder.setName("Faster Execution")
-        .setDescription("description 1")
+        .setDescription("Reduces transaction delay upon purchase. Current transaction delay: " + std::to_string(PlayerData::Instance().weekExecutionDelay))
         .setCost(150)
         .setEffect([](PlayerData& player)
         {
-            player.weekExecutionDelay -= 1.5f;
-            if (player.weekExecutionDelay < 0.5f) player.weekExecutionDelay = 0.5f;
+            player.weekExecutionDelay -= 1;
+            if (player.weekExecutionDelay < 1) player.weekExecutionDelay = 1;
             std::cout << "Execution Speed improved: " << player.weekExecutionDelay << "s" << std::endl;
         })
         .build());
