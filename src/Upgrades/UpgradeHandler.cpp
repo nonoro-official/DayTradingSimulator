@@ -14,7 +14,7 @@ void UpgradeHandler::init(GameState& game)
     upgrades.push_back(
         builder.setName("Faster Execution")
         .setDescription("Reduces transaction delay upon purchase. ")
-        .setCost(150)
+        .setCost(200)
         .setEffect([](PlayerData& player)
         {
             PlayerData::Instance().UpgradeWeekExecution();
@@ -25,7 +25,7 @@ void UpgradeHandler::init(GameState& game)
     upgrades.push_back(
         builder.setName("Prediction Hint")
         .setDescription("Enables market prediction leveraging cutting edge technology. ")
-        .setCost(200)
+        .setCost(250)
         .setEffect([](PlayerData& player)
         {
             PlayerData::Instance().UpgradePrediction();
@@ -36,7 +36,7 @@ void UpgradeHandler::init(GameState& game)
     upgrades.push_back(
         builder.setName("Sell Bonus")
         .setDescription("Gain +0.1% more from stock sales. ")
-        .setCost(250)
+        .setCost(300)
         .setEffect([](PlayerData& player)
         {
             PlayerData::Instance().sellBonusMultiplier += 0.1f;
