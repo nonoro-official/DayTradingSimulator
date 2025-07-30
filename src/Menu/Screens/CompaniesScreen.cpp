@@ -72,8 +72,8 @@ void CompaniesScreen::Draw() {
 
         std::ostringstream priceInfo;
         priceInfo << std::fixed << std::setprecision(2);
-        priceInfo << "share price: $" << company->GetCurrentPrice()
-                  << "  |  change: " << (company->CalculateAverageIncreaseOverWeeks(12) >= 0 ? "+" : "")
+        priceInfo << "Share price: $" << company->GetCurrentPrice()
+                  << "  |  Change: " << (company->CalculateAverageIncreaseOverWeeks(12) >= 0 ? "+" : "")
                   << company->CalculateAverageIncreaseOverWeeks(12);
 
         float textY = row.y + 10;
