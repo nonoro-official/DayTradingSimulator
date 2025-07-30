@@ -33,8 +33,24 @@ static bool showBuyPopup = false;
 static bool showSellPopup = false;
 static char inputBuffer[16] = "0.0f";  // shared input for both
 
+bool DashboardScreen::CanTrade(Company* company) {
+    if (!company) return false;
+    Stock* stock = GameState::Instance().GetStockByCompany(company);
+    if (TransactionManager::Instance().HasPendingOrder(stock)) {
+        PopUpWindow().Show("Wait for your current order to complete before trading again.");
+        return false;
+    }
+    return true;
+}
+
+
 void DashboardScreen::Draw() {
     Layout layout(GetScreenWidth(), GetScreenHeight());
+
+    Company* selectedCompany = nullptr;
+    if (*selectedCompanyIndex >= 0 && *selectedCompanyIndex < (int)companies->size()) {
+        selectedCompany = (*companies)[*selectedCompanyIndex];
+    }
 
     // 1. Top Bar Section (Dropdown Area)
     Rectangle topBar = {
@@ -117,14 +133,30 @@ void DashboardScreen::Draw() {
     GuiSetStyle(DEFAULT, TEXT_SIZE, 18);
 
     if (GuiButton(buyBtn, "BUY")) {
-        showBuyPopup = true;
-        strcpy(inputBuffer, "0.0");
+        if (selectedCompany) {
+            Stock* stock = GameState::Instance().GetStockByCompany(selectedCompany);
+            if (TransactionManager::Instance().HasPendingOrder(stock)) {
+                popup.Show("Wait for your current order to complete before buying again.");
+            } else {
+                showBuyPopup = true;
+                strcpy(inputBuffer, "0.0");
+            }
+        }
     }
 
+
     if (GuiButton(sellBtn, "SELL")) {
-        showSellPopup = true;
-        strcpy(inputBuffer, "0.0");
+        if (selectedCompany) {
+            Stock* stock = GameState::Instance().GetStockByCompany(selectedCompany);
+            if (TransactionManager::Instance().HasPendingOrder(stock)) {
+                PopUpWindow().Show("Wait for your current order to complete before selling again.");
+            } else {
+                showSellPopup = true;
+                strcpy(inputBuffer, "0.0");
+            }
+        }
     }
+
 
     // --- Company Info Text
     float infoX = sellBtn.x + buttonWidth + spacing * 2;
@@ -132,7 +164,6 @@ void DashboardScreen::Draw() {
     int fontSize = 20;
 
     // Add this before the popup logic
-    Company* selectedCompany = nullptr;
     if (*selectedCompanyIndex >= 0 && *selectedCompanyIndex < (int)companies->size()) {
         selectedCompany = (*companies)[*selectedCompanyIndex];
 
@@ -151,11 +182,15 @@ void DashboardScreen::Draw() {
     // Now this will work since selectedCompany is in scope
     if (showBuyPopup && selectedCompany) {
         GameState::Instance().SetTempPause(true);
-        PopUpWindow().DrawBuySellPopup(true, showBuyPopup, selectedCompany, PlayerData::Instance(), inputBuffer);
+        popup.DrawBuySellPopup(true, showBuyPopup, selectedCompany, PlayerData::Instance(), inputBuffer);
     }
     if (showSellPopup && selectedCompany) {
         GameState::Instance().SetTempPause(true);
-        PopUpWindow().DrawBuySellPopup(false, showSellPopup, selectedCompany, PlayerData::Instance(), inputBuffer);
+        popup.DrawBuySellPopup(false, showSellPopup, selectedCompany, PlayerData::Instance(), inputBuffer);
     }
+
+    // Draw persistent popup messages (success/error)
+    popup.Draw(); // 👈 This shows your floating message
+
 
 }
