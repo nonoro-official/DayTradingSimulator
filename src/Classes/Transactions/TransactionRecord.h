@@ -5,7 +5,13 @@
 #include "Stock.h"
 
 struct TransactionRecord {
-    enum Type { Buy, Sell } type;
+    enum Type {
+        Buy,
+        Sell,
+        PlacedBuy,
+        PlacedSell
+    };
+
     Stock* stock;
     float shares;
     float pricePerShare;
@@ -19,5 +25,6 @@ struct TransactionRecord {
         week = GameState::Instance().GetWeek();
     }
 };
+
 
 #endif

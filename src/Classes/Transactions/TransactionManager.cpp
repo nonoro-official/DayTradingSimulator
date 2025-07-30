@@ -56,9 +56,17 @@ void TransactionManager::CreateBuyOrder(Stock* stock, int delay, float cashDepos
     order.cashDeposited = cashDeposited;
 
     PlayerData::Instance().cash -= cashDeposited;
-
     buyOrders.push_back(order);
+
+    // === Record in Transaction History ===
+    float price = stock->company->GetCurrentPrice();
+    float estimatedShares = std::round((cashDeposited / price) * 100.0f) / 100.0f;
+
+    transactionHistory.emplace_back(
+        TransactionRecord::PlacedBuy, stock, estimatedShares, price, cashDeposited
+    );
 }
+
 
 void TransactionManager::CreateSellOrder(Stock* stock, int delay, float unitsToSell) {
     if (!stock || unitsToSell <= 0 || stock->shares < unitsToSell) return;
@@ -69,6 +77,13 @@ void TransactionManager::CreateSellOrder(Stock* stock, int delay, float unitsToS
     order.unitsWithdrawn = unitsToSell;
 
     order.stock->shares -= unitsToSell;
-
     sellOrders.push_back(order);
+
+    // === Record in Transaction History ===
+    float price = stock->company->GetCurrentPrice();
+    float estimatedReturn = unitsToSell * price;
+
+    transactionHistory.emplace_back(
+        TransactionRecord::PlacedSell, stock, unitsToSell, price, estimatedReturn
+    );
 }
