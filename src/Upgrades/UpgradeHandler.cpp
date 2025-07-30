@@ -35,11 +35,11 @@ void UpgradeHandler::init(GameState& game)
 
     upgrades.push_back(
         builder.setName("Sell Bonus")
-        .setDescription("Gain +0.5% more from stock sales. ")
+        .setDescription("Gain +0.1% more from stock sales. ")
         .setCost(250)
         .setEffect([](PlayerData& player)
         {
-            player.sellBonusMultiplier += 0.005f;
+            player.sellBonusMultiplier += 0.001f;
             std::cout << "Sell Bonus active! New multiplier: "
                       << std::fixed << std::setprecision(3)
                       << player.sellBonusMultiplier << "x" << std::endl;
