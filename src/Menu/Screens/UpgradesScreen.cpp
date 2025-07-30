@@ -97,7 +97,7 @@ void UpgradesScreen::Draw()
         std::string dynamicDescription;
 
         if (upgrade.getName() == "Faster Execution") {
-            dynamicDescription = upgrade.getDescription() + "Current delay:"
+            dynamicDescription = upgrade.getDescription() + "Current delay: "
                 + std::to_string(player->weekExecutionDelay) + " weeks";
         }
         else if (upgrade.getName() == "Prediction Hint") {
