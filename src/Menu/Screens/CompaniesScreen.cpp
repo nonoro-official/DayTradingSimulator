@@ -11,8 +11,8 @@
 #include <string>
 #include <cstring>
 
-CompaniesScreen::CompaniesScreen(std::vector<Company*>* companiesRef)
-    : companies(companiesRef) {
+CompaniesScreen::CompaniesScreen(std::vector<Company*>* companiesRef, PopUpWindow* popupRef)
+    : companies(companiesRef), popup(popupRef) {
 
     descriptionFont = LoadFontEx("../Fonts/VT323-Regular.ttf", 18, 0, 0); // adjust size as needed
 }
@@ -108,8 +108,8 @@ void CompaniesScreen::Draw() {
     }
 
     if (showBuyPopup && popupCompany) {
-        GameState::Instance().SetTempPause(true); // optional pause
-        PopUpWindow().DrawBuySellPopup(true, showBuyPopup, popupCompany, PlayerData::Instance(), inputBuffer);
+        GameState::Instance().SetTempPause(true);
+        popup->DrawBuySellPopup(true, showBuyPopup, popupCompany, PlayerData::Instance());
     }
 
 }

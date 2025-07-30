@@ -11,6 +11,8 @@
 class CompaniesScreen {
 private:
     std::vector<Company*>* companies;
+    PopUpWindow* popup;
+
     char searchText[32] = "Search...";
     bool isSearchFocused = false;
 
@@ -18,13 +20,13 @@ private:
     Company* popupCompany = nullptr;
     char inputBuffer[16] = "0.0";  // For entering investment amount
 
-    ~CompaniesScreen();
-
 public:
-    CompaniesScreen(std::vector<Company*>* companiesRef);
+    CompaniesScreen(std::vector<Company*>* companiesRef, PopUpWindow* popupRef);
     void Draw();
 
     Font descriptionFont;
+
+    ~CompaniesScreen();
 };
 
 

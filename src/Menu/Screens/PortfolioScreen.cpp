@@ -13,6 +13,9 @@
 
 #include "Objects/PopUpWindow.h"
 
+PortfolioScreen::PortfolioScreen(PopUpWindow* popupRef)
+    : popup(popupRef) {}
+
 void PortfolioScreen::Draw() {
     Layout layout(GetScreenWidth(), GetScreenHeight());
 
@@ -109,6 +112,6 @@ void PortfolioScreen::Draw() {
     // ===== POPUP HANDLER =====
     if (popupCompany) {
         GameState::Instance().SetTempPause(true);
-        PopUpWindow().DrawBuySellPopup(showBuyPopup, showPopup, popupCompany, PlayerData::Instance(), inputBuffer);
+        popup->DrawBuySellPopup(showBuyPopup, showPopup, popupCompany, PlayerData::Instance());
     }
 }
