@@ -15,14 +15,17 @@ void DashboardScreen::UpdatePrediction()
     prediction = PlayerData::Instance().GetMarketPrediction(GameState::Instance().GetCompanyByIndex(*selectedCompanyIndex));
 }
 
-DashboardScreen::DashboardScreen(std::vector<Company *> *companiesRef, int *selectedIndex, PopUpWindow *popupRef)
+DashboardScreen::DashboardScreen(std::vector<Company*>* companiesRef, int* selectedIndex, PopUpWindow* popupRef)
     : companies(companiesRef), selectedCompanyIndex(selectedIndex), popup(popupRef)
 {
     prediction = PlayerData::Instance().GetMarketPrediction(GameState::Instance().GetCompanyByIndex(*selectedCompanyIndex));
 
     GameState::Instance().AddTickListener([this]()
-                                          { UpdatePrediction(); });
+    {
+        UpdatePrediction();
+    });
 }
+
 
 std::string DashboardScreen::BuildCompanyDropdownString()
 {
@@ -180,6 +183,7 @@ void DashboardScreen::Draw()
 
     // Add this before the popup logic
 
+
     if (*selectedCompanyIndex >= 0 && *selectedCompanyIndex < (int)companies->size())
     {
         selectedCompany = (*companies)[*selectedCompanyIndex];
@@ -243,5 +247,5 @@ void DashboardScreen::Draw()
     }
 
     // Draw persistent popup messages (success/error)
-    popup.Draw(); // 👈 This shows your floating message
+    popup->Draw();
 }
