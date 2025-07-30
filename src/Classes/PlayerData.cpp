@@ -5,6 +5,7 @@
 #include "PlayerData.h"
 
 #include <iomanip>
+#include <iostream>
 
 #include "Stock.h"
 
