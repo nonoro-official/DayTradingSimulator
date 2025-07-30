@@ -10,7 +10,7 @@ public:
     static GameState& Instance() {
         static GameState instance; // Guaranteed to be initialized only once
         return instance;
-    } 
+    }
 
     // Game state control
     bool IsPaused();
