@@ -7,7 +7,7 @@
 
 PlayerData::PlayerData() {
     cash = 150;
-    weekExecutionDelay = 4;
+    weekExecutionDelay = 6;
 }
 
 float PlayerData::GetTotalPortfolioValue() {

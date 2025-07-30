@@ -6,6 +6,7 @@
 #include <cstdlib>  // for rand()
 #include <ctime>    // for time()
 
+#include "MonthDisplay.h"
 #include "raymath.h"
 
 float GetRandomFloat(float min, float max) {
@@ -217,4 +218,112 @@ void GenerateRandomMarket::SetVolatileValues(NoiseType noiseType, float noiseMul
     volatileNoiseType = noiseType;
     volatileNoiseMultiplier = noiseMultiplier;
     volatileTimeRange = timeRange;
+}
+
+void GenerateRandomMarket::SetCurrentValue(float value) {
+    currentValue = value;
+}
+
+
+float GenerateRandomMarket::PredictAverageOverWeeks(int weeks, float variationAmount)
+{
+    if (weeks <= 0) return currentValue;
+
+    int totalPoints = weeks * 7; // assuming 1 point per day
+    float simulatedValue = currentValue;
+    float sum = 0.0f;
+
+    float fakeTime = time;
+    int fakeTimeInState = timeInState;
+    MarketState fakeState = currentState;
+
+    for (int i = 0; i < totalPoints; ++i) {
+        // Decrease time in state
+        if (fakeTimeInState <= 0) {
+            if (fakeState != Cooldown)
+                fakeState = Cooldown;
+            else
+                fakeState = Normal;
+
+            switch (fakeState) {
+                case TrendUp:
+                case TrendDown:
+                case Hold:
+                case Volatile:
+                    fakeTimeInState = GetRandomValue(5, 20);
+                    break;
+                case Cooldown:
+                    fakeTimeInState = GetRandomValue(3, 10);
+                    break;
+                default:
+                    break;
+            }
+        } else {
+            fakeTimeInState--;
+        }
+
+        // Chance of event from Normal
+        if (fakeState == Normal) {
+            float chance = static_cast<float>(rand()) / RAND_MAX;
+            if (chance >= eventChance) {
+                fakeState = static_cast<MarketState>(GetRandomValue(1, 4));  // Random non-Normal state
+                fakeTimeInState = GetRandomValue(5, 20);
+            }
+        }
+
+        // Apply trend
+        if (fakeState == TrendUp)
+            simulatedValue += GetRandomFloat(randomTrendStrength.x, 0);
+        else if (fakeState == TrendDown)
+            simulatedValue += GetRandomFloat(0, randomTrendStrength.y);
+
+        // Noise parameters
+        NoiseType noiseType = defaultNoiseType;
+        float noiseMultiplier = defaultNoiseMultiplier;
+
+        switch (fakeState) {
+            case TrendUp:
+            case TrendDown:
+                noiseType = trendNoiseType;
+                noiseMultiplier = trendNoiseMultiplier;
+                break;
+            case Hold:
+                noiseType = holdNoiseType;
+                noiseMultiplier = holdNoiseMultiplier;
+                break;
+            case Volatile:
+                noiseType = volatileNoiseType;
+                noiseMultiplier = volatileNoiseMultiplier;
+                break;
+            default:
+                break;
+        }
+
+        float noiseValue = 0;
+        switch (noiseType) {
+            case PerlinNoise:
+                noiseValue = perlinNoise.noise1D(amplitude * fakeTime * frequency);
+                break;
+            case WhiteNoise:
+                noiseValue = Remap(static_cast<float>(rand()) / RAND_MAX, 0.025f, 0.95f, -0.5f, 0.5f);
+                break;
+        }
+
+        float yValue = simulatedValue + (simulatedValue * noiseValue * noiseMultiplier);
+
+        // Clamp and accumulate
+        yValue = Clamp(yValue, 0.025f, 0.95f);
+        simulatedValue = Clamp(simulatedValue, 0.025f, 0.95f);
+        sum += yValue;
+
+        fakeTime += 1.0f;
+    }
+
+    float average = sum / totalPoints;
+
+    // Apply variation (±percentage)
+    float variation = GetRandomFloat(-variationAmount, variationAmount);
+    float variedAverage = Clamp(average + (average * variation), 0.025f, 0.95f);
+
+    return variedAverage;
 }

@@ -25,9 +25,8 @@ void Menu::Init(GameState* gameRef)
 {
     game = gameRef;
     upgradeHandler.init(*game);
-    transactionManager = new TransactionManager();
-    game->AddTickListener([this]() {
-        transactionManager->Update();
+    game->AddTickListener([]() {
+        TransactionManager::Instance().Update();
     });
 
     game->InitializeCompaniesAndStocks();
@@ -93,6 +92,4 @@ Menu::~Menu()
         delete c;
     }
     companies.clear();
-
-    delete transactionManager;
 }

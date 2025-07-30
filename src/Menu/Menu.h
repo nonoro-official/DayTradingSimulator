@@ -31,7 +31,6 @@ private:
 
     GraphDisplay* graphDisplay = nullptr;
     GameState* game = nullptr;
-    TransactionManager* transactionManager = nullptr;
     UpgradeHandler upgradeHandler;
     PlayerData player;
     PopUpWindow message;

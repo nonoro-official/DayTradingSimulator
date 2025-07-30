@@ -55,7 +55,7 @@ private:
     std::vector<std::function<void()>> listeners;
 
     int month = 0;
-    int week = 0;
+    int week = 1;
 
     std::vector<Company*> companies;
     int selectedCompanyIndex = 0;

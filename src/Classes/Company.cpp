@@ -26,10 +26,6 @@ Company::Company(std::string companyName, std::string companyDescription, float 
     market = new GenerateRandomMarket(amplitude, frequency);
     market->InitializeMarket();
 
-    // pre gen points
-    std::vector<GraphPoint*> history = market->GeneratePrefillPoints(25);
-    display->PrefillPoints(history);
-
     // Add Listener
     this->display = display;
     GameState::Instance().AddTickListener([this]() {
@@ -44,6 +40,52 @@ Company::Company(std::string companyName, std::string companyDescription, float 
 void Company::SetStoreValues(std::string storeDescription, float basePrice) {
     this->companyStoreDescription = storeDescription;
     this->baseStockPrice = basePrice;
+
+    // pre gen points
+    std::vector<GraphPoint*> history = market->GeneratePrefillPoints(25);
+
+    int totalPoints = static_cast<int>(history.size());
+    int weeksBack = totalPoints;
+
+    float lastMultiplier = 0;
+    for (int i = 0; i < totalPoints; ++i) {
+        GraphPoint* point = history[i];
+
+        int pastTotalWeeks = -weeksBack + i + 1;
+        int month = pastTotalWeeks / 4;
+        int week = pastTotalWeeks % 4;
+
+        if (week < 1) {
+            week += 4;
+            month -= 1;
+        }
+
+        MarketData* data = new MarketData();
+        data->company = this;
+        data->monthAcquired = month;
+        data->weekAcquired = week;
+
+        float multiplier = point->yValue;
+        data->stockPrice = baseStockPrice * multiplier;
+
+        lastMultiplier = multiplier;
+
+        float increase = 0.0f;
+        if (!previousValues.empty()) {
+            increase = data->stockPrice - previousValues.back()->stockPrice;
+        }
+
+        point->InitializeTooltip(week, month, data->stockPrice, increase);
+        previousValues.push_back(data);
+    }
+
+    // === SET CURRENT MARKET DATA ===
+    if (!previousValues.empty()) {
+        currentMarketData = previousValues.back();
+        market->SetCurrentValue(lastMultiplier);
+    }
+
+    display->PrefillPoints(history);
 }
 
 
@@ -59,9 +101,7 @@ void Company::GenerateNext(GraphDisplay* display) {
 
     float multiplier = nextPoint->yValue;
     newData->stockPrice = this->baseStockPrice * multiplier;
-
-    std::cout << multiplier << std::endl;
-
+    
     // Pass tooltip data
     float increase = 0;
     if (!previousValues.empty()) {

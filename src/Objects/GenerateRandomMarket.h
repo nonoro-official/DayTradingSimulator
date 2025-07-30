@@ -55,11 +55,14 @@ public:
     void SetTrendValues(NoiseType noiseType, float noiseMultiplier, Vector2 timeRange, Vector2 trendStrengthRange);
     void SetHoldValues(NoiseType noiseType, float noiseMultiplier, Vector2 timeRange);
     void SetVolatileValues(NoiseType noiseType, float noiseMultiplier, Vector2 timeRange);
+    void SetCurrentValue(float value);
 
     const std::vector<GraphPoint*> &GetMarketValues() const;
     std::function<void()> OnFinishInitialize = nullptr;
 
     GraphPoint* GenerateNextPoint();
+
+    float PredictAverageOverWeeks(int weeks, float variationAmount);
 
 private:
     float time = 0.0f;
