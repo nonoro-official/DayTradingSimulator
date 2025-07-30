@@ -78,7 +78,7 @@ void GameState::InitializeCompaniesAndStocks() {
         52.00f
     );
 
-    lemon->SetMinimumShares(5);
+    lemon->SetMinimumShares(2.5);
     companies.push_back(lemon);
 
     Company* mango = new Company("Mango Ltd", "Manages cargo and logistics across tropical regions.", 0.9f, 1.1f, new GraphDisplay({540, 300}, {840, 360}));
@@ -92,7 +92,7 @@ void GameState::InitializeCompaniesAndStocks() {
         46.00f
     );
 
-    mango->SetMinimumShares(8);
+    mango->SetMinimumShares(4);
     companies.push_back(mango);
 
     Company* banana = new Company("Banana Corp", "Builds AI systems for automated fruit farming.", 1.25f, 1.4f, new GraphDisplay({540, 300}, {840, 360}));
@@ -106,7 +106,7 @@ void GameState::InitializeCompaniesAndStocks() {
         38.00f
     );
 
-    banana->SetMinimumShares(15);
+    banana->SetMinimumShares(5);
     companies.push_back(banana);
 
     // Add starter stocks to player
