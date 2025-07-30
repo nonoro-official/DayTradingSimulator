@@ -18,6 +18,7 @@ void UpgradeHandler::init(GameState& game)
         .setEffect([](PlayerData& player)
         {
             PlayerData::Instance().UpgradeWeekExecution();
+            player.UpgradeWeekExecution();
             std::cout << "Execution Speed improved: " << player.weekExecutionDelay << "weeks" << std::endl;
         })
         .build());
@@ -29,6 +30,7 @@ void UpgradeHandler::init(GameState& game)
         .setEffect([](PlayerData& player)
         {
             PlayerData::Instance().UpgradePrediction();
+            player.UpgradePrediction();
             std::cout << "Prediction Hints activated!" << std::endl;
         })
         .build());
@@ -40,6 +42,7 @@ void UpgradeHandler::init(GameState& game)
         .setEffect([](PlayerData& player)
         {
             PlayerData::Instance().sellBonusMultiplier += 0.1f;
+            player.sellBonusMultiplier += 0.1f;
             std::cout << "Sell Bonus active! New multiplier: "
                       << std::fixed << std::setprecision(3)
                       << player.sellBonusMultiplier << "x" << std::endl;
