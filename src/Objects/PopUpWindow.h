@@ -14,11 +14,18 @@ private:
     std::string popUp;
     bool isVisible = false;
     float remainingTime = 0.0f;
+
+    // textbox
+    char inputBuffer[32] = "0.0";
+    bool isInputFocused = false;
 public:
-    void Show(const std::string& p, float durationSeconds = 2.0f);
+    void Show(const std::string& p, float durationSeconds = 1.0f);
     void Hide();
+    bool IsVisible() const;
     void Draw();
-    void DrawBuySellPopup(bool isBuyMode, bool& isVisible, Company* company, PlayerData& player, char* inputText);
+    void DrawBuySellPopup(bool isBuyMode, bool& isVisible, Company* company, PlayerData& player);
+
+    const char* GetInputBuffer() const;
 };
 
 

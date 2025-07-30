@@ -12,15 +12,6 @@
 
 bool GraphDisplay::isAnyHovering = false;
 
-std::string Menu::BuildCompanyDropdownString() {
-    std::string result;
-    for (size_t i = 0; i < companies.size(); ++i) {
-        result += companies[i]->GetName();
-        if (i != companies.size() - 1) result += ";";
-    }
-    return result;
-}
-
 void Menu::Init(GameState* gameRef)
 {
     game = gameRef;
@@ -28,13 +19,16 @@ void Menu::Init(GameState* gameRef)
     game->AddTickListener([]() {
         TransactionManager::Instance().Update();
     });
+    game->AddTickListener([this]() {
+        upgradeHandler.progressWeek(player, popup);
+    });
 
     game->InitializeCompaniesAndStocks();
 
-    dashboardScreen = new DashboardScreen(&game->GetCompanies(), &game->GetSelectedCompanyIndex());
-    companiesScreen = new CompaniesScreen(&game->GetCompanies());
-    portfolioScreen = new PortfolioScreen();
-    upgradesScreen = new UpgradesScreen(&upgradeHandler, &player, &message);
+    dashboardScreen = new DashboardScreen(&game->GetCompanies(), &game->GetSelectedCompanyIndex(), &popup);
+    companiesScreen = new CompaniesScreen(&game->GetCompanies(), &popup);
+    portfolioScreen = new PortfolioScreen(&popup);
+    upgradesScreen = new UpgradesScreen(&upgradeHandler, &player, &popup);
     historyScreen = new HistoryScreen();
 }
 
@@ -89,11 +83,9 @@ void Menu::Draw() {
 
 Menu::~Menu()
 {
-    delete graphDisplay;
-
-    for (Company* c : companies)
-    {
-        delete c;
-    }
-    companies.clear();
+    delete dashboardScreen;
+    delete companiesScreen;
+    delete portfolioScreen;
+    delete upgradesScreen;
+    delete historyScreen;
 }

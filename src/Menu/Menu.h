@@ -34,16 +34,11 @@ private:
     GameState* game = nullptr;
     UpgradeHandler upgradeHandler;
     PlayerData player;
-    PopUpWindow message;
+    PopUpWindow popup;
 
     // Dropdown state
     int selectedCompanyIndex = 0;
     bool dropdownActive = false;
-    std::vector<Company*> companies;  // Use this to store all companies
-
-    // Search bar
-    char searchText[32] = "Search...";
-    bool isSearchFocused = false;
 
     // Screens
     DashboardScreen* dashboardScreen = nullptr;
@@ -60,8 +55,6 @@ public:
 
     void Update();
     void Draw();
-
-    std::string BuildCompanyDropdownString();
 
     ~Menu();
 };

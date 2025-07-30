@@ -27,12 +27,7 @@ void UpgradesScreen::Draw()
     DrawText("UPGRADES", layout.leftOffset + 20.0f, layout.topOffset + 10.0f, 30, DARKGRAY);
 
     // ===== Search Box =====
-    Rectangle searchBox = {
-        layout.screenWidth - 180.0f,
-        layout.topOffset + 10.0f,
-        170.0f,
-        30.0f
-    };
+    Rectangle searchBox = {layout.screenWidth - 180.0f,layout.topOffset + 10.0f, 170.0f,30.0f};
 
     if (CheckCollisionPointRec(GetMousePosition(), searchBox)) {
         if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) {
@@ -75,12 +70,7 @@ void UpgradesScreen::Draw()
         // Prevent drawing past screen
         if (y + layout.rowHeight > layout.screenHeight) break;
 
-        Rectangle row = {
-            layout.GetBoxX(),
-            y,
-            layout.GetBoxWidth(),
-            layout.rowHeight
-        };
+        Rectangle row = {layout.GetBoxX(), y, layout.GetBoxWidth(), layout.rowHeight};
 
         Color bgColor = (shownCount % 2 == 0) ? Color{230, 230, 230, 255} : Color{250, 250, 250, 255};
         DrawRectangleRec(row, bgColor);
@@ -88,23 +78,49 @@ void UpgradesScreen::Draw()
 
         std::ostringstream upgradeInfo;
         upgradeInfo << std::fixed << std::setprecision(2);
-        upgradeInfo << upgrade.getName() << " | $" << upgrade.getCost();
+        upgradeInfo << upgrade.getName() << " | $" << upgrade.getCost()
+                    << " | Tier " << upgrade.getTier() << "/" << upgrade.getMaxTier();
 
         float textY = row.y + 10.0f;
         DrawText(upgradeInfo.str().c_str(), row.x + 10.0f, textY, 20, BLACK);
         Vector2 descPos = { row.x + 10.0f, textY + 24.0f };
-        DrawTextEx(descriptionFont, upgrade.getDescription().c_str(), descPos, 18, 1, DARKGRAY);
+        std::string dynamicDescription;
 
-        Rectangle buyBtn = {
-            row.x + row.width - 100.0f,
-            row.y + (layout.rowHeight - 30.0f) / 2.0f,
-            80.0f,
-            30.0f
-        };
-
-        if (GuiButton(buyBtn, "Buy")) {
-            handler->handlePurchase(i, *player, *popup);
+        if (upgrade.getName() == "Faster Execution") {
+            dynamicDescription = upgrade.getDescription() + "Current delay: "
+                + std::to_string(player->weekExecutionDelay) + " weeks";
         }
+        else if (upgrade.getName() == "Prediction Hint") {
+            dynamicDescription = upgrade.getDescription() + "Current level: "
+                + std::to_string(player->showPredictionTier);
+        }
+        else if (upgrade.getName() == "Sell Bonus") {
+            float percent = (player->sellBonusMultiplier - 1.0f) * 100.0f;
+            std::ostringstream bonusStream;
+            bonusStream << std::fixed << std::setprecision(1) << percent;
+
+            dynamicDescription = upgrade.getDescription() + "Current bonus: " + bonusStream.str() + "%";
+        }
+        else {
+            dynamicDescription = upgrade.getDescription(); // fallback
+        }
+
+        DrawTextEx(descriptionFont, dynamicDescription.c_str(), descPos, 18, 1, DARKGRAY);
+
+        Rectangle buyBtn = {row.x + row.width - 100.0f, row.y + (layout.rowHeight - 30.0f) / 2.0f, 80.0f,30.0f};
+
+        bool isMaxed = upgrade.getTier() >= upgrade.getMaxTier();
+        bool isPending = upgrade.isPending();
+
+        if (isMaxed || isPending) GuiDisable();
+
+        if (GuiButton(buyBtn, isMaxed ? "Maxed" : (isPending ? "Pending..." : "Buy")))
+        {
+            if (!isMaxed && !isPending)
+                handler->handlePurchase(i, *player, *popup);
+        }
+
+        if (isMaxed || isPending) GuiEnable();
 
         shownCount++;
     }
@@ -114,6 +130,7 @@ void UpgradesScreen::Draw()
     }
 
     popup->Draw();
+    handler->updatePopups(*player, *popup);
 }
 
 UpgradesScreen::~UpgradesScreen() {

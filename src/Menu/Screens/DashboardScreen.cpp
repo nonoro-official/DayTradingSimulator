@@ -15,15 +15,17 @@ void DashboardScreen::UpdatePrediction()
     prediction = PlayerData::Instance().GetMarketPrediction(GameState::Instance().GetCompanyByIndex(*selectedCompanyIndex));
 }
 
-DashboardScreen::DashboardScreen(std::vector<Company *> *companiesRef, int *selectedIndex)
-    : companies(companiesRef), selectedCompanyIndex(selectedIndex)
+DashboardScreen::DashboardScreen(std::vector<Company*>* companiesRef, int* selectedIndex, PopUpWindow* popupRef)
+    : companies(companiesRef), selectedCompanyIndex(selectedIndex), popup(popupRef)
 {
-
     prediction = PlayerData::Instance().GetMarketPrediction(GameState::Instance().GetCompanyByIndex(*selectedCompanyIndex));
 
     GameState::Instance().AddTickListener([this]()
-                                          { UpdatePrediction(); });
+    {
+        UpdatePrediction();
+    });
 }
+
 
 std::string DashboardScreen::BuildCompanyDropdownString()
 {
@@ -46,20 +48,20 @@ void DashboardScreen::Update()
     }
 }
 
-static bool showBuyPopup = false;
-static bool showSellPopup = false;
-static char inputBuffer[16] = "0.0f"; // shared input for both
-
 bool DashboardScreen::CanTrade(Company *company)
 {
     if (!company)
         return false;
+
     Stock *stock = GameState::Instance().GetStockByCompany(company);
-    if (TransactionManager::Instance().HasPendingOrder(stock))
+
+    // Optional sanity check (e.g., not enough cash or shares)
+    if (PlayerData::Instance().cash < 0.01f && stock->shares < 0.01f)
     {
-        PopUpWindow().Show("Wait for your current order to complete before trading again.");
+        popup->Show("You don't have enough funds or shares to trade.");
         return false;
     }
+
     return true;
 }
 
@@ -158,35 +160,19 @@ void DashboardScreen::Draw()
 
     if (GuiButton(buyBtn, "BUY"))
     {
-        if (selectedCompany)
+        if (selectedCompany && CanTrade(selectedCompany))
         {
-            Stock *stock = GameState::Instance().GetStockByCompany(selectedCompany);
-            if (TransactionManager::Instance().HasPendingOrder(stock))
-            {
-                popup.Show("Wait for your current order to complete before buying again.");
-            }
-            else
-            {
-                showBuyPopup = true;
-                strcpy(inputBuffer, "0.0");
-            }
+            showBuyPopup = true;
+            strcpy(inputBuffer, "0.0");
         }
     }
 
     if (GuiButton(sellBtn, "SELL"))
     {
-        if (selectedCompany)
+        if (selectedCompany && CanTrade(selectedCompany))
         {
-            Stock *stock = GameState::Instance().GetStockByCompany(selectedCompany);
-            if (TransactionManager::Instance().HasPendingOrder(stock))
-            {
-                PopUpWindow().Show("Wait for your current order to complete before selling again.");
-            }
-            else
-            {
-                showSellPopup = true;
-                strcpy(inputBuffer, "0.0");
-            }
+            showSellPopup = true;
+            strcpy(inputBuffer, "0.0");
         }
     }
 
@@ -196,6 +182,8 @@ void DashboardScreen::Draw()
     int fontSize = 20;
 
     // Add this before the popup logic
+
+
     if (*selectedCompanyIndex >= 0 && *selectedCompanyIndex < (int)companies->size())
     {
         selectedCompany = (*companies)[*selectedCompanyIndex];
@@ -221,13 +209,16 @@ void DashboardScreen::Draw()
     if (showBuyPopup && selectedCompany)
     {
         GameState::Instance().SetTempPause(true);
-        popup.DrawBuySellPopup(true, showBuyPopup, selectedCompany, PlayerData::Instance(), inputBuffer);
+        popup->DrawBuySellPopup(true, showBuyPopup, selectedCompany, PlayerData::Instance());
     }
     if (showSellPopup && selectedCompany)
     {
         GameState::Instance().SetTempPause(true);
-        popup.DrawBuySellPopup(false, showSellPopup, selectedCompany, PlayerData::Instance(), inputBuffer);
+        popup->DrawBuySellPopup(false, showSellPopup, selectedCompany, PlayerData::Instance());
     }
+
+    // Draw persistent popup messages (success/error)
+    popup->Draw();
 
     // Prediction hint
     if (selectedCompany)
@@ -256,5 +247,5 @@ void DashboardScreen::Draw()
     }
 
     // Draw persistent popup messages (success/error)
-    popup.Draw(); // 👈 This shows your floating message
+    popup->Draw();
 }

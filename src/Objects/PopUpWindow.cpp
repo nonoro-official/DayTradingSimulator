@@ -22,6 +22,15 @@ void PopUpWindow::Hide()
     isVisible = false;
 }
 
+bool PopUpWindow::IsVisible() const {
+    return isVisible;
+}
+
+const char* PopUpWindow::GetInputBuffer() const
+{
+    return inputBuffer;
+}
+
 void PopUpWindow::Draw()
 {
     if (!isVisible) return;
@@ -31,6 +40,7 @@ void PopUpWindow::Draw()
     if (remainingTime <= 0.0f)
     {
         Hide();
+        GameState::Instance().SetTempPause(false);
         return;
     }
 
@@ -87,7 +97,7 @@ void PopUpWindow::Draw()
     }
 }
 
-void PopUpWindow::DrawBuySellPopup(bool isBuyMode, bool& isVisible, Company* company, PlayerData& player, char* inputText)
+void PopUpWindow::DrawBuySellPopup(bool isBuyMode, bool& isVisible, Company* company, PlayerData& player)
 {
     if (!isVisible || !company) return;
 
@@ -102,7 +112,7 @@ void PopUpWindow::DrawBuySellPopup(bool isBuyMode, bool& isVisible, Company* com
     float playerBalance = player.cash;
     float ownedShares = stock->shares;
     float minShares = stock->minimumShares;
-    float inputValue = std::atof(inputText);
+    float inputValue = std::atof(inputBuffer);
     float sharesToBuy = inputValue / pricePerShare;
     float estimatedValue = inputValue * pricePerShare;
 
@@ -113,18 +123,33 @@ void PopUpWindow::DrawBuySellPopup(bool isBuyMode, bool& isVisible, Company* com
     DrawText(isBuyMode ? "ENTER AMOUNT TO INVEST" : "ENTER NUMBER OF SHARES TO SELL", left, y, 24, BLACK);
     y += 40;
 
-    // Input box
-    Rectangle inputBox = { left, (float)y, 160, 30 };
-    static bool inputFocused = false;
-    GuiTextBox(inputBox, inputText, 16, inputFocused);
-    if (CheckCollisionPointRec(GetMousePosition(), inputBox) && IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
-        inputFocused = true;
-    else if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
-        inputFocused = false;
-    y += 40;
+    // Draw input box right after title
+    Rectangle inputBounds = { popup.x + 20, (float)y, 200, 30 };
+
+    // Draw the input box
+    GuiSetStyle(TEXTBOX, BASE_COLOR_NORMAL, ColorToInt(WHITE));
+    GuiSetStyle(TEXTBOX, BORDER_COLOR_NORMAL, ColorToInt(GRAY));
+    GuiSetStyle(TEXTBOX, TEXT_COLOR_NORMAL, ColorToInt(BLACK));
+    GuiTextBox(inputBounds, inputBuffer, sizeof(inputBuffer), isInputFocused);
+
+    // Handle input focus/clicks
+    if (CheckCollisionPointRec(GetMousePosition(), inputBounds)) {
+        if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) {
+            isInputFocused = true;
+            if (strcmp(inputBuffer, "0.0") == 0) strcpy(inputBuffer, "");
+        }
+    } else if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) {
+        isInputFocused = false;
+        if (strlen(inputBuffer) == 0) strcpy(inputBuffer, "0.0");
+    }
+
+    y += 40; // Space after textbox
 
     // --- Shared Info ---
     DrawText(TextFormat("Price per Share: $%.2f", pricePerShare), left, y, 20, DARKGRAY);
+    y += 30;
+
+    DrawText(TextFormat("Current Shares Owned: %.2f", ownedShares), left, y, 20, DARKGRAY);
     y += 30;
 
     if (isBuyMode) {
@@ -167,14 +192,11 @@ void PopUpWindow::DrawBuySellPopup(bool isBuyMode, bool& isVisible, Company* com
                 else if (inputValue > playerBalance) Show("Not enough funds.");
                 else Show("Must meet minimum shares requirement.");
             }
-            else if (TransactionManager::Instance().HasPendingBuy(stock)) {
-                Show("You already have a buy order for this stock.");
-            }
             else {
                 TransactionManager::Instance().CreateBuyOrder(stock, PlayerData::Instance().weekExecutionDelay, inputValue);
-                Show("Stock purchase placed! Will execute after delay.");
+                Show("Stock purchase placed! Shares will be added after delay.");
                 isVisible = false;
-                strcpy(inputText, "");
+                strcpy(inputBuffer, "");
                 GameState::Instance().SetTempPause(false);
             }
         } else {
@@ -183,14 +205,11 @@ void PopUpWindow::DrawBuySellPopup(bool isBuyMode, bool& isVisible, Company* com
                 else if (inputValue > ownedShares) Show("You don't own that many shares.");
                 else Show("Selling would drop you below the minimum shares.");
             }
-            else if (TransactionManager::Instance().HasPendingSell(stock)) {
-                Show("You already have a sell order for this stock.");
-            }
             else {
                 TransactionManager::Instance().CreateSellOrder(stock, PlayerData::Instance().weekExecutionDelay, inputValue);
                 Show("Sell order placed! Will execute after delay.");
                 isVisible = false;
-                strcpy(inputText, "");
+                strcpy(inputBuffer, "");
                 GameState::Instance().SetTempPause(false);
             }
         }
@@ -203,7 +222,7 @@ void PopUpWindow::DrawBuySellPopup(bool isBuyMode, bool& isVisible, Company* com
 
     if (GuiButton(cancelBtn, "CANCEL")) {
         isVisible = false;
-        strcpy(inputText, "");
+        strcpy(inputBuffer, "");
         GameState::Instance().SetTempPause(false);
     }
 }

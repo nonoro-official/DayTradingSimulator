@@ -20,20 +20,22 @@ class DashboardScreen {
     float dropdownOpenTime = 0.0f;
     std::string cachedDropdown;
 
-    std::string BuildCompanyDropdownString();
-
-    PopUpWindow popup;
-    int shareAmount = 0.5f;
-
     std::string prediction;
+    PopUpWindow* popup;
 
+    // Trade popup
+    bool showBuyPopup = false;
+    bool showSellPopup = false;
+    char inputBuffer[16] = "0.0";  // Initial placeholder
+    bool isInputFocused = false;
+
+    std::string BuildCompanyDropdownString();
     void UpdatePrediction();
 
     public:
-    DashboardScreen(std::vector<Company*>* companiesRef, int* selectedIndex);
+    DashboardScreen(std::vector<Company*>* companiesRef, int* selectedIndex, PopUpWindow* popupRef);
     void Update();
     bool CanTrade(Company* company);
     void Draw();
-    void DrawBuyStockPopup();
 };
 

@@ -12,9 +12,13 @@ class UpgradeHandler
 {
 private:
     std::vector<Upgrade> upgrades;
+    bool scheduleUpgradeEffectPopup = false;
+    int scheduledUpgradeIndex = -1;
 
 public:
     void init(GameState& game);
     void handlePurchase(int index, PlayerData& player, PopUpWindow& message);
+    void updatePopups(PlayerData& player, PopUpWindow& message);
     std::vector<Upgrade>& getUpgrades();
+    void progressWeek(PlayerData& player, PopUpWindow& popup);
 };

@@ -19,7 +19,6 @@ private:
 
     Font descriptionFont;
 
-
 public:
      UpgradesScreen(UpgradeHandler* handlerRef, PlayerData* playerRef, PopUpWindow* popupRef);
      void Draw();
