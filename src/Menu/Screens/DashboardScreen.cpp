@@ -9,6 +9,7 @@
 #include <sstream>
 #include <iomanip>
 #include <cstring>
+#include <iostream>
 
 void DashboardScreen::UpdatePrediction()
 {
