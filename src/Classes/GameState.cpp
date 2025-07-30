@@ -1,7 +1,8 @@
 // src/GameState.cpp
 
 #include "Classes/GameState.h"
-
+#include "Classes/Company.h"
+#include "Classes/Stock.h"
 #include "raylib.h"
 #include "PlayerData.h"
 
@@ -39,7 +40,6 @@ void GameState::AddWeek() {
     }
 }
 
-
 int GameState::GetMonth() { return this->month; }
 
 int GameState::GetWeek() { return this->week; }
@@ -65,10 +65,6 @@ void GameState::Update() {
 void GameState::AddTickListener(std::function<void()> listener) {
     listeners.push_back(listener);
 }
-
-#include "GameState.h"
-#include "Classes/Company.h"
-#include "Classes/Stock.h"
 
 void GameState::InitializeCompaniesAndStocks() {
     Company* lemon = new Company("Lemon Inc", "Develops sustainable tech for modern agriculture.", 0.6f, 0.9f, new GraphDisplay({540, 300}, {840, 360}));

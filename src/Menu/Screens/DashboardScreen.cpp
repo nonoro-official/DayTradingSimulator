@@ -58,40 +58,44 @@ void DashboardScreen::Draw() {
         selectedCompany->display->Draw();
         selectedCompany->display->DrawTooltips();
     }
-
     GuiSetStyle(DROPDOWNBOX, BASE_COLOR_NORMAL, ColorToInt(WHITE));
 
     // Build the dropdown string fresh each frame (in case companies update)
-    std::string cachedDropdown = BuildCompanyDropdownString();
+    cachedDropdown = BuildCompanyDropdownString();
     const char* companyItems = cachedDropdown.c_str();
 
     Rectangle dropdownBounds = { topBar.x + 20, topBar.y + 15, 180, 30 };
 
-    float deltaTime = GetFrameTime();
-    if (dropdownOpen) dropdownOpenTime += deltaTime;
-
-    // Dropdown interaction
+    // Toggle open if clicked inside
     if (!dropdownOpen && IsMouseButtonPressed(MOUSE_LEFT_BUTTON) &&
         CheckCollisionPointRec(GetMousePosition(), dropdownBounds)) {
         dropdownOpen = true;
-        dropdownOpenTime = 0.0f;
         }
 
-    bool itemSelected = GuiDropdownBox(dropdownBounds, companyItems, selectedCompanyIndex, dropdownOpen);
+    // Use temp index to detect changes (but don't close on select)
+    int tempIndex = *selectedCompanyIndex;
+    GuiDropdownBox(dropdownBounds, companyItems, &tempIndex, dropdownOpen);
 
-    if (dropdownOpen && IsMouseButtonPressed(MOUSE_LEFT_BUTTON) && dropdownOpenTime > 0.15f) {
+    // Update selection (but do not close dropdown)
+    if (*selectedCompanyIndex != tempIndex) {
+        *selectedCompanyIndex = tempIndex;
+    }
+
+    // Close dropdown only when clicking outside
+    if (dropdownOpen && IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) {
         Vector2 mouse = GetMousePosition();
         Rectangle fullDropdownArea = {
             dropdownBounds.x,
             dropdownBounds.y,
             dropdownBounds.width,
-            dropdownBounds.height * (int)companies->size()
+            dropdownBounds.height * ((int)companies->size() + 1) // +1 for header
         };
 
         if (!CheckCollisionPointRec(mouse, fullDropdownArea)) {
             dropdownOpen = false;
         }
     }
+
 
     // --- 3. Bottom Bar (Buy/Sell + Info)
     Rectangle bottomBar = {

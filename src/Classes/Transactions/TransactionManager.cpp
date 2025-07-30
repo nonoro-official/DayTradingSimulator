@@ -9,12 +9,12 @@ void TransactionManager::Update() {
     // Process buy orders
     for (int i = 0; i < buyOrders.size(); ++i) {
         BuyOrder& order = buyOrders[i];
-        order.delay--;
+        order.timeLeft--;
 
-        if (order.delay <= 0) {
+        if (order.timeLeft <= 0) {
             float price = order.stock->company->GetCurrentPrice();
-            float shares = std::round((order.deposit / price) * 100.0f) / 100.0f;
-            order.stock->BuyStock(order.deposit);
+            float shares = std::round((order.cashDeposited / price) * 100.0f) / 100.0f;
+            order.stock->BuyStock(order.cashDeposited);
 
             transactionHistory.emplace_back(
                 TransactionRecord::Buy, order.stock, shares, price, shares * price
@@ -28,15 +28,15 @@ void TransactionManager::Update() {
     // Process sell orders
     for (int i = 0; i < sellOrders.size(); ++i) {
         SellOrder& order = sellOrders[i];
-        order.delay--;
+        order.timeLeft--;
 
-        if (order.delay <= 0) {
+        if (order.timeLeft <= 0) {
             float price = order.stock->company->GetCurrentPrice();
-            float value = order.units * price;
-            order.stock->SellStock(order.units);
+            float value = order.unitsWithdrawn * price;
+            order.stock->SellStock(order.unitsWithdrawn);
 
             transactionHistory.emplace_back(
-                TransactionRecord::Sell, order.stock, order.units, price, value
+                TransactionRecord::Sell, order.stock, order.unitsWithdrawn, price, value
             );
 
             sellOrders.erase(sellOrders.begin() + i);

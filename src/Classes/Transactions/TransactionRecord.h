@@ -2,7 +2,7 @@
 #ifndef TRANSACTIONRECORD_H
 #define TRANSACTIONRECORD_H
 
-#include "Stock.h"
+#include "Classes/Stock.h"
 
 struct TransactionRecord {
     enum Type {
@@ -12,6 +12,7 @@ struct TransactionRecord {
         PlacedSell
     };
 
+    Type type;
     Stock* stock;
     float shares;
     float pricePerShare;
