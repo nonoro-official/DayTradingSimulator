@@ -15,6 +15,7 @@ class Company {
 public:
     std::string companyName, companyDescription, companyStoreDescription;
     float baseStockPrice;
+    float minimumShares;
     GenerateRandomMarket *market = nullptr;
     MarketData *currentMarketData = nullptr;
     GraphDisplay* display;
@@ -34,6 +35,7 @@ public:
     std::string GetStoreDescription();
 
     void SetStoreValues(std::string storeDescription, float basePrice);
+    void SetMinimumShares(float minimumShares);
 private:
     std::vector<MarketData*> previousValues = std::vector<MarketData*>();
     int maximumAmountOfGraphData = 12; // 3 months

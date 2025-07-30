@@ -77,6 +77,8 @@ void GameState::InitializeCompaniesAndStocks() {
         "Stable and low-risk, its ideal for long-term investors looking for consistent gains.",
         52.00f
     );
+
+    lemon->SetMinimumShares(5);
     companies.push_back(lemon);
 
     Company* mango = new Company("Mango Ltd", "Manages cargo and logistics across tropical regions.", 0.9f, 1.1f, new GraphDisplay({540, 300}, {840, 360}));
@@ -89,6 +91,8 @@ void GameState::InitializeCompaniesAndStocks() {
         "Moderately stable with occasional bursts, it's best bought before seasonal demand ramps up.",
         46.00f
     );
+
+    mango->SetMinimumShares(8);
     companies.push_back(mango);
 
     Company* banana = new Company("Banana Corp", "Builds AI systems for automated fruit farming.", 1.25f, 1.4f, new GraphDisplay({540, 300}, {840, 360}));
@@ -101,11 +105,13 @@ void GameState::InitializeCompaniesAndStocks() {
         "High-risk, high-reward, perfect for traders chasing sharp spikes and quick flips.",
         38.00f
     );
+
+    banana->SetMinimumShares(15);
     companies.push_back(banana);
 
     // Add starter stocks to player
     for (Company* company : companies) {
-        Stock* stock = new Stock(*company, 0.5f);
+        Stock* stock = new Stock(*company, company->minimumShares);
         PlayerData::Instance().AddStock(stock);
     }
 }

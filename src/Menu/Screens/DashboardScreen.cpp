@@ -229,21 +229,32 @@ void DashboardScreen::Draw()
         popup.DrawBuySellPopup(false, showSellPopup, selectedCompany, PlayerData::Instance(), inputBuffer);
     }
 
-    // Draw persistent popup messages (success/error)
-    popup.Draw(); // 👈 This shows your floating message
-
     // Prediction hint
-
     if (selectedCompany)
     {
-        int predictionFontSize = 18;
+        int predictionFontSize = 20;
 
-        // Measure prediction width so we can align it to the right
-        int textWidth = MeasureText(prediction.c_str(), predictionFontSize);
+        // Example condition for 'x'. Replace with your actual logic
+        bool showStatus = PlayerData::Instance().showPredictionTier == 3; // or any condition like `selectedCompany->status == true`
+
+        // Construct final prediction text
+        std::string fullPrediction = prediction;
+        if (showStatus)
+        {
+            fullPrediction += " [STATUS: ";
+            fullPrediction += selectedCompany->market->MarketStateToString(selectedCompany->market->currentState);
+            fullPrediction += "]";
+        }
+
+        // Measure combined width and align to right
+        int textWidth = MeasureText(fullPrediction.c_str(), predictionFontSize);
         float padding = 20.0f;
         float textX = layout.screenWidth - textWidth - padding;
         float textY = topBar.y + (layout.sectionHeight - predictionFontSize) / 2;
 
-        DrawText(prediction.c_str(), textX, textY, predictionFontSize, BLACK);
+        DrawText(fullPrediction.c_str(), textX, textY, predictionFontSize, BLACK);
     }
+
+    // Draw persistent popup messages (success/error)
+    popup.Draw(); // 👈 This shows your floating message
 }

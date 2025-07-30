@@ -11,7 +11,6 @@
 #include "../Classes/GameState.h"
 
 void MonthDisplay::Update() {
-    if (GameState::Instance().IsPaused()) return;
 
     // Global Controls
     if (IsKeyPressed(KEY_P)) {

@@ -58,43 +58,29 @@ void PlayerData::UpgradeWeekExecution() {
     }
 }
 
-std::string PlayerData::GetMarketPrediction(Company *company) {
-    std::string result = "No Prediction.";
-
+std::string PlayerData::GetMarketPrediction(Company* company) {
     if (showPredictionTier == 0 || !company || !company->market)
-        return result;
+        return "No prediction.";
 
     int weeks = 0;
     float accuracy = 1.0f;
 
     switch (showPredictionTier) {
-        case 1:
-            weeks = 4;
-            accuracy = 0.6f;
-            break;
-        case 2:
-            weeks = 6;
-            accuracy = 0.4f;
-            break;
-        case 3:
-            weeks = 8;
-            accuracy = 0.2f;
-            break;
+        case 1: weeks = 4; accuracy = 0.6f; break;
+        case 2: weeks = 6; accuracy = 0.4f; break;
+        case 3: weeks = 8; accuracy = 0.2f; break;
     }
 
     float predictedValue = company->market->PredictAverageOverWeeks(weeks, accuracy, company->currentMarketData->yValue);
-    float currentValue = company->GetCurrentPrice(); // Assumes this exists
+    float currentValue = company->GetCurrentPrice();
 
-    if (currentValue <= 0.0f) return "Invalid current value.";
+    if (currentValue <= 0.0f)
+        return "Invalid price.";
 
     std::ostringstream oss;
-    oss << "Predicted: ";
-    if (predictedValue >= 0)
-        oss << "+" << std::fixed << std::setprecision(2) << predictedValue << "% rise";
-    else
-        oss << std::fixed << std::setprecision(2) << predictedValue << "% fall";
-
-    oss << " over the next " << weeks << " weeks.";
+    oss << (predictedValue >= 0 ? "+" : "")
+        << std::fixed << std::setprecision(2) << predictedValue * 100
+        << "% in " << weeks << " weeks.";
 
     return oss.str();
 }
