@@ -9,6 +9,7 @@
 #include <string>
 
 #include "../Classes/GameState.h"
+#include "../Resources.h"
 
 void MonthDisplay::Update() {
 
@@ -109,7 +110,9 @@ MonthDisplay::MonthDisplay(float fontSize, Vector2 center, Vector2 bounds,
     const float bottomOffset = 12.0f;
 
     // === Load Texture ===
-    texture = LoadTexture("../Textures/uiTime.png");
+    Image img = LoadImageFromMemory(".png", uiTime_png, uiTime_png_size);
+    texture = LoadTextureFromImage(img);
+    UnloadImage(img);
 
     // === Compute Starting Button Position ===
     float totalWidth = (buttonSize + spacing) * 4 - spacing;

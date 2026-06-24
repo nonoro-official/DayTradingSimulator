@@ -87,4 +87,11 @@ target_include_directories(${PROJECT_NAME} PRIVATE
 # Link libraries
 target_link_libraries(${PROJECT_NAME} PRIVATE raylib)
 
-file(COPY ${CMAKE_SOURCE_DIR}/Textures DESTINATION ${CMAKE_BINARY_DIR})
+# Hide console window on Windows for Release builds
+if(MSVC)
+    set_property(TARGET ${PROJECT_NAME} PROPERTY WIN32_EXECUTABLE TRUE)
+elseif(WIN32)
+    set_target_properties(${PROJECT_NAME} PROPERTIES LINK_FLAGS "-mwindows -static")
+endif()
+
+# Assets are now embedded in src/Resources.h

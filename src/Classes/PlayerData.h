@@ -24,7 +24,6 @@
         int weekExecutionDelayTier = 0;   // Increases transaction turn-around
         float sellBonusMultiplier = 1.0f; // No bonus by default
 
-        PlayerData();
 
         void AddStock(Stock* stock);
         std::vector<Stock*>& GetStocks();
@@ -37,6 +36,7 @@
         std::string GetMarketPrediction(Company* company);
 
     private:
+        PlayerData();
         std::vector<Stock*> stocks = std::vector<Stock*>();
     };
 

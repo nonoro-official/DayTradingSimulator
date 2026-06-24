@@ -6,6 +6,7 @@
 #include "../Classes/PlayerData.h"
 #include "Upgrades/UpgradeHandler.h"
 #include "Objects/PopUpWindow.h"
+#include "Objects/MonthDisplay.h"
 #include "Screens/CompaniesScreen.h"
 #include "Screens/DashboardScreen.h"
 #include "Screens/PortfolioScreen.h"
@@ -19,6 +20,7 @@
 
 enum Screen
 {
+    SCREEN_INTRO,
     SCREEN_DASHBOARD,
     SCREEN_PORTFOLIO,
     SCREEN_COMPANIES,
@@ -28,13 +30,21 @@ enum Screen
 
 class Menu {
 private:
-    Screen currentScreen = SCREEN_DASHBOARD;
+    Screen currentScreen = SCREEN_INTRO;
 
     GraphDisplay* graphDisplay = nullptr;
     GameState* game = nullptr;
     UpgradeHandler upgradeHandler;
-    PlayerData player;
     PopUpWindow popup;
+    MonthDisplay* monthDisplay = nullptr;
+
+    bool isTutorialActive = false;
+    int tutorialStep = 0;
+
+    void DrawIntroScreen();
+    void DrawTutorialOverlay();
+    void DrawTopBar();
+    void DrawSidebar();
 
     // Dropdown state
     int selectedCompanyIndex = 0;
@@ -46,6 +56,8 @@ private:
     CompaniesScreen* companiesScreen = nullptr;
     UpgradesScreen* upgradesScreen = nullptr;
     HistoryScreen* historyScreen = nullptr;
+
+    Font menuFont;
 
 public:
     void Init(GameState* gameRef);

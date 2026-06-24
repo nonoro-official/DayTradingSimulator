@@ -1,0 +1,1 @@
+-I"E:/DayTradingSimulator/cmake-build-release/_deps/raylib-src/src" -isystem "E:/DayTradingSimulator/cmake-build-release/_deps/raylib-src/src/external/glfw/include"

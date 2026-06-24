@@ -1,0 +1,3 @@
+"C:\Program Files\JetBrains\CLion 2026.1.2\bin\cmake\win\x64\bin\cmake.exe" -E rm -f CMakeFiles\DayTradingSimulator.dir/objects.a
+C:\PROGRA~1\JETBRA~1\CLION2~1.2\bin\mingw\bin\ar.exe qc CMakeFiles\DayTradingSimulator.dir/objects.a @CMakeFiles\DayTradingSimulator.dir\objects1.rsp
+C:\PROGRA~1\JETBRA~1\CLION2~1.2\bin\mingw\bin\G__~1.EXE -O3 -DNDEBUG -mwindows -static -Wl,--whole-archive CMakeFiles\DayTradingSimulator.dir/objects.a -Wl,--no-whole-archive -o DayTradingSimulator.exe -Wl,--out-implib,libDayTradingSimulator.dll.a -Wl,--major-image-version,0,--minor-image-version,0 @CMakeFiles\DayTradingSimulator.dir\linkLibs.rsp

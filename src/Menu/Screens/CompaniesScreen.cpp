@@ -6,6 +6,7 @@
 #include "raylib.h"
 #include "raygui.h"
 #include "Objects/Layout.h"
+#include "../../Resources.h"
 #include <sstream>
 #include <iomanip>
 #include <string>
@@ -14,7 +15,7 @@
 CompaniesScreen::CompaniesScreen(std::vector<Company*>* companiesRef, PopUpWindow* popupRef)
     : companies(companiesRef), popup(popupRef) {
 
-    descriptionFont = LoadFontEx("../Fonts/VT323-Regular.ttf", 18, 0, 0); // adjust size as needed
+    descriptionFont = LoadFontFromMemory(".ttf", VT323_Regular_ttf, VT323_Regular_ttf_size, 18, NULL, 0); // adjust size as needed
 }
 
 void CompaniesScreen::Draw() {
