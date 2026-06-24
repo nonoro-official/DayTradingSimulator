@@ -1,0 +1,60 @@
+#pragma once
+#include "Objects/Graph.h"
+#include "Objects/GenerateRandomMarket.h"
+#include "../Classes/GameState.h"
+#include "../Classes/Company.h"
+#include "../Classes/PlayerData.h"
+#include "Upgrades/UpgradeHandler.h"
+#include "Objects/PopUpWindow.h"
+#include "Screens/CompaniesScreen.h"
+#include "Screens/DashboardScreen.h"
+#include "Screens/PortfolioScreen.h"
+#include "Screens/UpgradesScreen.h"
+#include "Screens/HistoryScreen.h"
+#include <vector>
+#include <cstring>
+#include <sstream>
+#include <iomanip>
+#include "Classes/Transactions/TransactionManager.h"
+
+enum Screen
+{
+    SCREEN_DASHBOARD,
+    SCREEN_PORTFOLIO,
+    SCREEN_COMPANIES,
+    SCREEN_UPGRADES,
+    SCREEN_HISTORY
+};
+
+class Menu {
+private:
+    Screen currentScreen = SCREEN_DASHBOARD;
+
+    GraphDisplay* graphDisplay = nullptr;
+    GameState* game = nullptr;
+    UpgradeHandler upgradeHandler;
+    PlayerData player;
+    PopUpWindow popup;
+
+    // Dropdown state
+    int selectedCompanyIndex = 0;
+    bool dropdownActive = false;
+
+    // Screens
+    DashboardScreen* dashboardScreen = nullptr;
+    PortfolioScreen* portfolioScreen = nullptr;
+    CompaniesScreen* companiesScreen = nullptr;
+    UpgradesScreen* upgradesScreen = nullptr;
+    HistoryScreen* historyScreen = nullptr;
+
+public:
+    void Init(GameState* gameRef);
+
+    Screen GetCurrentScreen();
+    void SetScreen(Screen screen);
+
+    void Update();
+    void Draw();
+
+    ~Menu();
+};

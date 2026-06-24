@@ -1,0 +1,60 @@
+#pragma once
+#include <functional>
+
+class Stock;
+class Company;
+
+class GameState {
+public:
+    // Access the singleton instance
+    static GameState& Instance() {
+        static GameState instance; // Guaranteed to be initialized only once
+        return instance;
+    }
+
+    // Game state control
+    bool IsPaused();
+    float GetTimeScale();
+    void PauseGame();
+    void SetPause(bool value);
+    void SetTempPause(bool value);
+    void SetTimeScale(float scale);
+    int GetMonth();
+    int GetWeek();
+    void AddWeek();
+
+    void AddTickListener(std::function<void()> listener);
+
+    void Update();
+
+    void InitializeCompaniesAndStocks();
+
+    std::vector<Company*>& GetCompanies();
+    int& GetSelectedCompanyIndex();
+    Company* GetCompanyByIndex(int index);
+    Stock* GetStockByCompany(Company* company);
+    Stock* GetStockByCompanyIndex(int index);
+
+
+private:
+    // Private constructor prevents external instancing
+    GameState() = default;
+    GameState(const GameState&) = delete;
+    GameState& operator=(const GameState&) = delete;
+
+    // Internal state
+    bool paused = false;
+    bool tempPaused = false;
+    float timeScale = 1.0f;
+
+    // Timer
+    float tickInterval = 2.5f;
+    float tickTimer = 0.0f;
+    std::vector<std::function<void()>> listeners;
+
+    int month = 0;
+    int week = 1;
+
+    std::vector<Company*> companies;
+    int selectedCompanyIndex = 0;
+};
