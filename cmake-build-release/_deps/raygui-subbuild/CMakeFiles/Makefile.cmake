@@ -7,10 +7,8 @@ set(CMAKE_DEPENDS_GENERATOR "MinGW Makefiles")
 # The top level Makefile was generated from the following files:
 set(CMAKE_MAKEFILE_DEPENDS
   "CMakeCache.txt"
-  "C:/Program Files/JetBrains/CLion 2026.1.2/bin/cmake/win/x64/share/cmake-4.2/Modules/CMakeDetermineSystem.cmake"
   "C:/Program Files/JetBrains/CLion 2026.1.2/bin/cmake/win/x64/share/cmake-4.2/Modules/CMakeGenericSystem.cmake"
   "C:/Program Files/JetBrains/CLion 2026.1.2/bin/cmake/win/x64/share/cmake-4.2/Modules/CMakeInitializeConfigs.cmake"
-  "C:/Program Files/JetBrains/CLion 2026.1.2/bin/cmake/win/x64/share/cmake-4.2/Modules/CMakeSystem.cmake.in"
   "C:/Program Files/JetBrains/CLion 2026.1.2/bin/cmake/win/x64/share/cmake-4.2/Modules/CMakeSystemSpecificInformation.cmake"
   "C:/Program Files/JetBrains/CLion 2026.1.2/bin/cmake/win/x64/share/cmake-4.2/Modules/CMakeSystemSpecificInitialize.cmake"
   "C:/Program Files/JetBrains/CLion 2026.1.2/bin/cmake/win/x64/share/cmake-4.2/Modules/ExternalProject.cmake"
@@ -38,7 +36,6 @@ set(CMAKE_MAKEFILE_OUTPUTS
 
 # Byproducts of CMake generate step:
 set(CMAKE_MAKEFILE_PRODUCTS
-  "CMakeFiles/4.2.2/CMakeSystem.cmake"
   "raygui-populate-prefix/tmp/raygui-populate-mkdirs.cmake"
   "raygui-populate-prefix/tmp/raygui-populate-gitclone.cmake"
   "raygui-populate-prefix/src/raygui-populate-stamp/raygui-populate-gitinfo.txt"

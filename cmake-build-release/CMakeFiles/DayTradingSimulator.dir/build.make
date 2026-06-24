@@ -71,11 +71,16 @@ include CMakeFiles/DayTradingSimulator.dir/flags.make
 CMakeFiles/DayTradingSimulator.dir/codegen:
 .PHONY : CMakeFiles/DayTradingSimulator.dir/codegen
 
+CMakeFiles/DayTradingSimulator.dir/src/DayTradingSimulator.rc.obj: CMakeFiles/DayTradingSimulator.dir/flags.make
+CMakeFiles/DayTradingSimulator.dir/src/DayTradingSimulator.rc.obj: E:/DayTradingSimulator/src/DayTradingSimulator.rc
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=E:\DayTradingSimulator\cmake-build-release\CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building RC object CMakeFiles/DayTradingSimulator.dir/src/DayTradingSimulator.rc.obj"
+	C:\PROGRA~1\JETBRA~1\CLION2~1.2\bin\mingw\bin\windres.exe -O coff $(RC_DEFINES) $(RC_INCLUDES) $(RC_FLAGS) E:\DayTradingSimulator\src\DayTradingSimulator.rc CMakeFiles\DayTradingSimulator.dir\src\DayTradingSimulator.rc.obj
+
 CMakeFiles/DayTradingSimulator.dir/src/Libraries/raygui_wrapper.cpp.obj: CMakeFiles/DayTradingSimulator.dir/flags.make
 CMakeFiles/DayTradingSimulator.dir/src/Libraries/raygui_wrapper.cpp.obj: CMakeFiles/DayTradingSimulator.dir/includes_CXX.rsp
 CMakeFiles/DayTradingSimulator.dir/src/Libraries/raygui_wrapper.cpp.obj: E:/DayTradingSimulator/src/Libraries/raygui_wrapper.cpp
 CMakeFiles/DayTradingSimulator.dir/src/Libraries/raygui_wrapper.cpp.obj: CMakeFiles/DayTradingSimulator.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=E:\DayTradingSimulator\cmake-build-release\CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/DayTradingSimulator.dir/src/Libraries/raygui_wrapper.cpp.obj"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=E:\DayTradingSimulator\cmake-build-release\CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/DayTradingSimulator.dir/src/Libraries/raygui_wrapper.cpp.obj"
 	C:\PROGRA~1\JETBRA~1\CLION2~1.2\bin\mingw\bin\G__~1.EXE $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/DayTradingSimulator.dir/src/Libraries/raygui_wrapper.cpp.obj -MF CMakeFiles\DayTradingSimulator.dir\src\Libraries\raygui_wrapper.cpp.obj.d -o CMakeFiles\DayTradingSimulator.dir\src\Libraries\raygui_wrapper.cpp.obj -c E:\DayTradingSimulator\src\Libraries\raygui_wrapper.cpp
 
 CMakeFiles/DayTradingSimulator.dir/src/Libraries/raygui_wrapper.cpp.i: cmake_force
@@ -90,7 +95,7 @@ CMakeFiles/DayTradingSimulator.dir/src/main.cpp.obj: CMakeFiles/DayTradingSimula
 CMakeFiles/DayTradingSimulator.dir/src/main.cpp.obj: CMakeFiles/DayTradingSimulator.dir/includes_CXX.rsp
 CMakeFiles/DayTradingSimulator.dir/src/main.cpp.obj: E:/DayTradingSimulator/src/main.cpp
 CMakeFiles/DayTradingSimulator.dir/src/main.cpp.obj: CMakeFiles/DayTradingSimulator.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=E:\DayTradingSimulator\cmake-build-release\CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/DayTradingSimulator.dir/src/main.cpp.obj"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=E:\DayTradingSimulator\cmake-build-release\CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/DayTradingSimulator.dir/src/main.cpp.obj"
 	C:\PROGRA~1\JETBRA~1\CLION2~1.2\bin\mingw\bin\G__~1.EXE $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/DayTradingSimulator.dir/src/main.cpp.obj -MF CMakeFiles\DayTradingSimulator.dir\src\main.cpp.obj.d -o CMakeFiles\DayTradingSimulator.dir\src\main.cpp.obj -c E:\DayTradingSimulator\src\main.cpp
 
 CMakeFiles/DayTradingSimulator.dir/src/main.cpp.i: cmake_force
@@ -105,7 +110,7 @@ CMakeFiles/DayTradingSimulator.dir/src/Objects/Graph.cpp.obj: CMakeFiles/DayTrad
 CMakeFiles/DayTradingSimulator.dir/src/Objects/Graph.cpp.obj: CMakeFiles/DayTradingSimulator.dir/includes_CXX.rsp
 CMakeFiles/DayTradingSimulator.dir/src/Objects/Graph.cpp.obj: E:/DayTradingSimulator/src/Objects/Graph.cpp
 CMakeFiles/DayTradingSimulator.dir/src/Objects/Graph.cpp.obj: CMakeFiles/DayTradingSimulator.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=E:\DayTradingSimulator\cmake-build-release\CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/DayTradingSimulator.dir/src/Objects/Graph.cpp.obj"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=E:\DayTradingSimulator\cmake-build-release\CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/DayTradingSimulator.dir/src/Objects/Graph.cpp.obj"
 	C:\PROGRA~1\JETBRA~1\CLION2~1.2\bin\mingw\bin\G__~1.EXE $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/DayTradingSimulator.dir/src/Objects/Graph.cpp.obj -MF CMakeFiles\DayTradingSimulator.dir\src\Objects\Graph.cpp.obj.d -o CMakeFiles\DayTradingSimulator.dir\src\Objects\Graph.cpp.obj -c E:\DayTradingSimulator\src\Objects\Graph.cpp
 
 CMakeFiles/DayTradingSimulator.dir/src/Objects/Graph.cpp.i: cmake_force
@@ -120,7 +125,7 @@ CMakeFiles/DayTradingSimulator.dir/src/Objects/GenerateRandomMarket.cpp.obj: CMa
 CMakeFiles/DayTradingSimulator.dir/src/Objects/GenerateRandomMarket.cpp.obj: CMakeFiles/DayTradingSimulator.dir/includes_CXX.rsp
 CMakeFiles/DayTradingSimulator.dir/src/Objects/GenerateRandomMarket.cpp.obj: E:/DayTradingSimulator/src/Objects/GenerateRandomMarket.cpp
 CMakeFiles/DayTradingSimulator.dir/src/Objects/GenerateRandomMarket.cpp.obj: CMakeFiles/DayTradingSimulator.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=E:\DayTradingSimulator\cmake-build-release\CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/DayTradingSimulator.dir/src/Objects/GenerateRandomMarket.cpp.obj"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=E:\DayTradingSimulator\cmake-build-release\CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object CMakeFiles/DayTradingSimulator.dir/src/Objects/GenerateRandomMarket.cpp.obj"
 	C:\PROGRA~1\JETBRA~1\CLION2~1.2\bin\mingw\bin\G__~1.EXE $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/DayTradingSimulator.dir/src/Objects/GenerateRandomMarket.cpp.obj -MF CMakeFiles\DayTradingSimulator.dir\src\Objects\GenerateRandomMarket.cpp.obj.d -o CMakeFiles\DayTradingSimulator.dir\src\Objects\GenerateRandomMarket.cpp.obj -c E:\DayTradingSimulator\src\Objects\GenerateRandomMarket.cpp
 
 CMakeFiles/DayTradingSimulator.dir/src/Objects/GenerateRandomMarket.cpp.i: cmake_force
@@ -135,7 +140,7 @@ CMakeFiles/DayTradingSimulator.dir/src/Menu/Menu.cpp.obj: CMakeFiles/DayTradingS
 CMakeFiles/DayTradingSimulator.dir/src/Menu/Menu.cpp.obj: CMakeFiles/DayTradingSimulator.dir/includes_CXX.rsp
 CMakeFiles/DayTradingSimulator.dir/src/Menu/Menu.cpp.obj: E:/DayTradingSimulator/src/Menu/Menu.cpp
 CMakeFiles/DayTradingSimulator.dir/src/Menu/Menu.cpp.obj: CMakeFiles/DayTradingSimulator.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=E:\DayTradingSimulator\cmake-build-release\CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object CMakeFiles/DayTradingSimulator.dir/src/Menu/Menu.cpp.obj"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=E:\DayTradingSimulator\cmake-build-release\CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Building CXX object CMakeFiles/DayTradingSimulator.dir/src/Menu/Menu.cpp.obj"
 	C:\PROGRA~1\JETBRA~1\CLION2~1.2\bin\mingw\bin\G__~1.EXE $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/DayTradingSimulator.dir/src/Menu/Menu.cpp.obj -MF CMakeFiles\DayTradingSimulator.dir\src\Menu\Menu.cpp.obj.d -o CMakeFiles\DayTradingSimulator.dir\src\Menu\Menu.cpp.obj -c E:\DayTradingSimulator\src\Menu\Menu.cpp
 
 CMakeFiles/DayTradingSimulator.dir/src/Menu/Menu.cpp.i: cmake_force
@@ -150,7 +155,7 @@ CMakeFiles/DayTradingSimulator.dir/src/Classes/GameState.cpp.obj: CMakeFiles/Day
 CMakeFiles/DayTradingSimulator.dir/src/Classes/GameState.cpp.obj: CMakeFiles/DayTradingSimulator.dir/includes_CXX.rsp
 CMakeFiles/DayTradingSimulator.dir/src/Classes/GameState.cpp.obj: E:/DayTradingSimulator/src/Classes/GameState.cpp
 CMakeFiles/DayTradingSimulator.dir/src/Classes/GameState.cpp.obj: CMakeFiles/DayTradingSimulator.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=E:\DayTradingSimulator\cmake-build-release\CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Building CXX object CMakeFiles/DayTradingSimulator.dir/src/Classes/GameState.cpp.obj"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=E:\DayTradingSimulator\cmake-build-release\CMakeFiles --progress-num=$(CMAKE_PROGRESS_7) "Building CXX object CMakeFiles/DayTradingSimulator.dir/src/Classes/GameState.cpp.obj"
 	C:\PROGRA~1\JETBRA~1\CLION2~1.2\bin\mingw\bin\G__~1.EXE $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/DayTradingSimulator.dir/src/Classes/GameState.cpp.obj -MF CMakeFiles\DayTradingSimulator.dir\src\Classes\GameState.cpp.obj.d -o CMakeFiles\DayTradingSimulator.dir\src\Classes\GameState.cpp.obj -c E:\DayTradingSimulator\src\Classes\GameState.cpp
 
 CMakeFiles/DayTradingSimulator.dir/src/Classes/GameState.cpp.i: cmake_force
@@ -165,7 +170,7 @@ CMakeFiles/DayTradingSimulator.dir/src/Upgrades/Upgrade.cpp.obj: CMakeFiles/DayT
 CMakeFiles/DayTradingSimulator.dir/src/Upgrades/Upgrade.cpp.obj: CMakeFiles/DayTradingSimulator.dir/includes_CXX.rsp
 CMakeFiles/DayTradingSimulator.dir/src/Upgrades/Upgrade.cpp.obj: E:/DayTradingSimulator/src/Upgrades/Upgrade.cpp
 CMakeFiles/DayTradingSimulator.dir/src/Upgrades/Upgrade.cpp.obj: CMakeFiles/DayTradingSimulator.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=E:\DayTradingSimulator\cmake-build-release\CMakeFiles --progress-num=$(CMAKE_PROGRESS_7) "Building CXX object CMakeFiles/DayTradingSimulator.dir/src/Upgrades/Upgrade.cpp.obj"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=E:\DayTradingSimulator\cmake-build-release\CMakeFiles --progress-num=$(CMAKE_PROGRESS_8) "Building CXX object CMakeFiles/DayTradingSimulator.dir/src/Upgrades/Upgrade.cpp.obj"
 	C:\PROGRA~1\JETBRA~1\CLION2~1.2\bin\mingw\bin\G__~1.EXE $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/DayTradingSimulator.dir/src/Upgrades/Upgrade.cpp.obj -MF CMakeFiles\DayTradingSimulator.dir\src\Upgrades\Upgrade.cpp.obj.d -o CMakeFiles\DayTradingSimulator.dir\src\Upgrades\Upgrade.cpp.obj -c E:\DayTradingSimulator\src\Upgrades\Upgrade.cpp
 
 CMakeFiles/DayTradingSimulator.dir/src/Upgrades/Upgrade.cpp.i: cmake_force
@@ -180,7 +185,7 @@ CMakeFiles/DayTradingSimulator.dir/src/Upgrades/UpgradeHandler.cpp.obj: CMakeFil
 CMakeFiles/DayTradingSimulator.dir/src/Upgrades/UpgradeHandler.cpp.obj: CMakeFiles/DayTradingSimulator.dir/includes_CXX.rsp
 CMakeFiles/DayTradingSimulator.dir/src/Upgrades/UpgradeHandler.cpp.obj: E:/DayTradingSimulator/src/Upgrades/UpgradeHandler.cpp
 CMakeFiles/DayTradingSimulator.dir/src/Upgrades/UpgradeHandler.cpp.obj: CMakeFiles/DayTradingSimulator.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=E:\DayTradingSimulator\cmake-build-release\CMakeFiles --progress-num=$(CMAKE_PROGRESS_8) "Building CXX object CMakeFiles/DayTradingSimulator.dir/src/Upgrades/UpgradeHandler.cpp.obj"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=E:\DayTradingSimulator\cmake-build-release\CMakeFiles --progress-num=$(CMAKE_PROGRESS_9) "Building CXX object CMakeFiles/DayTradingSimulator.dir/src/Upgrades/UpgradeHandler.cpp.obj"
 	C:\PROGRA~1\JETBRA~1\CLION2~1.2\bin\mingw\bin\G__~1.EXE $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/DayTradingSimulator.dir/src/Upgrades/UpgradeHandler.cpp.obj -MF CMakeFiles\DayTradingSimulator.dir\src\Upgrades\UpgradeHandler.cpp.obj.d -o CMakeFiles\DayTradingSimulator.dir\src\Upgrades\UpgradeHandler.cpp.obj -c E:\DayTradingSimulator\src\Upgrades\UpgradeHandler.cpp
 
 CMakeFiles/DayTradingSimulator.dir/src/Upgrades/UpgradeHandler.cpp.i: cmake_force
@@ -195,7 +200,7 @@ CMakeFiles/DayTradingSimulator.dir/src/Upgrades/UpgradeBuilder.cpp.obj: CMakeFil
 CMakeFiles/DayTradingSimulator.dir/src/Upgrades/UpgradeBuilder.cpp.obj: CMakeFiles/DayTradingSimulator.dir/includes_CXX.rsp
 CMakeFiles/DayTradingSimulator.dir/src/Upgrades/UpgradeBuilder.cpp.obj: E:/DayTradingSimulator/src/Upgrades/UpgradeBuilder.cpp
 CMakeFiles/DayTradingSimulator.dir/src/Upgrades/UpgradeBuilder.cpp.obj: CMakeFiles/DayTradingSimulator.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=E:\DayTradingSimulator\cmake-build-release\CMakeFiles --progress-num=$(CMAKE_PROGRESS_9) "Building CXX object CMakeFiles/DayTradingSimulator.dir/src/Upgrades/UpgradeBuilder.cpp.obj"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=E:\DayTradingSimulator\cmake-build-release\CMakeFiles --progress-num=$(CMAKE_PROGRESS_10) "Building CXX object CMakeFiles/DayTradingSimulator.dir/src/Upgrades/UpgradeBuilder.cpp.obj"
 	C:\PROGRA~1\JETBRA~1\CLION2~1.2\bin\mingw\bin\G__~1.EXE $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/DayTradingSimulator.dir/src/Upgrades/UpgradeBuilder.cpp.obj -MF CMakeFiles\DayTradingSimulator.dir\src\Upgrades\UpgradeBuilder.cpp.obj.d -o CMakeFiles\DayTradingSimulator.dir\src\Upgrades\UpgradeBuilder.cpp.obj -c E:\DayTradingSimulator\src\Upgrades\UpgradeBuilder.cpp
 
 CMakeFiles/DayTradingSimulator.dir/src/Upgrades/UpgradeBuilder.cpp.i: cmake_force
@@ -210,7 +215,7 @@ CMakeFiles/DayTradingSimulator.dir/src/Classes/PlayerData.cpp.obj: CMakeFiles/Da
 CMakeFiles/DayTradingSimulator.dir/src/Classes/PlayerData.cpp.obj: CMakeFiles/DayTradingSimulator.dir/includes_CXX.rsp
 CMakeFiles/DayTradingSimulator.dir/src/Classes/PlayerData.cpp.obj: E:/DayTradingSimulator/src/Classes/PlayerData.cpp
 CMakeFiles/DayTradingSimulator.dir/src/Classes/PlayerData.cpp.obj: CMakeFiles/DayTradingSimulator.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=E:\DayTradingSimulator\cmake-build-release\CMakeFiles --progress-num=$(CMAKE_PROGRESS_10) "Building CXX object CMakeFiles/DayTradingSimulator.dir/src/Classes/PlayerData.cpp.obj"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=E:\DayTradingSimulator\cmake-build-release\CMakeFiles --progress-num=$(CMAKE_PROGRESS_11) "Building CXX object CMakeFiles/DayTradingSimulator.dir/src/Classes/PlayerData.cpp.obj"
 	C:\PROGRA~1\JETBRA~1\CLION2~1.2\bin\mingw\bin\G__~1.EXE $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/DayTradingSimulator.dir/src/Classes/PlayerData.cpp.obj -MF CMakeFiles\DayTradingSimulator.dir\src\Classes\PlayerData.cpp.obj.d -o CMakeFiles\DayTradingSimulator.dir\src\Classes\PlayerData.cpp.obj -c E:\DayTradingSimulator\src\Classes\PlayerData.cpp
 
 CMakeFiles/DayTradingSimulator.dir/src/Classes/PlayerData.cpp.i: cmake_force
@@ -225,7 +230,7 @@ CMakeFiles/DayTradingSimulator.dir/src/Classes/Stock.cpp.obj: CMakeFiles/DayTrad
 CMakeFiles/DayTradingSimulator.dir/src/Classes/Stock.cpp.obj: CMakeFiles/DayTradingSimulator.dir/includes_CXX.rsp
 CMakeFiles/DayTradingSimulator.dir/src/Classes/Stock.cpp.obj: E:/DayTradingSimulator/src/Classes/Stock.cpp
 CMakeFiles/DayTradingSimulator.dir/src/Classes/Stock.cpp.obj: CMakeFiles/DayTradingSimulator.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=E:\DayTradingSimulator\cmake-build-release\CMakeFiles --progress-num=$(CMAKE_PROGRESS_11) "Building CXX object CMakeFiles/DayTradingSimulator.dir/src/Classes/Stock.cpp.obj"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=E:\DayTradingSimulator\cmake-build-release\CMakeFiles --progress-num=$(CMAKE_PROGRESS_12) "Building CXX object CMakeFiles/DayTradingSimulator.dir/src/Classes/Stock.cpp.obj"
 	C:\PROGRA~1\JETBRA~1\CLION2~1.2\bin\mingw\bin\G__~1.EXE $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/DayTradingSimulator.dir/src/Classes/Stock.cpp.obj -MF CMakeFiles\DayTradingSimulator.dir\src\Classes\Stock.cpp.obj.d -o CMakeFiles\DayTradingSimulator.dir\src\Classes\Stock.cpp.obj -c E:\DayTradingSimulator\src\Classes\Stock.cpp
 
 CMakeFiles/DayTradingSimulator.dir/src/Classes/Stock.cpp.i: cmake_force
@@ -240,7 +245,7 @@ CMakeFiles/DayTradingSimulator.dir/src/Classes/Company.cpp.obj: CMakeFiles/DayTr
 CMakeFiles/DayTradingSimulator.dir/src/Classes/Company.cpp.obj: CMakeFiles/DayTradingSimulator.dir/includes_CXX.rsp
 CMakeFiles/DayTradingSimulator.dir/src/Classes/Company.cpp.obj: E:/DayTradingSimulator/src/Classes/Company.cpp
 CMakeFiles/DayTradingSimulator.dir/src/Classes/Company.cpp.obj: CMakeFiles/DayTradingSimulator.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=E:\DayTradingSimulator\cmake-build-release\CMakeFiles --progress-num=$(CMAKE_PROGRESS_12) "Building CXX object CMakeFiles/DayTradingSimulator.dir/src/Classes/Company.cpp.obj"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=E:\DayTradingSimulator\cmake-build-release\CMakeFiles --progress-num=$(CMAKE_PROGRESS_13) "Building CXX object CMakeFiles/DayTradingSimulator.dir/src/Classes/Company.cpp.obj"
 	C:\PROGRA~1\JETBRA~1\CLION2~1.2\bin\mingw\bin\G__~1.EXE $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/DayTradingSimulator.dir/src/Classes/Company.cpp.obj -MF CMakeFiles\DayTradingSimulator.dir\src\Classes\Company.cpp.obj.d -o CMakeFiles\DayTradingSimulator.dir\src\Classes\Company.cpp.obj -c E:\DayTradingSimulator\src\Classes\Company.cpp
 
 CMakeFiles/DayTradingSimulator.dir/src/Classes/Company.cpp.i: cmake_force
@@ -255,7 +260,7 @@ CMakeFiles/DayTradingSimulator.dir/src/Objects/MonthDisplay.cpp.obj: CMakeFiles/
 CMakeFiles/DayTradingSimulator.dir/src/Objects/MonthDisplay.cpp.obj: CMakeFiles/DayTradingSimulator.dir/includes_CXX.rsp
 CMakeFiles/DayTradingSimulator.dir/src/Objects/MonthDisplay.cpp.obj: E:/DayTradingSimulator/src/Objects/MonthDisplay.cpp
 CMakeFiles/DayTradingSimulator.dir/src/Objects/MonthDisplay.cpp.obj: CMakeFiles/DayTradingSimulator.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=E:\DayTradingSimulator\cmake-build-release\CMakeFiles --progress-num=$(CMAKE_PROGRESS_13) "Building CXX object CMakeFiles/DayTradingSimulator.dir/src/Objects/MonthDisplay.cpp.obj"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=E:\DayTradingSimulator\cmake-build-release\CMakeFiles --progress-num=$(CMAKE_PROGRESS_14) "Building CXX object CMakeFiles/DayTradingSimulator.dir/src/Objects/MonthDisplay.cpp.obj"
 	C:\PROGRA~1\JETBRA~1\CLION2~1.2\bin\mingw\bin\G__~1.EXE $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/DayTradingSimulator.dir/src/Objects/MonthDisplay.cpp.obj -MF CMakeFiles\DayTradingSimulator.dir\src\Objects\MonthDisplay.cpp.obj.d -o CMakeFiles\DayTradingSimulator.dir\src\Objects\MonthDisplay.cpp.obj -c E:\DayTradingSimulator\src\Objects\MonthDisplay.cpp
 
 CMakeFiles/DayTradingSimulator.dir/src/Objects/MonthDisplay.cpp.i: cmake_force
@@ -270,7 +275,7 @@ CMakeFiles/DayTradingSimulator.dir/src/Objects/ToggleButton.cpp.obj: CMakeFiles/
 CMakeFiles/DayTradingSimulator.dir/src/Objects/ToggleButton.cpp.obj: CMakeFiles/DayTradingSimulator.dir/includes_CXX.rsp
 CMakeFiles/DayTradingSimulator.dir/src/Objects/ToggleButton.cpp.obj: E:/DayTradingSimulator/src/Objects/ToggleButton.cpp
 CMakeFiles/DayTradingSimulator.dir/src/Objects/ToggleButton.cpp.obj: CMakeFiles/DayTradingSimulator.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=E:\DayTradingSimulator\cmake-build-release\CMakeFiles --progress-num=$(CMAKE_PROGRESS_14) "Building CXX object CMakeFiles/DayTradingSimulator.dir/src/Objects/ToggleButton.cpp.obj"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=E:\DayTradingSimulator\cmake-build-release\CMakeFiles --progress-num=$(CMAKE_PROGRESS_15) "Building CXX object CMakeFiles/DayTradingSimulator.dir/src/Objects/ToggleButton.cpp.obj"
 	C:\PROGRA~1\JETBRA~1\CLION2~1.2\bin\mingw\bin\G__~1.EXE $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/DayTradingSimulator.dir/src/Objects/ToggleButton.cpp.obj -MF CMakeFiles\DayTradingSimulator.dir\src\Objects\ToggleButton.cpp.obj.d -o CMakeFiles\DayTradingSimulator.dir\src\Objects\ToggleButton.cpp.obj -c E:\DayTradingSimulator\src\Objects\ToggleButton.cpp
 
 CMakeFiles/DayTradingSimulator.dir/src/Objects/ToggleButton.cpp.i: cmake_force
@@ -285,7 +290,7 @@ CMakeFiles/DayTradingSimulator.dir/src/Objects/PopUpWindow.cpp.obj: CMakeFiles/D
 CMakeFiles/DayTradingSimulator.dir/src/Objects/PopUpWindow.cpp.obj: CMakeFiles/DayTradingSimulator.dir/includes_CXX.rsp
 CMakeFiles/DayTradingSimulator.dir/src/Objects/PopUpWindow.cpp.obj: E:/DayTradingSimulator/src/Objects/PopUpWindow.cpp
 CMakeFiles/DayTradingSimulator.dir/src/Objects/PopUpWindow.cpp.obj: CMakeFiles/DayTradingSimulator.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=E:\DayTradingSimulator\cmake-build-release\CMakeFiles --progress-num=$(CMAKE_PROGRESS_15) "Building CXX object CMakeFiles/DayTradingSimulator.dir/src/Objects/PopUpWindow.cpp.obj"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=E:\DayTradingSimulator\cmake-build-release\CMakeFiles --progress-num=$(CMAKE_PROGRESS_16) "Building CXX object CMakeFiles/DayTradingSimulator.dir/src/Objects/PopUpWindow.cpp.obj"
 	C:\PROGRA~1\JETBRA~1\CLION2~1.2\bin\mingw\bin\G__~1.EXE $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/DayTradingSimulator.dir/src/Objects/PopUpWindow.cpp.obj -MF CMakeFiles\DayTradingSimulator.dir\src\Objects\PopUpWindow.cpp.obj.d -o CMakeFiles\DayTradingSimulator.dir\src\Objects\PopUpWindow.cpp.obj -c E:\DayTradingSimulator\src\Objects\PopUpWindow.cpp
 
 CMakeFiles/DayTradingSimulator.dir/src/Objects/PopUpWindow.cpp.i: cmake_force
@@ -300,7 +305,7 @@ CMakeFiles/DayTradingSimulator.dir/src/Menu/Screens/DashboardScreen.cpp.obj: CMa
 CMakeFiles/DayTradingSimulator.dir/src/Menu/Screens/DashboardScreen.cpp.obj: CMakeFiles/DayTradingSimulator.dir/includes_CXX.rsp
 CMakeFiles/DayTradingSimulator.dir/src/Menu/Screens/DashboardScreen.cpp.obj: E:/DayTradingSimulator/src/Menu/Screens/DashboardScreen.cpp
 CMakeFiles/DayTradingSimulator.dir/src/Menu/Screens/DashboardScreen.cpp.obj: CMakeFiles/DayTradingSimulator.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=E:\DayTradingSimulator\cmake-build-release\CMakeFiles --progress-num=$(CMAKE_PROGRESS_16) "Building CXX object CMakeFiles/DayTradingSimulator.dir/src/Menu/Screens/DashboardScreen.cpp.obj"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=E:\DayTradingSimulator\cmake-build-release\CMakeFiles --progress-num=$(CMAKE_PROGRESS_17) "Building CXX object CMakeFiles/DayTradingSimulator.dir/src/Menu/Screens/DashboardScreen.cpp.obj"
 	C:\PROGRA~1\JETBRA~1\CLION2~1.2\bin\mingw\bin\G__~1.EXE $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/DayTradingSimulator.dir/src/Menu/Screens/DashboardScreen.cpp.obj -MF CMakeFiles\DayTradingSimulator.dir\src\Menu\Screens\DashboardScreen.cpp.obj.d -o CMakeFiles\DayTradingSimulator.dir\src\Menu\Screens\DashboardScreen.cpp.obj -c E:\DayTradingSimulator\src\Menu\Screens\DashboardScreen.cpp
 
 CMakeFiles/DayTradingSimulator.dir/src/Menu/Screens/DashboardScreen.cpp.i: cmake_force
@@ -315,7 +320,7 @@ CMakeFiles/DayTradingSimulator.dir/src/Menu/Screens/CompaniesScreen.cpp.obj: CMa
 CMakeFiles/DayTradingSimulator.dir/src/Menu/Screens/CompaniesScreen.cpp.obj: CMakeFiles/DayTradingSimulator.dir/includes_CXX.rsp
 CMakeFiles/DayTradingSimulator.dir/src/Menu/Screens/CompaniesScreen.cpp.obj: E:/DayTradingSimulator/src/Menu/Screens/CompaniesScreen.cpp
 CMakeFiles/DayTradingSimulator.dir/src/Menu/Screens/CompaniesScreen.cpp.obj: CMakeFiles/DayTradingSimulator.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=E:\DayTradingSimulator\cmake-build-release\CMakeFiles --progress-num=$(CMAKE_PROGRESS_17) "Building CXX object CMakeFiles/DayTradingSimulator.dir/src/Menu/Screens/CompaniesScreen.cpp.obj"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=E:\DayTradingSimulator\cmake-build-release\CMakeFiles --progress-num=$(CMAKE_PROGRESS_18) "Building CXX object CMakeFiles/DayTradingSimulator.dir/src/Menu/Screens/CompaniesScreen.cpp.obj"
 	C:\PROGRA~1\JETBRA~1\CLION2~1.2\bin\mingw\bin\G__~1.EXE $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/DayTradingSimulator.dir/src/Menu/Screens/CompaniesScreen.cpp.obj -MF CMakeFiles\DayTradingSimulator.dir\src\Menu\Screens\CompaniesScreen.cpp.obj.d -o CMakeFiles\DayTradingSimulator.dir\src\Menu\Screens\CompaniesScreen.cpp.obj -c E:\DayTradingSimulator\src\Menu\Screens\CompaniesScreen.cpp
 
 CMakeFiles/DayTradingSimulator.dir/src/Menu/Screens/CompaniesScreen.cpp.i: cmake_force
@@ -330,7 +335,7 @@ CMakeFiles/DayTradingSimulator.dir/src/Menu/Screens/UpgradesScreen.cpp.obj: CMak
 CMakeFiles/DayTradingSimulator.dir/src/Menu/Screens/UpgradesScreen.cpp.obj: CMakeFiles/DayTradingSimulator.dir/includes_CXX.rsp
 CMakeFiles/DayTradingSimulator.dir/src/Menu/Screens/UpgradesScreen.cpp.obj: E:/DayTradingSimulator/src/Menu/Screens/UpgradesScreen.cpp
 CMakeFiles/DayTradingSimulator.dir/src/Menu/Screens/UpgradesScreen.cpp.obj: CMakeFiles/DayTradingSimulator.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=E:\DayTradingSimulator\cmake-build-release\CMakeFiles --progress-num=$(CMAKE_PROGRESS_18) "Building CXX object CMakeFiles/DayTradingSimulator.dir/src/Menu/Screens/UpgradesScreen.cpp.obj"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=E:\DayTradingSimulator\cmake-build-release\CMakeFiles --progress-num=$(CMAKE_PROGRESS_19) "Building CXX object CMakeFiles/DayTradingSimulator.dir/src/Menu/Screens/UpgradesScreen.cpp.obj"
 	C:\PROGRA~1\JETBRA~1\CLION2~1.2\bin\mingw\bin\G__~1.EXE $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/DayTradingSimulator.dir/src/Menu/Screens/UpgradesScreen.cpp.obj -MF CMakeFiles\DayTradingSimulator.dir\src\Menu\Screens\UpgradesScreen.cpp.obj.d -o CMakeFiles\DayTradingSimulator.dir\src\Menu\Screens\UpgradesScreen.cpp.obj -c E:\DayTradingSimulator\src\Menu\Screens\UpgradesScreen.cpp
 
 CMakeFiles/DayTradingSimulator.dir/src/Menu/Screens/UpgradesScreen.cpp.i: cmake_force
@@ -345,7 +350,7 @@ CMakeFiles/DayTradingSimulator.dir/src/Menu/Screens/PortfolioScreen.cpp.obj: CMa
 CMakeFiles/DayTradingSimulator.dir/src/Menu/Screens/PortfolioScreen.cpp.obj: CMakeFiles/DayTradingSimulator.dir/includes_CXX.rsp
 CMakeFiles/DayTradingSimulator.dir/src/Menu/Screens/PortfolioScreen.cpp.obj: E:/DayTradingSimulator/src/Menu/Screens/PortfolioScreen.cpp
 CMakeFiles/DayTradingSimulator.dir/src/Menu/Screens/PortfolioScreen.cpp.obj: CMakeFiles/DayTradingSimulator.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=E:\DayTradingSimulator\cmake-build-release\CMakeFiles --progress-num=$(CMAKE_PROGRESS_19) "Building CXX object CMakeFiles/DayTradingSimulator.dir/src/Menu/Screens/PortfolioScreen.cpp.obj"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=E:\DayTradingSimulator\cmake-build-release\CMakeFiles --progress-num=$(CMAKE_PROGRESS_20) "Building CXX object CMakeFiles/DayTradingSimulator.dir/src/Menu/Screens/PortfolioScreen.cpp.obj"
 	C:\PROGRA~1\JETBRA~1\CLION2~1.2\bin\mingw\bin\G__~1.EXE $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/DayTradingSimulator.dir/src/Menu/Screens/PortfolioScreen.cpp.obj -MF CMakeFiles\DayTradingSimulator.dir\src\Menu\Screens\PortfolioScreen.cpp.obj.d -o CMakeFiles\DayTradingSimulator.dir\src\Menu\Screens\PortfolioScreen.cpp.obj -c E:\DayTradingSimulator\src\Menu\Screens\PortfolioScreen.cpp
 
 CMakeFiles/DayTradingSimulator.dir/src/Menu/Screens/PortfolioScreen.cpp.i: cmake_force
@@ -360,7 +365,7 @@ CMakeFiles/DayTradingSimulator.dir/src/Classes/Transactions/TransactionManager.c
 CMakeFiles/DayTradingSimulator.dir/src/Classes/Transactions/TransactionManager.cpp.obj: CMakeFiles/DayTradingSimulator.dir/includes_CXX.rsp
 CMakeFiles/DayTradingSimulator.dir/src/Classes/Transactions/TransactionManager.cpp.obj: E:/DayTradingSimulator/src/Classes/Transactions/TransactionManager.cpp
 CMakeFiles/DayTradingSimulator.dir/src/Classes/Transactions/TransactionManager.cpp.obj: CMakeFiles/DayTradingSimulator.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=E:\DayTradingSimulator\cmake-build-release\CMakeFiles --progress-num=$(CMAKE_PROGRESS_20) "Building CXX object CMakeFiles/DayTradingSimulator.dir/src/Classes/Transactions/TransactionManager.cpp.obj"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=E:\DayTradingSimulator\cmake-build-release\CMakeFiles --progress-num=$(CMAKE_PROGRESS_21) "Building CXX object CMakeFiles/DayTradingSimulator.dir/src/Classes/Transactions/TransactionManager.cpp.obj"
 	C:\PROGRA~1\JETBRA~1\CLION2~1.2\bin\mingw\bin\G__~1.EXE $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/DayTradingSimulator.dir/src/Classes/Transactions/TransactionManager.cpp.obj -MF CMakeFiles\DayTradingSimulator.dir\src\Classes\Transactions\TransactionManager.cpp.obj.d -o CMakeFiles\DayTradingSimulator.dir\src\Classes\Transactions\TransactionManager.cpp.obj -c E:\DayTradingSimulator\src\Classes\Transactions\TransactionManager.cpp
 
 CMakeFiles/DayTradingSimulator.dir/src/Classes/Transactions/TransactionManager.cpp.i: cmake_force
@@ -375,7 +380,7 @@ CMakeFiles/DayTradingSimulator.dir/src/Menu/Screens/HistoryScreen.cpp.obj: CMake
 CMakeFiles/DayTradingSimulator.dir/src/Menu/Screens/HistoryScreen.cpp.obj: CMakeFiles/DayTradingSimulator.dir/includes_CXX.rsp
 CMakeFiles/DayTradingSimulator.dir/src/Menu/Screens/HistoryScreen.cpp.obj: E:/DayTradingSimulator/src/Menu/Screens/HistoryScreen.cpp
 CMakeFiles/DayTradingSimulator.dir/src/Menu/Screens/HistoryScreen.cpp.obj: CMakeFiles/DayTradingSimulator.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=E:\DayTradingSimulator\cmake-build-release\CMakeFiles --progress-num=$(CMAKE_PROGRESS_21) "Building CXX object CMakeFiles/DayTradingSimulator.dir/src/Menu/Screens/HistoryScreen.cpp.obj"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=E:\DayTradingSimulator\cmake-build-release\CMakeFiles --progress-num=$(CMAKE_PROGRESS_22) "Building CXX object CMakeFiles/DayTradingSimulator.dir/src/Menu/Screens/HistoryScreen.cpp.obj"
 	C:\PROGRA~1\JETBRA~1\CLION2~1.2\bin\mingw\bin\G__~1.EXE $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/DayTradingSimulator.dir/src/Menu/Screens/HistoryScreen.cpp.obj -MF CMakeFiles\DayTradingSimulator.dir\src\Menu\Screens\HistoryScreen.cpp.obj.d -o CMakeFiles\DayTradingSimulator.dir\src\Menu\Screens\HistoryScreen.cpp.obj -c E:\DayTradingSimulator\src\Menu\Screens\HistoryScreen.cpp
 
 CMakeFiles/DayTradingSimulator.dir/src/Menu/Screens/HistoryScreen.cpp.i: cmake_force
@@ -388,6 +393,7 @@ CMakeFiles/DayTradingSimulator.dir/src/Menu/Screens/HistoryScreen.cpp.s: cmake_f
 
 # Object files for target DayTradingSimulator
 DayTradingSimulator_OBJECTS = \
+"CMakeFiles/DayTradingSimulator.dir/src/DayTradingSimulator.rc.obj" \
 "CMakeFiles/DayTradingSimulator.dir/src/Libraries/raygui_wrapper.cpp.obj" \
 "CMakeFiles/DayTradingSimulator.dir/src/main.cpp.obj" \
 "CMakeFiles/DayTradingSimulator.dir/src/Objects/Graph.cpp.obj" \
@@ -413,6 +419,7 @@ DayTradingSimulator_OBJECTS = \
 # External object files for target DayTradingSimulator
 DayTradingSimulator_EXTERNAL_OBJECTS =
 
+DayTradingSimulator.exe: CMakeFiles/DayTradingSimulator.dir/src/DayTradingSimulator.rc.obj
 DayTradingSimulator.exe: CMakeFiles/DayTradingSimulator.dir/src/Libraries/raygui_wrapper.cpp.obj
 DayTradingSimulator.exe: CMakeFiles/DayTradingSimulator.dir/src/main.cpp.obj
 DayTradingSimulator.exe: CMakeFiles/DayTradingSimulator.dir/src/Objects/Graph.cpp.obj
@@ -439,7 +446,7 @@ DayTradingSimulator.exe: _deps/raylib-build/raylib/libraylib.a
 DayTradingSimulator.exe: CMakeFiles/DayTradingSimulator.dir/linkLibs.rsp
 DayTradingSimulator.exe: CMakeFiles/DayTradingSimulator.dir/objects1.rsp
 DayTradingSimulator.exe: CMakeFiles/DayTradingSimulator.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=E:\DayTradingSimulator\cmake-build-release\CMakeFiles --progress-num=$(CMAKE_PROGRESS_22) "Linking CXX executable DayTradingSimulator.exe"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=E:\DayTradingSimulator\cmake-build-release\CMakeFiles --progress-num=$(CMAKE_PROGRESS_23) "Linking CXX executable DayTradingSimulator.exe"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles\DayTradingSimulator.dir\link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.

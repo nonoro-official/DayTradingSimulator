@@ -9,6 +9,7 @@ file(REMOVE_RECURSE
   "CMakeFiles/DayTradingSimulator.dir/src/Classes/Stock.cpp.obj.d"
   "CMakeFiles/DayTradingSimulator.dir/src/Classes/Transactions/TransactionManager.cpp.obj"
   "CMakeFiles/DayTradingSimulator.dir/src/Classes/Transactions/TransactionManager.cpp.obj.d"
+  "CMakeFiles/DayTradingSimulator.dir/src/DayTradingSimulator.rc.obj"
   "CMakeFiles/DayTradingSimulator.dir/src/Libraries/raygui_wrapper.cpp.obj"
   "CMakeFiles/DayTradingSimulator.dir/src/Libraries/raygui_wrapper.cpp.obj.d"
   "CMakeFiles/DayTradingSimulator.dir/src/Menu/Menu.cpp.obj"
@@ -48,6 +49,6 @@ file(REMOVE_RECURSE
 )
 
 # Per-language clean rules from dependency scanning.
-foreach(lang CXX)
+foreach(lang CXX RC)
   include(CMakeFiles/DayTradingSimulator.dir/cmake_clean_${lang}.cmake OPTIONAL)
 endforeach()

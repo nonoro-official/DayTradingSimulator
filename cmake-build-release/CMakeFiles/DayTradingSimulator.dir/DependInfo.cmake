@@ -4,6 +4,25 @@ set(CMAKE_DEPENDS_IN_PROJECT_ONLY OFF)
 
 # The set of languages for which implicit dependencies are needed:
 set(CMAKE_DEPENDS_LANGUAGES
+  "RC"
+  )
+# The set of files for implicit dependencies of each language:
+set(CMAKE_DEPENDS_CHECK_RC
+  "E:/DayTradingSimulator/src/DayTradingSimulator.rc" "E:/DayTradingSimulator/cmake-build-release/CMakeFiles/DayTradingSimulator.dir/src/DayTradingSimulator.rc.obj"
+  )
+
+# Preprocessor definitions for this target.
+set(CMAKE_TARGET_DEFINITIONS_RC
+  "GRAPHICS_API_OPENGL_33"
+  "PLATFORM_DESKTOP"
+  )
+
+# The include file search paths:
+set(CMAKE_RC_TARGET_INCLUDE_PATH
+  "E:/DayTradingSimulator/src"
+  "_deps/raygui-src/src"
+  "_deps/raylib-src/src"
+  "_deps/raylib-src/src/external/glfw/include"
   )
 
 # The set of dependency files which are needed:

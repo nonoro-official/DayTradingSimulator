@@ -35,7 +35,7 @@ void GenerateRandomMarket::InitializeMarket() {
 
     // Reinitialize values for forward simulation
     time = 0;
-    currentValue = Clamp(currentValue, 0.025f, 0.95f);
+    currentValue = Clamp(currentValue, 0.05f, 0.95f);
     SetMarketState(Normal);
 
     if (OnFinishInitialize) OnFinishInitialize();
@@ -76,22 +76,21 @@ void GenerateRandomMarket::SetMarketState(MarketState state) {
 }
 
 GraphPoint* GenerateRandomMarket::GenerateNextPoint() {
-    if (timeInState <= 0) {
-        if (currentState != Cooldown) {
-            SetMarketState(Cooldown);
-        }
-
+    if (timeInState > 0) {
+        timeInState--;
+    } else if (currentState != Normal) {
         if (currentState == Cooldown) {
             SetMarketState(Normal);
+        } else {
+            SetMarketState(Cooldown);
         }
     }
-    else timeInState--;
 
     // Events
     if (currentState == Normal) {
         // Event Selection
-        float chance = static_cast<float>(rand()) / RAND_MAX;
-        if (chance >= eventChance) {
+        float chance = static_cast<float>(rand()) / (float)RAND_MAX;
+        if (chance < eventChance) {
             // chooseRandomEvent
             MarketState randomState = static_cast<MarketState>(GetRandomValue(1, 4));
 
@@ -99,15 +98,15 @@ GraphPoint* GenerateRandomMarket::GenerateNextPoint() {
         }
     }
 
-    if (currentState != Cooldown) {
+    if (currentState != Cooldown && currentState != Normal) {
         // Event Loop
         switch (currentState) {
             case TrendUp: {
-                currentValue += GetRandomFloat(randomTrendStrength.x, 0);
+                currentValue += GetRandomFloat(0, randomTrendStrength.y);
             } break;
 
             case TrendDown: {
-                currentValue += GetRandomFloat(0, randomTrendStrength.y);
+                currentValue += GetRandomFloat(randomTrendStrength.x, 0);
             } break;
 
             case Hold: {
@@ -135,23 +134,23 @@ GraphPoint* GenerateRandomMarket::GenerateNextPoint() {
 
     switch (noiseType) {
         case PerlinNoise: noiseValue = perlinNoise.noise1D(amplitude * time * frequency) * noiseMultiplier; break;
-        case WhiteNoise: noiseValue = Remap(static_cast<float>(rand()) / RAND_MAX, 0.025, 0.95, -.5, .5) * noiseMultiplier;
+        case WhiteNoise: noiseValue = (static_cast<float>(rand()) / (float)RAND_MAX - 0.5f) * noiseMultiplier; break;
     }
 
     // If we're hitting the edges, steer the market back
     if (currentState != Volatile && currentState != Hold && currentState != Cooldown) {
         if (currentValue >= 1.0f - edgePadding) {
-            SetMarketState(TrendUp);
-        } else if (currentValue <= 0.025f + edgePadding) {
-            SetMarketState(TrendDown);
+            if (currentState != TrendDown) SetMarketState(TrendDown);
+        } else if (currentValue <= 0.05f + edgePadding) {
+            if (currentState != TrendUp) SetMarketState(TrendUp);
         }
     }
 
     float yValue = currentValue + (currentValue * noiseValue);
 
     // Clamp to minmax
-    currentValue = Clamp(currentValue, 0.025, 0.95);
-    yValue = Clamp(yValue, 0.025, 0.95);
+    currentValue = Clamp(currentValue, 0.05f, 0.95f);
+    yValue = Clamp(yValue, 0.05f, 0.95f);
 
     // Apply value
     GraphPoint* newPoint = new GraphPoint(yValue);
@@ -260,8 +259,8 @@ float GenerateRandomMarket::PredictAverageOverWeeks(int weeks, float variationAm
 
         // Chance of event from Normal
         if (fakeState == Normal) {
-            float chance = static_cast<float>(rand()) / RAND_MAX;
-            if (chance >= eventChance) {
+            float chance = static_cast<float>(rand()) / (float)RAND_MAX;
+            if (chance < eventChance) {
                 fakeState = static_cast<MarketState>(GetRandomValue(1, 4));
                 fakeTimeInState = GetRandomValue(5, 20);
             }
@@ -269,9 +268,9 @@ float GenerateRandomMarket::PredictAverageOverWeeks(int weeks, float variationAm
 
         // Apply trend
         if (fakeState == TrendUp)
-            simulatedValue += GetRandomFloat(randomTrendStrength.x, 0);
-        else if (fakeState == TrendDown)
             simulatedValue += GetRandomFloat(0, randomTrendStrength.y);
+        else if (fakeState == TrendDown)
+            simulatedValue += GetRandomFloat(randomTrendStrength.x, 0);
 
         // Noise parameters
         NoiseType noiseType = defaultNoiseType;
@@ -301,15 +300,15 @@ float GenerateRandomMarket::PredictAverageOverWeeks(int weeks, float variationAm
                 noiseValue = perlinNoise.noise1D(amplitude * fakeTime * frequency);
                 break;
             case WhiteNoise:
-                noiseValue = Remap(static_cast<float>(rand()) / RAND_MAX, 0.025f, 0.95f, -0.5f, 0.5f);
+                noiseValue = (static_cast<float>(rand()) / (float)RAND_MAX - 0.5f);
                 break;
         }
 
         float yValue = simulatedValue + (simulatedValue * noiseValue * noiseMultiplier);
 
-        // Clamp and accumulate
-        yValue = Clamp(yValue, 0.025f, 0.95f);
-        simulatedValue = Clamp(simulatedValue, 0.025f, 0.95f);
+    // PredictAverageOverWeeks clamps
+    yValue = Clamp(yValue, 0.05f, 0.95f);
+    simulatedValue = Clamp(simulatedValue, 0.05f, 0.95f);
         sum += yValue;
 
         fakeTime += 1.0f;
@@ -319,7 +318,7 @@ float GenerateRandomMarket::PredictAverageOverWeeks(int weeks, float variationAm
 
     // Apply variation (±percentage)
     float variation = GetRandomFloat(-variationAmount, variationAmount);
-    float variedAverage = Clamp(average + (average * variation), 0.025f, 0.95f);
+    float variedAverage = Clamp(average + (average * variation), 0.05f, 0.95f);
 
     // Return percent change from given valueAtStart
     float percentChange = (variedAverage - valueAtStart) / valueAtStart;

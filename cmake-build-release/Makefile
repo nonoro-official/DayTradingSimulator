@@ -365,6 +365,14 @@ src/Classes/Transactions/TransactionManager.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\DayTradingSimulator.dir\build.make CMakeFiles/DayTradingSimulator.dir/src/Classes/Transactions/TransactionManager.cpp.s
 .PHONY : src/Classes/Transactions/TransactionManager.cpp.s
 
+src/DayTradingSimulator.obj: src/DayTradingSimulator.rc.obj
+.PHONY : src/DayTradingSimulator.obj
+
+# target to build an object file
+src/DayTradingSimulator.rc.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\DayTradingSimulator.dir\build.make CMakeFiles/DayTradingSimulator.dir/src/DayTradingSimulator.rc.obj
+.PHONY : src/DayTradingSimulator.rc.obj
+
 src/Libraries/raygui_wrapper.obj: src/Libraries/raygui_wrapper.cpp.obj
 .PHONY : src/Libraries/raygui_wrapper.obj
 
@@ -783,6 +791,7 @@ help:
 	@echo ... src/Classes/Transactions/TransactionManager.obj
 	@echo ... src/Classes/Transactions/TransactionManager.i
 	@echo ... src/Classes/Transactions/TransactionManager.s
+	@echo ... src/DayTradingSimulator.obj
 	@echo ... src/Libraries/raygui_wrapper.obj
 	@echo ... src/Libraries/raygui_wrapper.i
 	@echo ... src/Libraries/raygui_wrapper.s

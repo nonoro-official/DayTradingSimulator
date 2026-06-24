@@ -4326,7 +4326,8 @@ CMakeFiles/DayTradingSimulator.dir/src/main.cpp.obj: E:/DayTradingSimulator/src/
   E:/DayTradingSimulator/src/Menu/Screens/DashboardScreen.h \
   E:/DayTradingSimulator/src/Menu/Screens/HistoryScreen.h \
   E:/DayTradingSimulator/src/Menu/Screens/PortfolioScreen.h \
-  E:/DayTradingSimulator/src/Menu/Screens/UpgradesScreen.h
+  E:/DayTradingSimulator/src/Menu/Screens/UpgradesScreen.h \
+  E:/DayTradingSimulator/src/Resources.h
 
 
 E:/DayTradingSimulator/src/Classes/Company.cpp:

@@ -45,6 +45,7 @@ private:
     void DrawTutorialOverlay();
     void DrawTopBar();
     void DrawSidebar();
+    void DrawBackdrop();
 
     // Dropdown state
     int selectedCompanyIndex = 0;
@@ -58,6 +59,7 @@ private:
     HistoryScreen* historyScreen = nullptr;
 
     Font menuFont;
+    Texture2D logoTexture;
 
 public:
     void Init(GameState* gameRef);

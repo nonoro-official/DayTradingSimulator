@@ -193,8 +193,11 @@ void PopUpWindow::DrawBuySellPopup(bool isBuyMode, bool& isVisible, Company* com
                 else Show("Must meet minimum shares requirement.");
             }
             else {
-                TransactionManager::Instance().CreateBuyOrder(stock, PlayerData::Instance().weekExecutionDelay, inputValue);
-                Show("Stock purchase placed! Shares will be added after delay.");
+                TransactionManager::Instance().CreateBuyOrder(stock, player.weekExecutionDelay, inputValue);
+                std::ostringstream oss;
+                oss << "Stock purchase placed! Shares will be added after " << player.weekExecutionDelay
+                    << (player.weekExecutionDelay == 1 ? " week." : " weeks.");
+                Show(oss.str());
                 isVisible = false;
                 strcpy(inputBuffer, "");
                 GameState::Instance().SetTempPause(false);
@@ -206,8 +209,11 @@ void PopUpWindow::DrawBuySellPopup(bool isBuyMode, bool& isVisible, Company* com
                 else Show("Selling would drop you below the minimum shares.");
             }
             else {
-                TransactionManager::Instance().CreateSellOrder(stock, PlayerData::Instance().weekExecutionDelay, inputValue);
-                Show("Sell order placed! Will execute after delay.");
+                TransactionManager::Instance().CreateSellOrder(stock, player.weekExecutionDelay, inputValue);
+                std::ostringstream oss;
+                oss << "Sell order placed! Will execute after " << player.weekExecutionDelay
+                    << (player.weekExecutionDelay == 1 ? " week." : " weeks.");
+                Show(oss.str());
                 isVisible = false;
                 strcpy(inputBuffer, "");
                 GameState::Instance().SetTempPause(false);

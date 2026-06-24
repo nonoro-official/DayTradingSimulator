@@ -1,0 +1,7 @@
+$png = [System.IO.File]::ReadAllBytes('Textures\day-trading-logo.png')
+$ico = New-Object byte[] (22 + $png.Length)
+[System.Array]::Copy([byte[]](0,0, 1,0, 1,0, 64,64, 0,0, 1,0, 32,0), 0, $ico, 0, 14)
+[System.Array]::Copy([BitConverter]::GetBytes($png.Length), 0, $ico, 14, 4)
+[System.Array]::Copy([BitConverter]::GetBytes(22), 0, $ico, 18, 4)
+[System.Array]::Copy($png, 0, $ico, 22, $png.Length)
+[System.IO.File]::WriteAllBytes('Textures\day-trading-logo.ico', $ico)

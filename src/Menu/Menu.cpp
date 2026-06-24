@@ -18,6 +18,13 @@ void Menu::Init(GameState* gameRef)
     game = gameRef;
     game->SetPause(true); // Start paused for intro/tutorial
     menuFont = LoadFontFromMemory(".ttf", VT323_Regular_ttf, VT323_Regular_ttf_size, 30, NULL, 0);
+
+    // Load logo
+    Image logoImg = LoadImageFromMemory(".png", day_trading_logo_png, day_trading_logo_png_size);
+    logoTexture = LoadTextureFromImage(logoImg);
+    SetTextureFilter(logoTexture, TEXTURE_FILTER_POINT); // No filtering as requested
+    UnloadImage(logoImg);
+
     upgradeHandler.init(*game);
     game->AddTickListener([]() {
         TransactionManager::Instance().Update();
@@ -76,6 +83,8 @@ void Menu::SetScreen(Screen screen)
 }
 
 void Menu::Draw() {
+    DrawBackdrop();
+
     if (currentScreen == SCREEN_INTRO) {
         DrawIntroScreen();
         return;
@@ -113,6 +122,10 @@ void Menu::DrawIntroScreen() {
     int sw = GetScreenWidth();
     int sh = GetScreenHeight();
 
+    // Draw Logo
+    float logoScale = 2.0f;
+    DrawTextureEx(logoTexture, {(float)sw / 2 - (logoTexture.width * logoScale) / 2, (float)sh / 2 - 240.0f}, 0, logoScale, WHITE);
+
     const char* title = "THE way to get rich";
     const char* subtext = "(do not replicate at home)";
     const char* description =
@@ -128,11 +141,11 @@ void Menu::DrawIntroScreen() {
     Vector2 subtextDim = MeasureTextEx(menuFont, subtext, subtextSize, 2);
     Vector2 descDim = MeasureTextEx(menuFont, description, descSize, 2);
 
-    DrawTextEx(menuFont, title, {(float)(sw - titleDim.x) / 2.0f, (float)sh / 2.0f - 120.0f}, titleSize, 2.0f, BLACK);
-    DrawTextEx(menuFont, subtext, {(float)(sw - subtextDim.x) / 2.0f, (float)sh / 2.0f - 50.0f}, subtextSize, 2.0f, DARKGRAY);
-    DrawTextEx(menuFont, description, {(float)(sw - descDim.x) / 2.0f, (float)sh / 2.0f + 10.0f}, descSize, 2.0f, BLACK);
+    DrawTextEx(menuFont, title, {(float)(sw - titleDim.x) / 2.0f, (float)sh / 2.0f - 100.0f}, titleSize, 2.0f, BLACK);
+    DrawTextEx(menuFont, subtext, {(float)(sw - subtextDim.x) / 2.0f, (float)sh / 2.0f - 30.0f}, subtextSize, 2.0f, DARKGRAY);
+    DrawTextEx(menuFont, description, {(float)(sw - descDim.x) / 2.0f, (float)sh / 2.0f + 30.0f}, descSize, 2.0f, BLACK);
 
-    if (GuiButton({ (float)sw / 2 - 100, (float)sh / 2 + 110, 200, 50 }, "Enter Market")) {
+    if (GuiButton({ (float)sw / 2 - 100, (float)sh / 2 + 130, 200, 50 }, "Enter Market")) {
         currentScreen = SCREEN_DASHBOARD;
         isTutorialActive = true;
         tutorialStep = 0;
@@ -178,30 +191,41 @@ void Menu::DrawTutorialOverlay() {
         btnHighlight = { 10, 110, 100, 40 };
         break;
     case 4:
+        tutorialTitle = "Switching Companies";
+        tutorialText = "Use this dropdown to switch between\ndifferent companies. Each firm has its\nown price history and risk profile.";
+        highlight = { 140, 75, 180, 30 };
+        break;
+    case 5:
         tutorialTitle = "Portfolio";
         tutorialText = "The Portfolio shows all the stocks you\ncurrently own. Check your holdings\nand their current value here.";
         highlight = { 130, 70, (float)sw - 140, (float)sh - 80 };
         btnHighlight = { 10, 20, 100, 80 };
         break;
-    case 5:
+    case 6:
         tutorialTitle = "Companies";
         tutorialText = "The Companies screen gives you details\nabout every firm in the market.\nKnow your assets!";
         highlight = { 130, 70, (float)sw - 140, (float)sh - 80 };
         btnHighlight = { 10, 160, 100, 40 };
         break;
-    case 6:
+    case 7:
+        tutorialTitle = "Market Strategy";
+        tutorialText = "Each company has different risk levels\nand market states (Trends, Volatile).\nCheck them often to find opportunities!";
+        highlight = { 130, 70, (float)sw - 140, (float)sh - 80 };
+        btnHighlight = { 10, 160, 100, 40 };
+        break;
+    case 8:
         tutorialTitle = "Upgrades";
         tutorialText = "Spend your profits on Upgrades to get\nmarket advantages like faster execution\nor prediction hints.";
         highlight = { 130, 70, (float)sw - 140, (float)sh - 80 };
         btnHighlight = { 10, 210, 100, 40 };
         break;
-    case 7:
+    case 9:
         tutorialTitle = "History";
         tutorialText = "The History log keeps track of all your\npast trades. Analyze your performance\nover time.";
         highlight = { 130, 70, (float)sw - 140, (float)sh - 80 };
         btnHighlight = { 10, 260, 100, 40 };
         break;
-    case 8:
+    case 10:
         tutorialTitle = "Final Advice";
         tutorialText = "Good luck! You're ready to become a\nmarket legend. (Or lose it all,\nbut hey, it's a simulator!)";
         break;
@@ -217,19 +241,39 @@ void Menu::DrawTutorialOverlay() {
         DrawRectangleLinesEx(btnHighlight, 3, RED);
     }
 
-    if (GuiButton({ tutorialBox.x + tutorialBox.width - 130, tutorialBox.y + tutorialBox.height - 60, 110, 45 }, tutorialStep < 8 ? "Next" : "Finish")) {
+    if (GuiButton({ tutorialBox.x + tutorialBox.width - 130, tutorialBox.y + tutorialBox.height - 60, 110, 45 }, tutorialStep < 10 ? "Next" : "Finish")) {
         tutorialStep++;
-        if (tutorialStep == 4) currentScreen = SCREEN_PORTFOLIO;
-        else if (tutorialStep == 5) currentScreen = SCREEN_COMPANIES;
-        else if (tutorialStep == 6) currentScreen = SCREEN_UPGRADES;
-        else if (tutorialStep == 7) currentScreen = SCREEN_HISTORY;
-        else if (tutorialStep == 8) currentScreen = SCREEN_DASHBOARD;
+        if (tutorialStep == 5) currentScreen = SCREEN_PORTFOLIO;
+        else if (tutorialStep == 6) currentScreen = SCREEN_COMPANIES;
+        else if (tutorialStep == 7) currentScreen = SCREEN_COMPANIES;
+        else if (tutorialStep == 8) currentScreen = SCREEN_UPGRADES;
+        else if (tutorialStep == 9) currentScreen = SCREEN_HISTORY;
+        else if (tutorialStep == 10) currentScreen = SCREEN_DASHBOARD;
 
-        if (tutorialStep > 8) {
+        if (tutorialStep > 10) {
             isTutorialActive = false;
             game->SetPause(false); // Unpause when tutorial is done
         }
     }
+}
+
+void Menu::DrawBackdrop() {
+    int sw = GetScreenWidth();
+    int sh = GetScreenHeight();
+
+    // Draw a subtle grid
+    int gridSize = 40;
+    for (int x = 0; x < sw; x += gridSize) {
+        DrawLine(x, 0, x, sh, Fade(LIGHTGRAY, 0.2f));
+    }
+    for (int y = 0; y < sh; y += gridSize) {
+        DrawLine(0, y, sw, y, Fade(LIGHTGRAY, 0.2f));
+    }
+
+    // Draw a very subtle large logo in the background
+    float scale = 6.0f;
+    Vector2 pos = { (sw - logoTexture.width * scale) / 2, (sh - logoTexture.height * scale) / 2 };
+    DrawTextureEx(logoTexture, pos, 0, scale, Fade(LIGHTGRAY, 0.15f));
 }
 
 void Menu::DrawTopBar() {
@@ -298,6 +342,7 @@ void Menu::DrawSidebar() {
 Menu::~Menu()
 {
     UnloadFont(menuFont);
+    UnloadTexture(logoTexture);
     delete dashboardScreen;
     delete companiesScreen;
     delete portfolioScreen;

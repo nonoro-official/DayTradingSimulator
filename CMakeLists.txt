@@ -33,7 +33,12 @@ FetchContent_Declare(
 FetchContent_MakeAvailable(raygui)
 
 # Our Project
+if(WIN32)
+    set(RESOURCE_FILES src/DayTradingSimulator.rc)
+endif()
+
 add_executable(${PROJECT_NAME}
+        ${RESOURCE_FILES}
         src/Libraries/raygui_wrapper.cpp
         src/main.cpp
         src/Objects/Graph.cpp
